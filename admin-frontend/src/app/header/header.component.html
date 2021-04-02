@@ -1,0 +1,35 @@
+<mdb-navbar
+  SideClass="navbar navbar-expand-lg navbar-dark"
+  class="navCss"
+  [containerInside]="false"
+>
+  <links>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          routerLink="/certificates"
+          routerLinkActive="active"
+          mdbWavesEffect
+          >Certificates</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          routerLink="/users"
+          mdbWavesEffect
+          >Users</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          routerLink="/logs"
+          mdbWavesEffect
+          >Logs</a
+        >
+      </li>
+    </ul>
+  </links>
+</mdb-navbar>

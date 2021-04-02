@@ -1,0 +1,60 @@
+<div class="container-fluid">
+    <button mat-flat-button color="primary" class="mt-3" (click)="addCA()">
+        <mat-icon class="mr-2">person_add</mat-icon> Add new CA
+    </button>
+    <div class="mt-4">
+        <mat-tab-group mat-align-tabs="center" (selectedTabChange)="changeTab($event)" class="mt-n4">
+            <mat-tab
+                *ngFor="let tab of tabs; let i = index"
+                [label]="tab"
+            >
+                <div *ngIf="currentTab == 0">
+                    <table class="table table-hover">
+                        <thead>
+                            <th scope="col" width="4%">No</th>
+                            <th scope="col" width="13%">Common Name</th>
+                            <th scope="col" width="13%">Organization</th>
+                            <th scope="col" width="13%">Organizational Unit</th>
+                            <th scope="col" width="13%">City/Locality</th>
+                            <th scope="col" width="13%">State/County/Region</th>
+                            <th scope="col" width="8%">Country</th>
+                            <th scope="col" width="13%">Email Address</th>
+                            <th scope="col" width="5%"></th>
+                            <th scope="col" width="5%"></th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="
+                                let item of csrs.content
+                                    | paginate
+                                    : {
+                                        itemsPerPage: size,
+                                        currentPage: page,
+                                        totalItems: csrs.totalElements
+                                        };
+                                let i = index"
+                            >
+                                <th scope="col" width="4%">{{ (page-1)*size + i + 1 }}</th>
+                                <td scope="col" width="13%">{{ item.commonName }}</td>
+                                <td scope="col" width="13%">{{ item.organization }}</td>
+                                <td scope="col" width="13%">{{ item.organizationalUnit }}</td>
+                                <td scope="col" width="13%">{{ item.cityLocality }}</td>
+                                <td scope="col" width="13%">{{ item.stateCountyRegion }}</td>
+                                <td scope="col" width="8%">{{ item.country }}</td>
+                                <td scope="col" width="13%">{{ item.emailAddress }}</td>
+                                <td scope="col" width="5%"><button mat-flat-button color="primary" class="button-class" (click)="approve(item.id)" >Approve</button></td>
+                                <td scope="col" width="5%"><button mat-flat-button color="warn" class="button-class" (click)="openDialogReject(item.id)" >Reject</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3 div-centered">
+                    <pagination-controls
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    (pageChange)="handlePageChange($event)"
+                    ></pagination-controls>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

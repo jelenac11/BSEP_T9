@@ -1,0 +1,52 @@
+@use 'base';
+@import "~bootstrap/scss/bootstrap";
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: base.$secondary-font-family, base.$main-font-family, sans-serif;
+}
+
+snack-bar-container.success {
+  background-color: base.$success;
+}
+
+snack-bar-container.error {
+  background-color: base.$error;
+}
+
+snack-bar-container.notification {
+  font-size: 18px !important;
+  color: white;
+  font-weight: bold;
+}
+
+mat-card {
+  border-radius: 30px !important;
+  @extend %flex-center;
+  width: 500px;
+}
+
+.navCss {
+  nav {
+    background-color: base.$main-color;
+    height: 10%;
+  }
+}
+
+.carousel-inner {
+  margin-right: 0%;
+  align-content: center;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon
+ {
+    background-color: black;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

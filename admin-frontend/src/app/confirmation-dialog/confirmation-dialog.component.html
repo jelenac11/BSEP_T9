@@ -1,0 +1,21 @@
+<mat-dialog-content>
+    <p>
+      {{ message }}
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <button
+      mdbBtn
+      type="button"
+      size="sm"
+      color="red"
+      mdbWavesEffect
+      (click)="onConfirmClick()"
+    >
+      {{ confirmButtonText }}
+    </button>
+    <button mdbBtn type="button" size="sm" color="light" mat-dialog-close>
+      {{ cancelButtonText }}
+    </button>
+  </mat-dialog-actions>
+  

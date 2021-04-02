@@ -1,0 +1,10 @@
+@use '../../base';
+
+.mat-menu-item{ 
+    @extend %simple-raised-button;
+} 
+
+.mat-icon-button{ 
+    @extend %simple-raised-button;
+    color:white; 
+} 
