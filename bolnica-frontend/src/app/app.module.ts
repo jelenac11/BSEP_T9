@@ -20,12 +20,16 @@ import { CoreModule } from './core/core.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Snackbar } from './snackbar';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
+import { SignInComponent } from './sign-in/sign-in.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CsrComponent,
-    HeaderComponent
+    HeaderComponent,
+    SignInComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +50,14 @@ import { Snackbar } from './snackbar';
     AppRoutingModule,
     CoreModule
   ],
-  providers: [Snackbar],
+  providers: [
+    Snackbar,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpTokenInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

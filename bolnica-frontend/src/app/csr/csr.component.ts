@@ -29,11 +29,11 @@ export class CsrComponent implements OnInit {
 
   ngOnInit(): void {
     this.csrForm = this.formBuilder.group({
-      common_name: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9\. ]+')]],
-      organization: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9 ]+')]],
-      organizational_unit: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9 ]+')]],
-      city_locality: ['', [Validators.required, Validators.pattern('[a-zA-Z ]+')]],
-      state_county_region: ['',[Validators.required, Validators.pattern('[a-zA-Z ]+')]],
+      common_name: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9\. ]*')]],
+      organization: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9 ]*')]],
+      organizational_unit: ['', [Validators.required, Validators.pattern('[a-zA-Z0-9][a-zA-Z0-9 ]*')]],
+      city_locality: ['', [Validators.required, Validators.pattern('[A-Z][a-zA-Z ]+')]],
+      state_county_region: ['',[Validators.required, Validators.pattern('[A-Z][a-zA-Z ]+')]],
       country: ['', Validators.required],
       email_address: ['', [Validators.required, Validators.email]]
     });
@@ -53,14 +53,14 @@ export class CsrComponent implements OnInit {
     if (this.csrForm.invalid) {
       return;
     }
-    const csr: any = { common_name: '', organization: '', organizational_unit: '', city_locality: '', state_county_region: '', country: '', email_address: '' };
-    csr.common_name = this.csrForm.value.common_name;
+    const csr: any = { commonName: '', organization: '', organizationalUnit: '', cityLocality: '', stateCountyRegion: '', country: '', emailAddress: '' };
+    csr.commonName = this.csrForm.value.common_name;
     csr.organization = this.csrForm.value.organization;
-    csr.organizational_unit = this.csrForm.value.organizational_unit;
-    csr.city_locality = this.csrForm.value.city_locality;
-    csr.state_county_region = this.csrForm.value.state_county_region;
+    csr.organizationalUnit = this.csrForm.value.organizational_unit;
+    csr.cityLocality = this.csrForm.value.city_locality;
+    csr.stateCountyRegion = this.csrForm.value.state_county_region;
     csr.country = this.csrForm.value.country;
-    csr.email_address = this.csrForm.value.email_address;
+    csr.emailAddress = this.csrForm.value.email_address;
     this.csrService.requestCertificate(csr).subscribe((data: any) => {
       this.snackBar.success("Request sent successfully!");
     },

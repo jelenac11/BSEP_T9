@@ -11,5 +11,13 @@ export class AppComponent {
 
   constructor(
     private router: Router
-  ) {}
+  ) {
+    this.router.events.subscribe((url: any) => {
+      if (this.router.url === '/sign-in') {
+        this.showNavbar = false;
+      } else {
+        this.showNavbar = true;
+      }
+    });
+  }
 }

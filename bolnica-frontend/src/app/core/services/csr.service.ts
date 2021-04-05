@@ -14,7 +14,7 @@ export class CsrService {
   ) { }
 
   requestCertificate(csr: any): Observable<any> {
-    return this.http.post(`${environment.api_url}csr`, csr, {headers: this.headers, responseType: 'json'});
+    return this.http.post(`${environment.api_url}csr`, csr, {headers: this.headers});
   }
 
 }

@@ -10,22 +10,27 @@
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>Commmon Name</mat-label>
                             <input formControlName="common_name" matInput placeholder="Common Name">
+                            <mat-error *ngIf="f.common_name.errors">Common Name is required and can only contain alphanumerical characters, dots and spaces.</mat-error>
                         </mat-form-field></p>
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>Organization</mat-label>
                             <input formControlName="organization" matInput placeholder="Organization">
+                            <mat-error *ngIf="f.organization.errors">Organization is required and can only contain alphanumerical characters and spaces.</mat-error>
                         </mat-form-field></p>
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>Organizational Unit</mat-label>
                             <input formControlName="organizational_unit" matInput placeholder="Organizational Unit">
+                            <mat-error *ngIf="f.organizational_unit.errors">Organizational Unit is required and can only contain alphanumerical characters and spaces.</mat-error>
                         </mat-form-field></p>
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>City/Locality</mat-label>
                             <input formControlName="city_locality" matInput placeholder="City/Locality">
+                            <mat-error *ngIf="f.city_locality.errors">City/locality is required, must start with capital letter and can only contain alphabet characters and spaces.</mat-error>
                         </mat-form-field></p>
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>State/County/Region</mat-label>
                             <input formControlName="state_county_region" matInput placeholder="State/County/Region">
+                            <mat-error *ngIf="f.state_county_region.errors">State/country/region is required, must start with capital letter and can only contain alphabet characters and spaces.</mat-error>
                         </mat-form-field></p>
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>Country</mat-label>
@@ -39,6 +44,7 @@
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>Email address</mat-label>
                             <input formControlName="email_address" matInput placeholder="Email address">
+                            <mat-error *ngIf="f.email_address.errors">Email is not valid.</mat-error>
                         </mat-form-field></p>
                         <button class="mr-3 px-3 mt-2 mb-4 btn sign-in">Submit</button>
                     </form>

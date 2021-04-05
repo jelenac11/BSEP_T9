@@ -1,8 +1,8 @@
 package com.tim9.admin.controllers;
 
-
-
 import java.io.IOException;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,13 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.admin.dto.CertDataDTO;
 import com.tim9.admin.services.CSRService;
 import com.tim9.admin.util.CustomPageImplementation;
 import com.tim9.dto.response.CSRResponseDTO;
 
+
 @RestController
 @RequestMapping(value = "/api/csr")
-@CrossOrigin(origins = "*", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:4201", maxAge = 3600, allowedHeaders = "*")
 public class CsrController {
 	
 	@Autowired
@@ -54,6 +56,24 @@ public class CsrController {
     public ResponseEntity<String> rejectCSR(@PathVariable(value = "serialNumber") Long serialNumber) {
         try {
             return new ResponseEntity<>(csrService.rejectCSR(serialNumber), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+	
+	@GetMapping("/{serialNumber}")
+    public ResponseEntity<?> getCSR(@PathVariable(value = "serialNumber") Long serialNumber) {
+        try {
+            return new ResponseEntity<>(csrService.getCSR(serialNumber), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+	
+	@PostMapping("/approve")
+    public ResponseEntity<?> createNonCACertificate(@Valid @RequestBody CertDataDTO dto) {
+        try {
+            return new ResponseEntity<>(csrService.createNonCACertificate(dto), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

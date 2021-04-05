@@ -1,0 +1,32 @@
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <mat-card class="col-sm-6 offset-sm-3 mt-4" [class.mat-elevation-z24]='true'>
+                <a [routerLink]="['/']"><img src="../../assets/Logo.png" height="150" width="150" class="mx-auto mb-4 d-block mt-3"/></a>
+                <mat-card-header>
+                    <mat-card-subtitle><p class="mb-5 subtitle">Sign-in here!</p></mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                        <p><mat-form-field appearance="outline" class="full-row">
+                            <mat-label>Email</mat-label>
+                            <input id="login_email" formControlName="email" matInput placeholder="Email" [errorStateMatcher]="matcher">
+                            <mat-icon matSuffix>email</mat-icon>
+                            <mat-error *ngIf="f.email.errors?.required" id='login-email-error-required'>Email is required</mat-error>
+                            <mat-error *ngIf="f.email.errors?.email" id='login-email-error-invalid'>Email is not valid</mat-error>
+                        </mat-form-field></p>
+                        <p><mat-form-field appearance="outline" class="full-row">
+                            <mat-label>Password</mat-label>
+                            <input id="login_password" formControlName="password" matInput placeholder="Password" [type]="hidePassword ? 'password' : 'text'" [errorStateMatcher]="matcher">
+                            <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+                                <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="f.password.errors?.required" id='login-password-error'>Password is required</mat-error>
+                        </mat-form-field></p>
+                        <button class="mr-3 px-3 mt-2 mb-4 btn sign-in">Sign in</button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

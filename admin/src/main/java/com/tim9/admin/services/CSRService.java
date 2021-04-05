@@ -1,32 +1,62 @@
 package com.tim9.admin.services;
 
+
+import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.InvalidKeyException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.ContentVerifierProvider;
 import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaContentVerifierProviderBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCSException;
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tim9.admin.dto.CertDataDTO;
+import com.tim9.admin.exceptions.CertificateAlreadyExistsException;
+import com.tim9.admin.exceptions.CertificateDoesNotExistException;
+import com.tim9.admin.exceptions.InvalidCertificateDateException;
 import com.tim9.admin.exceptions.InvalidDigitalSignatureException;
 import com.tim9.admin.model.CSR;
 import com.tim9.admin.repositories.CsrRepository;
+import com.tim9.admin.util.CertUtil;
+import com.tim9.admin.util.KeyStoreUtil;
 import com.tim9.dto.response.CSRResponseDTO;
+
 
 @Service
 public class CSRService {
@@ -34,9 +64,25 @@ public class CSRService {
 	/*
 	 * Izvori:
 	 * https://www.bouncycastle.org/docs/pkixdocs1.5on/org/bouncycastle/pkcs/PKCS10CertificationRequest.html
-	 * 
+	 * https://www.programcreek.com/java-api-examples/?api=org.bouncycastle.asn1.x509.Extension
+	 *
 	 */
 
+	@Value("${keystore.filepath}")
+    private String KEYSTORE_FILE_PATH;
+
+    @Value("${keystore.password}")
+    private String KEYSTORE_PASSWORD;
+    
+    @Value("${truststore.path}")
+    private String TRUSTSTORE_FILE_PATH;
+
+    @Value("${truststore.password}")
+    private String TRUSTSTORE_PASSWORD;
+    
+    @Autowired
+    private EmailService emailService;
+    
 	@Autowired
 	private CsrRepository csrRepository;
 	
@@ -63,7 +109,6 @@ public class CSRService {
 		for (CSR csr: page.getContent()) {
 			JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(csr.getCsr());
 			X500Name subject = req.getSubject();
-			System.out.println(subject.toString());
 			CSRResponseDTO dto = new CSRResponseDTO(csr.getId(), subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.L)[0].getFirst().getValue().toString(),
 					subject.getRDNs(BCStyle.ST)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.C)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString());
 			csrList.add(dto);
@@ -79,6 +124,112 @@ public class CSRService {
 		} else {
 			throw new NoSuchElementException("CSR with given serial number does not exist!");
 		}
+	}
+
+	public CSRResponseDTO getCSR(Long serialNumber) throws IOException {
+		Optional<CSR> csr = csrRepository.findById(serialNumber);
+		if (csr.isPresent()) {
+			JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(csr.get().getCsr());
+			X500Name subject = req.getSubject();
+			CSRResponseDTO dto = new CSRResponseDTO(csr.get().getId(), subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.L)[0].getFirst().getValue().toString(),
+					subject.getRDNs(BCStyle.ST)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.C)[0].getFirst().getValue().toString(), subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString());
+			return dto;
+		} else {
+			throw new NoSuchElementException("CSR with given serial number does not exist!");
+		}
+	}
+
+	public String createNonCACertificate(CertDataDTO dto) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException, CertificateAlreadyExistsException,
+	InvalidCertificateDateException, CertificateDoesNotExistException, UnrecoverableKeyException, OperatorCreationException, InvalidKeyException, MessagingException {
+		KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+		
+		X509Certificate cert = (X509Certificate) ks.getCertificate(dto.getSerialNumber());
+		if (cert != null) {
+		    throw new CertificateAlreadyExistsException("Certificate with given serial number already exists");
+		}
+		System.out.println(dto.getNotBefore());
+		System.out.println(dto.getNotAfter());
+		if (dto.getNotBefore().compareTo(dto.getNotAfter()) >= 0)
+		    throw new InvalidCertificateDateException("Certificate start date must be before expiration date");
+		Date novo = dto.getNotBefore();
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(novo);
+	    cal.add(Calendar.YEAR,  2);
+	    Date newDate = cal.getTime();
+	    if (newDate.compareTo(dto.getNotAfter()) < 0)
+		    throw new InvalidCertificateDateException("Maximum validity period is two years");
+	    Optional<CSR> csr = csrRepository.findById(Long.parseLong(dto.getSerialNumber()));
+	    if (!csr.isPresent()) {
+	    	throw new NoSuchElementException("CSR with given serial number doesn't exist!");
+	    }
+	    X509Certificate certCA = (X509Certificate) ks.getCertificate(dto.getIssuer());
+	    if (certCA == null) {
+            throw new CertificateDoesNotExistException("CA certificate with given serial number does not exist");
+        }
+	    if (dto.getNotAfter().compareTo(certCA.getNotAfter()) > 0) {
+	    	throw new InvalidCertificateDateException("CA Certificate will expire before end date.");
+	    }
+	    String signingAlg = "";
+	    if (dto.getSigningAlgorithm().equals("")) {
+	    	signingAlg = "sha256WithRSAEncryption";
+	    } else {
+	    	signingAlg = dto.getSigningAlgorithm();
+	    }
+	    JcaContentSignerBuilder builder = new JcaContentSignerBuilder(signingAlg);
+        BouncyCastleProvider bcp = new BouncyCastleProvider();
+        builder = builder.setProvider(bcp);
+        certCA.checkValidity();
+        String caPassword = KEYSTORE_PASSWORD + dto.getIssuer();
+        PrivateKey privateKey = (PrivateKey) ks.getKey(dto.getIssuer(), caPassword.toCharArray());
+        System.out.println("1");
+        ContentSigner contentSigner = builder.build(privateKey);
+        System.out.println("1");
+        X500Name issuerName = new JcaX509CertificateHolder(certCA).getSubject();
+        System.out.println("1");
+        JcaPKCS10CertificationRequest csrData = new JcaPKCS10CertificationRequest(csr.get().getCsr());
+        System.out.println("1");
+        
+        X500Name subject = CertUtil.createSubjectX500Name(csrData.getSubject(), certCA.getSerialNumber().toString());
+        System.out.println("1");
+        String email = csrData.getSubject().getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
+        System.out.println("1");
+        String caEmail = issuerName.getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
+        System.out.println("1");
+        X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(issuerName, new BigInteger(dto.getSerialNumber()), dto.getNotBefore(), dto.getNotAfter(), subject, csrData.getPublicKey());
+        System.out.println("1");
+        CertUtil.addBasicConstraints(certGen, false);
+        System.out.println("1");
+        CertUtil.addKeyUsage(certGen, dto.getKeyUsage());
+        System.out.println("1");
+        CertUtil.addExtendedKeyUsage(certGen, dto.getExtendedKeyUsage());
+        System.out.println("1");
+        if (dto.isKeyIdentifierExtension()) {
+        	System.out.println("1");
+        	CertUtil.addKeyIdentifierExtensions(certGen, csrData.getPublicKey(), certCA.getPublicKey());
+        }
+        System.out.println("1");
+        if (dto.isAlternativeNameExtension()) {
+        	System.out.println("1");
+        	CertUtil.addAlternativeNamesExtensions(certGen, email, caEmail);
+        }
+        System.out.println("1");
+        X509CertificateHolder certHolder = certGen.build(contentSigner);
+        JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
+        certConverter = certConverter.setProvider(bcp);
+        X509Certificate newCertificate =  certConverter.getCertificate(certHolder);
+        ks.setCertificateEntry(dto.getSerialNumber(), newCertificate);
+        KeyStoreUtil.saveKeyStore(ks, KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+        System.out.println("2");
+        KeyStore truststore = KeyStoreUtil.loadKeyStore(TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
+        truststore.setCertificateEntry(dto.getSerialNumber(), newCertificate);
+        KeyStoreUtil.saveKeyStore(truststore, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
+        System.out.println("3");
+        File certFile = CertUtil.x509CertificateToPem(newCertificate, "", dto.getSerialNumber());
+        
+        emailService.sendEmailWithCertificate(email, certFile);
+        
+        csrRepository.delete(csr.get());
+		return "Successfully created certificate!";
 	}
 
 }

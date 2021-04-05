@@ -1,0 +1,21 @@
+@use '../../base';
+
+.mat-dialog-actions {
+    @extend %dialog-actions;
+}
+
+.mat-raised-button.mat-primary { 
+    @extend %raised-button;
+} 
+
+.mat-raised-button{ 
+    @extend %simple-raised-button;
+} 
+
+.mat-dialog-title { 
+    @extend %dialog-title;
+}
+
+.mat-dialog-content { 
+    @extend %content-center;
+}

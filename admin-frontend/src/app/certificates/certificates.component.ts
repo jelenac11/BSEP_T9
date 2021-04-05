@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { AddCaComponent } from '../add-ca/add-ca.component';
+import { ApproveCsrComponent } from '../approve-csr/approve-csr.component';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { CertificatesPage } from '../core/model/response/certificates-page.model';
 import { CSRPage } from '../core/model/response/csr-page.model';
 import { CertificatesService } from '../core/services/certificates.service';
 import { Snackbar } from '../snackbar';
@@ -15,7 +18,7 @@ import { Snackbar } from '../snackbar';
 export class CertificatesComponent implements OnInit {
   clicked = 'a';
   tabs: string[] = ['CSR', 'Certificates', 'Revoked certificates'];
-  //certificates: CertificatesPage;
+  certificates: CertificatesPage;
   csrs: CSRPage;
   page = 1;
   size = 10;
@@ -40,9 +43,12 @@ export class CertificatesComponent implements OnInit {
         this.csrs = { content: data.content, totalElements: data.totalElements };
       });
     } else if (this.currentTab === 1) {
-      /*this.certificatesService.getCertificates(this.size, this.page - 1).subscribe((data: CertificatePage) => {
+      /*this.certificatesService.getCertificates(this.size, this.page - 1).subscribe((data: CertificatesPage) => {
         this.certificates = { content: data.content, totalElements: data.totalElements };
       });*/
+      this.certificatesService.getCertificates().subscribe((data: any) => {
+        this.certificates = data;
+      });
     } else {
       /*this.certificatesService.getRevokedCertificates(this.size, this.page - 1).subscribe((data: CertificatePage) => {
         this.certificates = { content: data.content, totalElements: data.totalElements };
@@ -88,12 +94,21 @@ export class CertificatesComponent implements OnInit {
     });
   }
 
+  revoke(id: number): void {
+    console.log("revoke");
+  }
+
   approve(id: number): void {
-    this.certificatesService.approve(id).subscribe((succ: string) => {
-      this.getCertificates();
-      this.snackBar.success('You have successfully approved CSR!');
-    }, err => {
-      this.snackBar.error(err.error);
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.minHeight = '440px';
+    dialogConfig.minWidth = '400px';
+    dialogConfig.data = id;
+    const dialogRef = this.dialog.open(ApproveCsrComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.getCertificates();
+      }
     });
   }
 

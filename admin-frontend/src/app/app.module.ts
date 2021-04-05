@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -27,6 +28,14 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ApproveCsrComponent } from './approve-csr/approve-csr.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import { MatSelectModule } from '@angular/material/select';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -36,7 +45,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     UsersComponent,
     LogsComponent,
     AddCaComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    ApproveCsrComponent,
+    SignInComponent
   ],
   imports: [
     CommonModule,
@@ -58,9 +69,21 @@ import { MatTabsModule } from '@angular/material/tabs';
     AppRoutingModule,
     CoreModule,
     NgxPaginationModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatCheckboxModule
   ],
-  providers: [Snackbar],
+  providers: [
+    Snackbar,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpTokenInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

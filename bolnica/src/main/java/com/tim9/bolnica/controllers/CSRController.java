@@ -19,7 +19,7 @@ import com.tim9.bolnica.services.CSRService;
 
 @RestController
 @RequestMapping(value = "/api/csr", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:4205", maxAge = 3600, allowedHeaders = "*")
 public class CSRController {
 
 	@Autowired

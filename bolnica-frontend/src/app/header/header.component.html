@@ -29,5 +29,22 @@
         >
       </li>
     </ul>
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          mdbWavesEffect
+          >{{ user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1) }} {{ user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1) }}</a
+        >
+      </li>
+      <li class="nav-item">
+        <button *ngIf="role" mat-icon-button [matMenuTriggerFor]="menu" id="profile-circle-button">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button (click)="logout()" mat-menu-item><mat-icon>exit_to_app</mat-icon> Log out</button>
+        </mat-menu>
+      </li>
+    </ul>
   </links>
 </mdb-navbar>
