@@ -28,12 +28,12 @@ public class VerificationToken {
 
 	private String token;
 
-	@OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "user_id")
-	private User user;
+	@OneToOne(targetEntity = CSR.class, fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "serial_number")
+	private CSR csr;
 
-	public VerificationToken(String token, User user) {
+	public VerificationToken(String token, CSR csr) {
 		this.token = token;
-		this.user = user;
+		this.csr = csr;
 	}
 }

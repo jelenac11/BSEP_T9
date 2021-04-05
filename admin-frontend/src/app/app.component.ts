@@ -13,7 +13,8 @@ export class AppComponent {
     private router: Router
   ) {
     this.router.events.subscribe((url: any) => {
-      if (this.router.url === '/sign-in') {
+      if (this.router.url === '/sign-in' ||
+      this.router.url.startsWith('/verify-csr/')) {
         this.showNavbar = false;
       } else {
         this.showNavbar = true;

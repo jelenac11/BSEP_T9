@@ -2,8 +2,10 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { CertificatesPage } from '../model/response/certificates-page.model';
 import { CSRPage } from '../model/response/csr-page.model';
 import { CSR } from '../model/response/csr.model';
+import { RevokedCertificatesPage } from '../model/response/revoked-certificates-page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,15 +36,23 @@ export class CertificatesService {
     return this.http.get(`${environment.api_url}certificates`, { responseType: 'json' });
   }
 
-  getRevokedCertificates(size: number, page: number): Observable<CSRPage> {
+  getRevokedCertificates(size: number, page: number): Observable<RevokedCertificatesPage> {
     let params = new HttpParams();
     params = params.append('size', size.toString());
     params = params.append('page', page.toString());
-    return this.http.get(`${environment.api_url}revoked-certificates/by-page`, { params, responseType: 'json' });
+    return this.http.get(`${environment.api_url}certificates/revoked/by-page`, { params, responseType: 'json' });
+  }
+
+  verifyCSR(token: string): Observable<string> {
+    return this.http.get(`${environment.api_url}csr/verify-csr/${token}`, {responseType: 'text'});
   }
 
   reject(id: number): Observable<string> {
     return this.http.delete(`${environment.api_url}csr/${id}`, { responseType: 'text' });
+  }
+
+  revoke(serialNumber: number): Observable<string> {
+    return this.http.get(`${environment.api_url}certificates/revoke/${serialNumber}`, { responseType: 'text' });
   }
 
   approve(certificate: any): Observable<string> {

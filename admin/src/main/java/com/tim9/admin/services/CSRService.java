@@ -52,6 +52,7 @@ import com.tim9.admin.exceptions.CertificateDoesNotExistException;
 import com.tim9.admin.exceptions.InvalidCertificateDateException;
 import com.tim9.admin.exceptions.InvalidDigitalSignatureException;
 import com.tim9.admin.model.CSR;
+import com.tim9.admin.model.VerificationToken;
 import com.tim9.admin.repositories.CsrRepository;
 import com.tim9.admin.util.CertUtil;
 import com.tim9.admin.util.KeyStoreUtil;
@@ -63,9 +64,11 @@ public class CSRService {
 	
 	/*
 	 * Izvori:
+	 * https://smallstep.com/blog/everything-pki/
 	 * https://www.bouncycastle.org/docs/pkixdocs1.5on/org/bouncycastle/pkcs/PKCS10CertificationRequest.html
 	 * https://www.programcreek.com/java-api-examples/?api=org.bouncycastle.asn1.x509.Extension
-	 *
+	 * https://tools.ietf.org/html/rfc3279
+	 * 
 	 */
 
 	@Value("${keystore.filepath}")
@@ -83,17 +86,31 @@ public class CSRService {
     @Autowired
     private EmailService emailService;
     
+    @Autowired
+    private VerificationTokenService verificationTokenService;
+    
 	@Autowired
 	private CsrRepository csrRepository;
 	
-	public String saveCSR(byte[] csr) throws IOException, InvalidKeyException, OperatorCreationException, NoSuchAlgorithmException, PKCSException, InvalidDigitalSignatureException {
+	public CSR saveCSR(byte[] csr) throws IOException, InvalidKeyException, OperatorCreationException, NoSuchAlgorithmException, PKCSException, InvalidDigitalSignatureException {
 		boolean valid = isValidSigned(new PKCS10CertificationRequest(csr));
 		if (!valid) {
 			throw new InvalidDigitalSignatureException("Invalid digital signature!");
 		}
 		CSR certReq = new CSR(csr);
+		certReq.setVerified(false);
 		csrRepository.save(certReq);
-		return "CSR successfully saved!";
+		return certReq;
+	}
+	
+	public void verifyCSR(String token) throws Exception {
+		VerificationToken vt = verificationTokenService.findByToken(token);
+		if (vt != null) {
+			vt.getCsr().setVerified(true);
+			csrRepository.save(vt.getCsr());
+		} else {
+			throw new NoSuchElementException("Token doesn't exist.");
+		}
 	}
 
 	private boolean isValidSigned(PKCS10CertificationRequest csr) throws InvalidKeyException, OperatorCreationException, NoSuchAlgorithmException, PKCSException {
@@ -104,7 +121,7 @@ public class CSRService {
 	}
 
 	public Page<CSRResponseDTO> findAll(Pageable pageable) throws IOException {
-		Page<CSR> page =  csrRepository.findAll(pageable);
+		Page<CSR> page =  csrRepository.findByVerifiedTrue(pageable);
 		List<CSRResponseDTO> csrList = new ArrayList<CSRResponseDTO>();
 		for (CSR csr: page.getContent()) {
 			JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(csr.getCsr());
@@ -147,8 +164,6 @@ public class CSRService {
 		if (cert != null) {
 		    throw new CertificateAlreadyExistsException("Certificate with given serial number already exists");
 		}
-		System.out.println(dto.getNotBefore());
-		System.out.println(dto.getNotAfter());
 		if (dto.getNotBefore().compareTo(dto.getNotAfter()) >= 0)
 		    throw new InvalidCertificateDateException("Certificate start date must be before expiration date");
 		Date novo = dto.getNotBefore();
@@ -181,49 +196,34 @@ public class CSRService {
         certCA.checkValidity();
         String caPassword = KEYSTORE_PASSWORD + dto.getIssuer();
         PrivateKey privateKey = (PrivateKey) ks.getKey(dto.getIssuer(), caPassword.toCharArray());
-        System.out.println("1");
         ContentSigner contentSigner = builder.build(privateKey);
-        System.out.println("1");
         X500Name issuerName = new JcaX509CertificateHolder(certCA).getSubject();
-        System.out.println("1");
         JcaPKCS10CertificationRequest csrData = new JcaPKCS10CertificationRequest(csr.get().getCsr());
-        System.out.println("1");
         
         X500Name subject = CertUtil.createSubjectX500Name(csrData.getSubject(), certCA.getSerialNumber().toString());
-        System.out.println("1");
         String email = csrData.getSubject().getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
-        System.out.println("1");
         String caEmail = issuerName.getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
-        System.out.println("1");
         X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(issuerName, new BigInteger(dto.getSerialNumber()), dto.getNotBefore(), dto.getNotAfter(), subject, csrData.getPublicKey());
-        System.out.println("1");
         CertUtil.addBasicConstraints(certGen, false);
-        System.out.println("1");
         CertUtil.addKeyUsage(certGen, dto.getKeyUsage());
-        System.out.println("1");
         CertUtil.addExtendedKeyUsage(certGen, dto.getExtendedKeyUsage());
-        System.out.println("1");
         if (dto.isKeyIdentifierExtension()) {
-        	System.out.println("1");
         	CertUtil.addKeyIdentifierExtensions(certGen, csrData.getPublicKey(), certCA.getPublicKey());
         }
-        System.out.println("1");
         if (dto.isAlternativeNameExtension()) {
-        	System.out.println("1");
         	CertUtil.addAlternativeNamesExtensions(certGen, email, caEmail);
         }
-        System.out.println("1");
+        
         X509CertificateHolder certHolder = certGen.build(contentSigner);
         JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
         certConverter = certConverter.setProvider(bcp);
         X509Certificate newCertificate =  certConverter.getCertificate(certHolder);
         ks.setCertificateEntry(dto.getSerialNumber(), newCertificate);
         KeyStoreUtil.saveKeyStore(ks, KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
-        System.out.println("2");
         KeyStore truststore = KeyStoreUtil.loadKeyStore(TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
         truststore.setCertificateEntry(dto.getSerialNumber(), newCertificate);
         KeyStoreUtil.saveKeyStore(truststore, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
-        System.out.println("3");
+        
         File certFile = CertUtil.x509CertificateToPem(newCertificate, "", dto.getSerialNumber());
         
         emailService.sendEmailWithCertificate(email, certFile);

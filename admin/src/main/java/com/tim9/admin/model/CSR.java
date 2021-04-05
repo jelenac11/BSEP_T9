@@ -22,10 +22,14 @@ public class CSR {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "serial_number")
     private Long id;
 
     @Column(name = "csr", nullable = false)
     private byte[] csr;
+    
+    @Column
+	private boolean verified;
     
     public CSR(byte[] csr) {
     	this.csr = csr;

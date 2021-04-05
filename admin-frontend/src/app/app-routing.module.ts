@@ -6,6 +6,7 @@ import { RoleGuard } from './core/guards/role.guard';
 import { LogsComponent } from './logs/logs.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { UsersComponent } from './users/users.component';
+import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,10 @@ const routes: Routes = [
     path: 'sign-in',
     component: SignInComponent,
     canActivate: [NoAuthGuard]
+  },
+  {
+    path: 'verify-csr/:token',
+    component: VerifyCsrComponent,
   },
   {
     path: 'certificates',

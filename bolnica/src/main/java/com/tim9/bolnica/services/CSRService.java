@@ -33,7 +33,7 @@ public class CSRService {
 
 	/*
 	 * Izvori:
-	 * 
+	 * https://smallstep.com/blog/everything-pki/
 	 * https://www.programcreek.com/java-api-examples/?api=org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder
 	 * https://www.bouncycastle.org/docs/pkixdocs1.3/org/bouncycastle/pkcs/PKCS10CertificationRequestBuilder.html
 	 * https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html

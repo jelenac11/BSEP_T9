@@ -65,7 +65,39 @@
                                 <td scope="col" width="20%">{{ item.issuer }}</td>
                                 <td scope="col" width="20%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
                                 <td scope="col" width="20%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
-                                <td scope="col" width="10%"><button mat-flat-button color="warn" class="button-class" (click)="revoke(item.id)" >Revoke</button></td>
+                                <td scope="col" width="10%"><button mat-flat-button color="warn" *ngIf="item.serialNumber !== 'root'" class="button-class" (click)="openDialogRevoke(item.serialNumber)" >Revoke</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="currentTab == 2">
+                    <table class="table table-hover">
+                        <thead>
+                            <th scope="col" width="10%">Serial number</th>
+                            <th scope="col" width="20%">Common Name</th>
+                            <th scope="col" width="18%">Issuer</th>
+                            <th scope="col" width="17%">Not before</th>
+                            <th scope="col" width="17%">Not after</th>
+                            <th scope="col" width="17%">Revoke date</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="
+                                let item of revokedCertificates.content
+                                    | paginate
+                                    : {
+                                        itemsPerPage: size,
+                                        currentPage: page,
+                                        totalItems: revokedCertificates.totalElements
+                                        };
+                                let i = index"
+                            >
+                                <th scope="col" width="10%">{{ item.serialNumber }}</th>
+                                <td scope="col" width="20%">{{ item.commonName }}</td>
+                                <td scope="col" width="18%">{{ item.issuer }}</td>
+                                <td scope="col" width="17%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
+                                <td scope="col" width="17%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
+                                <td scope="col" width="17%">{{ item.revokeDate|date : 'dd/MM/yyyy' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -78,6 +110,13 @@
                     ></pagination-controls>
                 </div>
                 <mat-paginator [pageSizeOptions]="[6]" [hidePageSize]="true" *ngIf="currentTab == 1"></mat-paginator>
+                <div class="mt-3 div-centered" *ngIf="currentTab == 2">
+                    <pagination-controls
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    (pageChange)="handlePageChange($event)"
+                    ></pagination-controls>
+                </div>
             </mat-tab>
         </mat-tab-group>
     </div>

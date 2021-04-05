@@ -36,6 +36,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     AddCaComponent,
     ConfirmationDialogComponent,
     ApproveCsrComponent,
-    SignInComponent
+    SignInComponent,
+    VerifyCsrComponent
   ],
   imports: [
     CommonModule,

@@ -12,6 +12,13 @@ import java.security.cert.CertificateException;
 
 public class KeyStoreUtil {
     
+	/*
+	 * Izvori:
+	 * https://www.baeldung.com/java-keystore
+	 * vezbe
+	 * 
+	 */
+	
     public static KeyStore loadKeyStore(String keystorePath, String keystorePassword) throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException {
         KeyStore ks = KeyStore.getInstance("JKS", "SUN");
         ks.load(new FileInputStream(keystorePath), keystorePassword.toCharArray());
@@ -23,6 +30,10 @@ public class KeyStoreUtil {
         try (FileOutputStream fos = new FileOutputStream(path)) {
             ks.store(fos, pass.toCharArray());
         }
+    }
+    
+    public static void deleteEntry(KeyStore ks, String alias) throws KeyStoreException {
+        ks.deleteEntry(alias);
     }
     
 }

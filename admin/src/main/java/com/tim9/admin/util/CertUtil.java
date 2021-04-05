@@ -32,6 +32,9 @@ public class CertUtil {
 
 	/*
 	 * Izvori:
+	 * https://tools.ietf.org/html/rfc5280#section-4.2
+	 * https://help.hcltechsw.com/domino/10.0.1/admin/conf_keyusageextensionsandextendedkeyusage_r.html
+	 * https://www.ssl2buy.com/wiki/what-is-the-difference-between-client-and-server-certificates
 	 * https://www.programcreek.com/java-api-examples/?api=org.bouncycastle.asn1.x509.BasicConstraints
 	 * https://people.eecs.berkeley.edu/~jonah/bc/org/bouncycastle/asn1/x509/KeyUsage.html
 	 * https://7thzero.com/blog/bouncy-castle-add-a-subject-alternative-name-when-creating-a-cer
@@ -193,4 +196,6 @@ public class CertUtil {
         pemWriter.close();
         return f;
     }
+    
+    
 }
