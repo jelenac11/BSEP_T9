@@ -37,6 +37,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
+import { RevokeComponent } from './revoke/revoke.component';
+import {MatRadioModule} from '@angular/material/radio';
+import { InformationDialogComponent } from './information-dialog/information-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +52,9 @@ import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
     ConfirmationDialogComponent,
     ApproveCsrComponent,
     SignInComponent,
-    VerifyCsrComponent
+    VerifyCsrComponent,
+    RevokeComponent,
+    InformationDialogComponent
   ],
   imports: [
     CommonModule,
@@ -76,7 +81,8 @@ import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
     MatMomentDateModule,
     MatSelectModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatRadioModule
   ],
   providers: [
     Snackbar,

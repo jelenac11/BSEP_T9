@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -9,6 +10,8 @@ import { CertificatesPage } from '../core/model/response/certificates-page.model
 import { CSRPage } from '../core/model/response/csr-page.model';
 import { RevokedCertificatesPage } from '../core/model/response/revoked-certificates-page.model';
 import { CertificatesService } from '../core/services/certificates.service';
+import { InformationDialogComponent } from '../information-dialog/information-dialog.component';
+import { RevokeComponent } from '../revoke/revoke.component';
 import { Snackbar } from '../snackbar';
 
 @Component({
@@ -26,8 +29,10 @@ export class CertificatesComponent implements OnInit {
   size = 10;
   currentTab = 0;
   loggedIn = '';
+  formValidate: FormGroup;
 
   constructor(
+    private fb: FormBuilder,
     private certificatesService: CertificatesService,
     private dialog: MatDialog,
     private snackBar: Snackbar
@@ -37,6 +42,10 @@ export class CertificatesComponent implements OnInit {
     //this.certificates = { content: [], totalElements: 0 };
     this.csrs = { content: [], totalElements: 0 };
     this.getCertificates();
+
+    this.formValidate = this.fb.group({
+      serial_number: [""]
+    });
   }
 
   getCertificates(): void {
@@ -87,24 +96,6 @@ export class CertificatesComponent implements OnInit {
     });
   }
 
-  openDialogRevoke(id: number): void {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        message: 'Are you sure you want to revoke this certificate?',
-        buttonText: {
-          ok: 'Yes',
-          cancel: 'No'
-        }
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        this.revoke(id);
-      }
-    });
-  }
-
   reject(id: number): void {
     this.certificatesService.reject(id).subscribe((succ: string) => {
       this.getCertificates();
@@ -115,11 +106,16 @@ export class CertificatesComponent implements OnInit {
   }
 
   revoke(id: number): void {
-    this.certificatesService.revoke(id).subscribe((succ: string) => {
-      this.getCertificates();
-      this.snackBar.success('You have successfully revoked certificate.');
-    }, err => {
-      this.snackBar.error(err.error);
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.minHeight = '440px';
+    dialogConfig.minWidth = '400px';
+    dialogConfig.data = id;
+    const dialogRef = this.dialog.open(RevokeComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.getCertificates();
+      }
     });
   }
 
@@ -150,4 +146,26 @@ export class CertificatesComponent implements OnInit {
     });
   }
 
+  checkStatus(): void {
+    if (this.formValidate.value.serial_number === "" || this.formValidate.value.serial_number === null) {
+      return;
+    }
+    if (this.formValidate.value.serial_number === "root") {
+      const dialogRef = this.dialog.open(InformationDialogComponent, {
+        data: {
+          message: "Certificate with serial number root is valid!",
+        }
+      });
+      this.formValidate.reset();
+      return;
+    }
+    this.certificatesService.checkStatus(this.formValidate.value.serial_number).subscribe((data: string) => {
+      const dialogRef = this.dialog.open(InformationDialogComponent, {
+        data: {
+          message: data,
+        }
+      });
+      this.formValidate.reset();
+    });
+  }
 }

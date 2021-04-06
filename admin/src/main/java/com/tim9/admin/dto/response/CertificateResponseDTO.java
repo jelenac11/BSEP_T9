@@ -1,4 +1,4 @@
-package com.tim9.dto.response;
+package com.tim9.admin.dto.response;
 
 import java.util.Date;
 

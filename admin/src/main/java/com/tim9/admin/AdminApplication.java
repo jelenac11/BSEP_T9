@@ -1,7 +1,9 @@
 package com.tim9.admin;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,12 +12,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 import com.tim9.admin.model.Authority;
 import com.tim9.admin.model.User;
 import com.tim9.admin.services.AuthorityService;
+import com.tim9.admin.services.CertificateService;
 import com.tim9.admin.services.UserService;
 
 
 @SpringBootApplication
 public class AdminApplication {
-
+    
 	public static void main(String[] args) throws Exception {
 		ConfigurableApplicationContext appContext = SpringApplication.run(AdminApplication.class, args);
 		
@@ -36,6 +39,9 @@ public class AdminApplication {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	    
+	    CertificateService cert = appContext.getBean(CertificateService.class);
+	    cert.deleteAllExceptRoot();
 	}
 
 }

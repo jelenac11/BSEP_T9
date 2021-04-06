@@ -63,6 +63,13 @@ export class CsrComponent implements OnInit {
     csr.emailAddress = this.csrForm.value.email_address;
     this.csrService.requestCertificate(csr).subscribe((data: any) => {
       this.snackBar.success("Request sent successfully!");
+      this.submitted = false;
+      this.csrForm.reset();
+      for (const control in this.csrForm.controls) {
+        if (this.csrForm.controls.hasOwnProperty(control)) {
+          this.csrForm.controls[control].setErrors(null);
+        }
+      }
     },
     error => {
       this.snackBar.error(error.error);

@@ -23,13 +23,15 @@ import { Snackbar } from './snackbar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { CertificatesComponent } from './certificates/certificates.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CsrComponent,
     HeaderComponent,
-    SignInComponent
+    SignInComponent,
+    CertificatesComponent
   ],
   imports: [
     CommonModule,

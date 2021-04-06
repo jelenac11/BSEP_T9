@@ -6,12 +6,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +17,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -47,6 +42,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tim9.admin.dto.CertDataDTO;
+import com.tim9.admin.dto.response.CSRResponseDTO;
 import com.tim9.admin.exceptions.CertificateAlreadyExistsException;
 import com.tim9.admin.exceptions.CertificateDoesNotExistException;
 import com.tim9.admin.exceptions.InvalidCertificateDateException;
@@ -56,7 +52,6 @@ import com.tim9.admin.model.VerificationToken;
 import com.tim9.admin.repositories.CsrRepository;
 import com.tim9.admin.util.CertUtil;
 import com.tim9.admin.util.KeyStoreUtil;
-import com.tim9.dto.response.CSRResponseDTO;
 
 
 @Service
@@ -133,10 +128,24 @@ public class CSRService {
 		return new PageImpl<CSRResponseDTO>(csrList, pageable, csrList.size());
 	}
 
-	public String rejectCSR(Long serialNumber) {
+	public String rejectCSR(Long serialNumber) throws IOException {
 		Optional<CSR> csr = csrRepository.findById(serialNumber);
 		if (csr.isPresent()) {
+			VerificationToken vt = verificationTokenService.findByCsr(csr.get());
+			verificationTokenService.deleteById(vt.getId());
 			csrRepository.deleteById(serialNumber);
+			
+			JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(csr.get().getCsr());
+			X500Name subject = req.getSubject();
+			emailService.sendMail(subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "CSR Rejection", "Hi,\n\nYour CSR is rejected." + 
+					"\n\nCSR info:\n\tCommon Name: " + subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString() +
+					"\n\tOrganization: " + subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString() +
+					"\n\tOrganizational Unit: " + subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString() +
+					"\n\tCity/Locality: " + subject.getRDNs(BCStyle.L)[0].getFirst().getValue().toString() +
+					"\n\tState/County/Region: " + subject.getRDNs(BCStyle.ST)[0].getFirst().getValue().toString() +
+					"\n\tCountry: " + subject.getRDNs(BCStyle.C)[0].getFirst().getValue().toString() +
+					"\n\nTeam 9\n");
+			
 			return "CSR successfully rejected!";
 		} else {
 			throw new NoSuchElementException("CSR with given serial number does not exist!");
@@ -156,8 +165,7 @@ public class CSRService {
 		}
 	}
 
-	public String createNonCACertificate(CertDataDTO dto) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException, CertificateAlreadyExistsException,
-	InvalidCertificateDateException, CertificateDoesNotExistException, UnrecoverableKeyException, OperatorCreationException, InvalidKeyException, MessagingException {
+	public String createNonCACertificate(CertDataDTO dto) throws Exception {
 		KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
 		
 		X509Certificate cert = (X509Certificate) ks.getCertificate(dto.getSerialNumber());
@@ -166,6 +174,8 @@ public class CSRService {
 		}
 		if (dto.getNotBefore().compareTo(dto.getNotAfter()) >= 0)
 		    throw new InvalidCertificateDateException("Certificate start date must be before expiration date");
+		if (new Date().compareTo(dto.getNotBefore()) >= 0)
+		    throw new InvalidCertificateDateException("Certificate start date must be after today");
 		Date novo = dto.getNotBefore();
 	    Calendar cal = Calendar.getInstance();
 	    cal.setTime(novo);
@@ -184,6 +194,7 @@ public class CSRService {
 	    if (dto.getNotAfter().compareTo(certCA.getNotAfter()) > 0) {
 	    	throw new InvalidCertificateDateException("CA Certificate will expire before end date.");
 	    }
+	    
 	    String signingAlg = "";
 	    if (dto.getSigningAlgorithm().equals("")) {
 	    	signingAlg = "sha256WithRSAEncryption";
@@ -227,6 +238,9 @@ public class CSRService {
         File certFile = CertUtil.x509CertificateToPem(newCertificate, "", dto.getSerialNumber());
         
         emailService.sendEmailWithCertificate(email, certFile);
+        
+        VerificationToken vt = verificationTokenService.findByCsr(csr.get());
+		verificationTokenService.deleteById(vt.getId());
         
         csrRepository.delete(csr.get());
 		return "Successfully created certificate!";

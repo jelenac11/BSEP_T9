@@ -14,7 +14,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
@@ -27,12 +26,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.tim9.admin.dto.response.CertificateResponseDTO;
 import com.tim9.admin.dto.response.RevokedCertResponseDTO;
 import com.tim9.admin.exceptions.CertificateAlreadyRevokedException;
 import com.tim9.admin.model.RevokedCertificate;
 import com.tim9.admin.repositories.RevokedCertificatesRepository;
 import com.tim9.admin.util.KeyStoreUtil;
-import com.tim9.dto.response.CertificateResponseDTO;
 
 
 @Service
@@ -61,6 +60,9 @@ public class CertificateService {
     
     @Autowired
     private RevokedCertificatesRepository revokedCertRepo;
+    
+    @Autowired
+    private EmailService emailService;
     
 	public ArrayList<CertificateResponseDTO> findAll() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException, NoSuchProviderException {
 		KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
@@ -107,7 +109,7 @@ public class CertificateService {
 		return certificates;
 	}
 
-	public String revokeCertificate(String serialNumber) throws CertificateAlreadyRevokedException, KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
+	public String revokeCertificate(String serialNumber, String reason) throws CertificateAlreadyRevokedException, KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException,
 		IOException {
 		Optional<RevokedCertificate> rvc = revokedCertRepo.findById(Long.parseLong(serialNumber));
 		if (rvc.isPresent()) {
@@ -133,6 +135,14 @@ public class CertificateService {
         KeyStore ts = KeyStoreUtil.loadKeyStore(TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
         KeyStoreUtil.deleteEntry(ts, serialNumber);
         KeyStoreUtil.saveKeyStore(ts, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
+        
+		emailService.sendMail(new JcaX509CertificateHolder(certificate).getIssuer().getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "Certificate Revoke", "Hi,\n\nYour CSR is rejected." + 
+				"\n\nCSR info:\n\tCommon Name: " + rc.getCommonName() +
+				"\n\tSerial number: " + rc.getId() +
+				"\n\tIssuer: " + rc.getIssuer() +
+				"\n\tReason: " + reason +
+				"\n\nTeam 9\n");
+		
 		return "Certificate successfully revoked";
 	}
 
@@ -143,6 +153,50 @@ public class CertificateService {
 			revoked.add(new RevokedCertResponseDTO(cert.getId().toString(), cert.getCommonName(), cert.getNotBefore(), cert.getNotAfter(), cert.getIssuer(), cert.getRevokeDate()));
 		}
 		return new PageImpl<RevokedCertResponseDTO>(revoked, pageable, revoked.size());
+	}
+
+	public String checkCertStatus(String serialNumber, KeyStore ks) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+        if (ks == null) {
+            ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+            X509Certificate cert = (X509Certificate) ks.getCertificate(serialNumber);
+            if (cert == null) {
+                return "Unknown certificate with serial number " + serialNumber + "!";
+            }
+            if (new Date().compareTo(cert.getNotAfter()) > 0) {
+            	return "Certificate with serial number " + serialNumber + " is not valid!";
+            }
+            if (new Date().compareTo(cert.getNotBefore()) < 0) {
+            	return "Certificate with serial number " + serialNumber + " is not valid yet!";
+            }
+        }
+        Optional<RevokedCertificate> r = revokedCertRepo.findById(Long.parseLong(serialNumber));
+        if (r.isPresent()) {
+            return "Certificate with serial number " + serialNumber + " is revoked!";
+        }
+
+        return "Certificate with serial number " + serialNumber + " is valid!";
+	}
+
+	public void deleteAllExceptRoot() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+		KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+	    Enumeration<String> enumeration = ks.aliases();
+		while (enumeration.hasMoreElements()) {
+			String current = enumeration.nextElement();
+			if (!current.equals("root")) {
+				ks.deleteEntry(current);
+			}
+		}
+		KeyStoreUtil.saveKeyStore(ks, KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+		ks = KeyStoreUtil.loadKeyStore(TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
+	    enumeration = ks.aliases();
+		while (enumeration.hasMoreElements()) {
+			String current = enumeration.nextElement();
+			if (!current.equals("root")) {
+				ks.deleteEntry(current);
+			}
+		}
+		KeyStoreUtil.saveKeyStore(ks, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
+		
 	}
 
 }

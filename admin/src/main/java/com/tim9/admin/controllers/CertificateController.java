@@ -3,6 +3,8 @@ package com.tim9.admin.controllers;
 
 import java.util.ArrayList;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,13 +13,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.admin.dto.RevokeObjectDTO;
+import com.tim9.admin.dto.response.CertificateResponseDTO;
 import com.tim9.admin.dto.response.RevokedCertResponseDTO;
 import com.tim9.admin.services.CertificateService;
 import com.tim9.admin.util.CustomPageImplementation;
-import com.tim9.dto.response.CertificateResponseDTO;
 
 @RestController
 @RequestMapping(value = "/api/certificates")
@@ -33,7 +38,7 @@ public class CertificateController {
 			ArrayList<CertificateResponseDTO> certs = certService.findAll();
 			return new ResponseEntity<>(certs, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>("Error occured!", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
@@ -47,10 +52,11 @@ public class CertificateController {
 		}
 	}
 	
-	@GetMapping("/revoke/{serialNumber}")
-	public ResponseEntity<?> revokeCertificate(@PathVariable(value = "serialNumber") String serialNumber) {
+	@PostMapping("/revoke")
+	public ResponseEntity<String> revokeCertificate(@Valid @RequestBody RevokeObjectDTO dto) {
 		try {
-			return new ResponseEntity<>(certService.revokeCertificate(serialNumber), HttpStatus.OK);
+			String message = certService.revokeCertificate(dto.getSerialNumber(), dto.getReason());
+			return new ResponseEntity<>(message, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -67,6 +73,15 @@ public class CertificateController {
         }
     }
 
+	@GetMapping("/status/{serialNumber}")
+    public ResponseEntity<String> getCertificateStatus(@PathVariable(value = "serialNumber") String serialNumber) {
+        try {
+            return new ResponseEntity<>(certService.checkCertStatus(serialNumber, null), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+	
 	private CustomPageImplementation<RevokedCertResponseDTO> createCustomPage(Page<RevokedCertResponseDTO> page) {
 		return new CustomPageImplementation<>(page.getContent(), page.getNumber(), page.getSize(),
 				page.getTotalElements(), null, page.isLast(), page.getTotalPages(), null, page.isFirst(),

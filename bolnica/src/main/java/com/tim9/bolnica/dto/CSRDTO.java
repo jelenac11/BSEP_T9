@@ -14,13 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CSRDTO {
 
-	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9\\. ]*", message = "Common Name is required and can only contain alphanumerical characters, dots and spaces.")
+	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9\\. ]*", message = "Common Name is required and can only contain alphanumeric characters, dots and spaces.")
 	private String commonName;
 
-	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9 ]*", message = "Organization is required and can only contain alphanumerical characters and spaces.")
+	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9 ]*", message = "Organization is required and can only contain alphanumeric characters and spaces.")
 	private String organization;
 	
-	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9 ]*", message = "Organizational Unit is required and can only contain alphanumerical characters and spaces.")
+	@Pattern(regexp = "[a-zA-Z0-9][a-zA-Z0-9 ]*", message = "Organizational Unit is required and can only contain alphanumeric characters and spaces.")
 	private String organizationalUnit;
 	
 	@Pattern(regexp = "[A-Z][a-zA-Z ]+", message = "City/locality is required, must start with capital letter and can only contain alphabet characters and spaces.")

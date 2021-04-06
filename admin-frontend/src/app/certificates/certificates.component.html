@@ -1,123 +1,134 @@
 <div class="container-fluid">
-    <button mat-flat-button color="primary" class="mt-3" (click)="addCA()">
-        <mat-icon class="mr-2">person_add</mat-icon> Add new CA
-    </button>
-    <div class="mt-4">
-        <mat-tab-group mat-align-tabs="center" (selectedTabChange)="changeTab($event)" class="mt-n4">
-            <mat-tab
-                *ngFor="let tab of tabs; let i = index"
-                [label]="tab"
-            >
-                <div *ngIf="currentTab == 0">
-                    <table class="table table-hover">
-                        <thead>
-                            <th scope="col" width="4%">Serial number</th>
-                            <th scope="col" width="13%">Common Name</th>
-                            <th scope="col" width="13%">Organization</th>
-                            <th scope="col" width="13%">Organizational Unit</th>
-                            <th scope="col" width="13%">City/Locality</th>
-                            <th scope="col" width="13%">State/County/Region</th>
-                            <th scope="col" width="8%">Country</th>
-                            <th scope="col" width="13%">Email Address</th>
-                            <th scope="col" width="5%"></th>
-                            <th scope="col" width="5%"></th>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="
-                                let item of csrs.content
-                                    | paginate
-                                    : {
-                                        itemsPerPage: size,
-                                        currentPage: page,
-                                        totalItems: csrs.totalElements
-                                        };
-                                let i = index"
-                            >
-                                <th scope="col" width="4%">{{ item.id }}</th>
-                                <td scope="col" width="13%">{{ item.commonName }}</td>
-                                <td scope="col" width="13%">{{ item.organization }}</td>
-                                <td scope="col" width="13%">{{ item.organizationalUnit }}</td>
-                                <td scope="col" width="13%">{{ item.cityLocality }}</td>
-                                <td scope="col" width="13%">{{ item.stateCountyRegion }}</td>
-                                <td scope="col" width="8%">{{ item.country }}</td>
-                                <td scope="col" width="13%">{{ item.emailAddress }}</td>
-                                <td scope="col" width="5%"><button mat-flat-button color="primary" class="button-class" (click)="approve(item.id)" >Approve</button></td>
-                                <td scope="col" width="5%"><button mat-flat-button color="warn" class="button-class" (click)="openDialogReject(item.id)" >Reject</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div *ngIf="currentTab == 1">
-                    <table class="table table-hover">
-                        <thead>
-                            <th scope="col" width="10%">Serial number</th>
-                            <th scope="col" width="20%">Common Name</th>
-                            <th scope="col" width="20%">Issuer</th>
-                            <th scope="col" width="20%">Not before</th>
-                            <th scope="col" width="20%">Not after</th>
-                            <th scope="col" width="10%"></th>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of certificates">
-                                <th scope="col" width="10%">{{ item.serialNumber }}</th>
-                                <td scope="col" width="20%">{{ item.commonName }}</td>
-                                <td scope="col" width="20%">{{ item.issuer }}</td>
-                                <td scope="col" width="20%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
-                                <td scope="col" width="20%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
-                                <td scope="col" width="10%"><button mat-flat-button color="warn" *ngIf="item.serialNumber !== 'root'" class="button-class" (click)="openDialogRevoke(item.serialNumber)" >Revoke</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div *ngIf="currentTab == 2">
-                    <table class="table table-hover">
-                        <thead>
-                            <th scope="col" width="10%">Serial number</th>
-                            <th scope="col" width="20%">Common Name</th>
-                            <th scope="col" width="18%">Issuer</th>
-                            <th scope="col" width="17%">Not before</th>
-                            <th scope="col" width="17%">Not after</th>
-                            <th scope="col" width="17%">Revoke date</th>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="
-                                let item of revokedCertificates.content
-                                    | paginate
-                                    : {
-                                        itemsPerPage: size,
-                                        currentPage: page,
-                                        totalItems: revokedCertificates.totalElements
-                                        };
-                                let i = index"
-                            >
-                                <th scope="col" width="10%">{{ item.serialNumber }}</th>
-                                <td scope="col" width="20%">{{ item.commonName }}</td>
-                                <td scope="col" width="18%">{{ item.issuer }}</td>
-                                <td scope="col" width="17%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
-                                <td scope="col" width="17%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
-                                <td scope="col" width="17%">{{ item.revokeDate|date : 'dd/MM/yyyy' }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-3 div-centered" *ngIf="currentTab == 0">
-                    <pagination-controls
-                    previousLabel="Previous"
-                    nextLabel="Next"
-                    (pageChange)="handlePageChange($event)"
-                    ></pagination-controls>
-                </div>
-                <mat-paginator [pageSizeOptions]="[6]" [hidePageSize]="true" *ngIf="currentTab == 1"></mat-paginator>
-                <div class="mt-3 div-centered" *ngIf="currentTab == 2">
-                    <pagination-controls
-                    previousLabel="Previous"
-                    nextLabel="Next"
-                    (pageChange)="handlePageChange($event)"
-                    ></pagination-controls>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
+    <div class="mt-2">
+        <div class="button-group">
+            <button mat-flat-button color="primary" class="button-add" (click)="addCA()">
+                <mat-icon class="mr-2">person_add</mat-icon> Add new CA
+            </button>
+            <form [formGroup]="formValidate" id="formValidate" (ngSubmit)="checkStatus()">
+                <mat-form-field appearance="outline" class="full-row">
+                    <mat-label>Serial number</mat-label>
+                    <input formControlName="serial_number" matInput placeholder="Serial number">
+                </mat-form-field>
+                <button class="mat-raised-button mat-primary ml-2" type="submit" form="formValidate">Check status</button>
+            </form>
+        </div>
+        <div class="mt-4">
+            <mat-tab-group mat-align-tabs="center" (selectedTabChange)="changeTab($event)" class="mt-n4">
+                <mat-tab
+                    *ngFor="let tab of tabs; let i = index"
+                    [label]="tab"
+                >
+                    <div *ngIf="currentTab == 0">
+                        <table class="table table-hover">
+                            <thead>
+                                <th scope="col" width="4%">Serial number</th>
+                                <th scope="col" width="13%">Common Name</th>
+                                <th scope="col" width="13%">Organization</th>
+                                <th scope="col" width="13%">Organizational Unit</th>
+                                <th scope="col" width="13%">City/Locality</th>
+                                <th scope="col" width="13%">State/County/Region</th>
+                                <th scope="col" width="8%">Country</th>
+                                <th scope="col" width="13%">Email Address</th>
+                                <th scope="col" width="5%"></th>
+                                <th scope="col" width="5%"></th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="
+                                    let item of csrs.content
+                                        | paginate
+                                        : {
+                                            itemsPerPage: size,
+                                            currentPage: page,
+                                            totalItems: csrs.totalElements
+                                            };
+                                    let i = index"
+                                >
+                                    <th scope="col" width="4%">{{ item.id }}</th>
+                                    <td scope="col" width="13%">{{ item.commonName }}</td>
+                                    <td scope="col" width="13%">{{ item.organization }}</td>
+                                    <td scope="col" width="13%">{{ item.organizationalUnit }}</td>
+                                    <td scope="col" width="13%">{{ item.cityLocality }}</td>
+                                    <td scope="col" width="13%">{{ item.stateCountyRegion }}</td>
+                                    <td scope="col" width="8%">{{ item.country }}</td>
+                                    <td scope="col" width="13%">{{ item.emailAddress }}</td>
+                                    <td scope="col" width="5%"><button mat-flat-button color="primary" class="button-class" (click)="approve(item.id)" >Approve</button></td>
+                                    <td scope="col" width="5%"><button mat-flat-button color="warn" class="button-class" (click)="openDialogReject(item.id)" >Reject</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div *ngIf="currentTab == 1">
+                        <table class="table table-hover">
+                            <thead>
+                                <th scope="col" width="10%">Serial number</th>
+                                <th scope="col" width="20%">Common Name</th>
+                                <th scope="col" width="20%">Issuer</th>
+                                <th scope="col" width="20%">Not before</th>
+                                <th scope="col" width="20%">Not after</th>
+                                <th scope="col" width="10%"></th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of certificates">
+                                    <th scope="col" width="10%">{{ item.serialNumber }}</th>
+                                    <td scope="col" width="20%">{{ item.commonName }}</td>
+                                    <td scope="col" width="20%">{{ item.issuer }}</td>
+                                    <td scope="col" width="20%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="20%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="10%"><button mat-flat-button color="warn" *ngIf="item.serialNumber !== 'root'" class="button-class" (click)="revoke(item.serialNumber)" >Revoke</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div *ngIf="currentTab == 2">
+                        <table class="table table-hover">
+                            <thead>
+                                <th scope="col" width="10%">Serial number</th>
+                                <th scope="col" width="20%">Common Name</th>
+                                <th scope="col" width="18%">Issuer</th>
+                                <th scope="col" width="17%">Not before</th>
+                                <th scope="col" width="17%">Not after</th>
+                                <th scope="col" width="17%">Revoke date</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="
+                                    let item of revokedCertificates.content
+                                        | paginate
+                                        : {
+                                            itemsPerPage: size,
+                                            currentPage: page,
+                                            totalItems: revokedCertificates.totalElements
+                                            };
+                                    let i = index"
+                                >
+                                    <th scope="col" width="10%">{{ item.serialNumber }}</th>
+                                    <td scope="col" width="20%">{{ item.commonName }}</td>
+                                    <td scope="col" width="18%">{{ item.issuer }}</td>
+                                    <td scope="col" width="17%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="17%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="17%">{{ item.revokeDate|date : 'dd/MM/yyyy' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 div-centered" *ngIf="currentTab == 0">
+                        <pagination-controls
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        (pageChange)="handlePageChange($event)"
+                        ></pagination-controls>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[6]" [hidePageSize]="true" *ngIf="currentTab == 1"></mat-paginator>
+                    <div class="mt-3 div-centered" *ngIf="currentTab == 2">
+                        <pagination-controls
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        (pageChange)="handlePageChange($event)"
+                        ></pagination-controls>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
     </div>
 </div>

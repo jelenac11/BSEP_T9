@@ -1,4 +1,4 @@
-package com.tim9.dto.response;
+package com.tim9.admin.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

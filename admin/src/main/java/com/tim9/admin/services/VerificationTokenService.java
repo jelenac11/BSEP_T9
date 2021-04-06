@@ -3,6 +3,7 @@ package com.tim9.admin.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tim9.admin.model.CSR;
 import com.tim9.admin.model.VerificationToken;
 import com.tim9.admin.repositories.VerificationTokenRepository;
 
@@ -18,5 +19,13 @@ public class VerificationTokenService {
 
 	public void saveToken(VerificationToken token) {
 		verificationTokenRepository.save(token);
+	}
+
+	public VerificationToken findByCsr(CSR csr) {
+		return verificationTokenRepository.findByCsr(csr);
+	}
+
+	public void deleteById(Long id) {
+		verificationTokenRepository.deleteById(id);
 	}
 }

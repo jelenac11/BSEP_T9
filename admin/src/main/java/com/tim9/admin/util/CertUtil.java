@@ -33,6 +33,7 @@ public class CertUtil {
 	/*
 	 * Izvori:
 	 * https://tools.ietf.org/html/rfc5280#section-4.2
+	 * https://access.redhat.com/documentation/en-us/red_hat_certificate_system/9/html/administration_guide/standard_x.509_v3_certificate_extensions
 	 * https://help.hcltechsw.com/domino/10.0.1/admin/conf_keyusageextensionsandextendedkeyusage_r.html
 	 * https://www.ssl2buy.com/wiki/what-is-the-difference-between-client-and-server-certificates
 	 * https://www.programcreek.com/java-api-examples/?api=org.bouncycastle.asn1.x509.BasicConstraints
@@ -61,7 +62,7 @@ public class CertUtil {
     }
 	
 	@SuppressWarnings("deprecation")
-	public static void addKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws CertIOException {
+	public static void addKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws Exception {
 		ArrayList<String> allowed = new ArrayList<String>( ){ /**
 			 * 
 			 */
@@ -111,12 +112,12 @@ public class CertUtil {
 			}
 	        certGen.addExtension(X509Extensions.KeyUsage, true, new X509KeyUsage(keyUsage));
 		} else {
-			new Exception("Invalid key usage!");
+			throw new Exception("Invalid key usage!");
 		}
     }
 	
 	@SuppressWarnings("deprecation")
-	public static void addExtendedKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws CertIOException {
+	public static void addExtendedKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws Exception {
 		ArrayList<String> allowed = new ArrayList<String>(){ /**
 			 * 
 			 */
@@ -160,7 +161,7 @@ public class CertUtil {
 			}
 	        certGen.addExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsages));
 		} else {
-			new Exception("Invalid extended key usage!");
+			throw new Exception("Invalid extended key usage!");
 		}
     }
 	

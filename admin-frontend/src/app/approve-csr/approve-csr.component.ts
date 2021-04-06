@@ -121,7 +121,6 @@ export class ApproveCsrComponent implements OnInit {
       this.snackBar.error("Maximum validity time is two years.");
       return;
     }
-    console.log(certificate.signingAlgorithm);
     this.certificatesService.approve(certificate).subscribe((data: any) => {
       this.snackBar.success("You have succesfully approved CSR!");
       this.dialogRef.close(true);

@@ -51,12 +51,15 @@ export class CertificatesService {
     return this.http.delete(`${environment.api_url}csr/${id}`, { responseType: 'text' });
   }
 
-  revoke(serialNumber: number): Observable<string> {
-    return this.http.get(`${environment.api_url}certificates/revoke/${serialNumber}`, { responseType: 'text' });
+  revoke(revokeObject: any): Observable<string> {
+    return this.http.post(`${environment.api_url}certificates/revoke`, revokeObject, { responseType: 'text' });
   }
 
   approve(certificate: any): Observable<string> {
     return this.http.post(`${environment.api_url}csr/approve`, certificate, { headers: this.headers, responseType: 'text' });
   }
 
+  checkStatus(serialNumber: string): Observable<string> {
+    return this.http.get(`${environment.api_url}certificates/status/${serialNumber}`, { responseType: 'text' });
+  }
 }

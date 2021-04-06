@@ -1,7 +1,6 @@
 package com.tim9.admin.controllers;
 
 import java.io.IOException;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -24,13 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.admin.dto.CertDataDTO;
+import com.tim9.admin.dto.response.CSRResponseDTO;
 import com.tim9.admin.model.CSR;
 import com.tim9.admin.model.VerificationToken;
 import com.tim9.admin.services.CSRService;
 import com.tim9.admin.services.EmailService;
 import com.tim9.admin.services.VerificationTokenService;
 import com.tim9.admin.util.CustomPageImplementation;
-import com.tim9.dto.response.CSRResponseDTO;
 
 
 @RestController
@@ -60,8 +59,14 @@ public class CsrController {
 			String confirmationUrl = "/verify-csr/" + token;
 			JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(newCSR.getCsr());
 			X500Name subject = req.getSubject();
-			emailService.sendMail(subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "CSR Verification", "Hi,\n\nClick below to verify your CSR:\n" + 
-					"\nhttp://localhost:4201" + confirmationUrl + "\n\nThanks,\nTeam 9\n");
+			emailService.sendMail(subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "CSR Verification", "Hi,\n\nClick below to confirm your CSR:\n" + 
+					"\nhttp://localhost:4201" + confirmationUrl + "\n\nCSR info:\n\tCommon Name: " + subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString() +
+					"\n\tOrganization: " + subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString() +
+					"\n\tOrganizational Unit: " + subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString() +
+					"\n\tCity/Locality: " + subject.getRDNs(BCStyle.L)[0].getFirst().getValue().toString() +
+					"\n\tState/County/Region: " + subject.getRDNs(BCStyle.ST)[0].getFirst().getValue().toString() +
+					"\n\tCountry: " + subject.getRDNs(BCStyle.C)[0].getFirst().getValue().toString() +
+					"\n\nThanks,\nTeam 9\n");
 			return new ResponseEntity<>(newCSR, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -72,10 +77,8 @@ public class CsrController {
 	public ResponseEntity<String> verifyCSR(@PathVariable("token") String url) {
 		try {
 			csrService.verifyCSR(url);
-		} catch (NoSuchElementException e) {
-			return new ResponseEntity<>("Token doesn't exist.", HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
-			return new ResponseEntity<>("Error happened.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>("CSR verified!.", HttpStatus.OK);
 	}

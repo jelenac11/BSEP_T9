@@ -25,7 +25,7 @@ public class BolnicaApplication {
 		a.setName("ROLE_ADMIN");
 		authService.create(a);
 		
-	    User u = new User("aleksa@gmail.com", "sifra123", "Aleksa", "Goljovic");
+	    User u = new User("aleksa@gmail.com", "wH090210.", "Aleksa", "Goljovic");
 	    List<Authority> authorities = new ArrayList<Authority>();
 		authorities.add(a);
 	    u.setAuthorities(authorities);
