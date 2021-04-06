@@ -77,7 +77,7 @@ export class CsrComponent implements OnInit {
   }
 
   private _filter(value: any): string[] {
-    const filterValue = value.toLowerCase();
+    const filterValue = value?.toLowerCase();
 
     return this.country_codes.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }

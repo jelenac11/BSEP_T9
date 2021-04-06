@@ -160,7 +160,15 @@ public class CertificateService {
             ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
             X509Certificate cert = (X509Certificate) ks.getCertificate(serialNumber);
             if (cert == null) {
-                return "Unknown certificate with serial number " + serialNumber + "!";
+            	try {
+            		Optional<RevokedCertificate> r = revokedCertRepo.findById(Long.parseLong(serialNumber));
+                    if (r.isPresent()) {
+                        return "Certificate with serial number " + serialNumber + " is revoked!";
+                    }
+                    return "Unknown certificate with serial number " + serialNumber + "!";
+            	} catch (NumberFormatException e) {
+            		return "Unknown certificate with serial number " + serialNumber + "!";
+            	}
             }
             if (new Date().compareTo(cert.getNotAfter()) > 0) {
             	return "Certificate with serial number " + serialNumber + " is not valid!";
@@ -168,10 +176,6 @@ public class CertificateService {
             if (new Date().compareTo(cert.getNotBefore()) < 0) {
             	return "Certificate with serial number " + serialNumber + " is not valid yet!";
             }
-        }
-        Optional<RevokedCertificate> r = revokedCertRepo.findById(Long.parseLong(serialNumber));
-        if (r.isPresent()) {
-            return "Certificate with serial number " + serialNumber + " is revoked!";
         }
 
         return "Certificate with serial number " + serialNumber + " is valid!";

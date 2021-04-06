@@ -31,7 +31,7 @@ export class ApproveCsrComponent implements OnInit {
   maxDateStart: Date;
   pickerDisable = true;
   issuers = [];
-  algorithms = ["sha256WithRSAEncryption", "sha384WithRSAEncryption", "sha512WithRSAEncryption", "ecdsa_with_SHA256", "ecdsa_with_SHA384", "ecdsa_with_SHA512"];
+  algorithms = ["sha256WithRSAEncryption", "sha384WithRSAEncryption", "sha512WithRSAEncryption"];
   types = ['SSL server', 'SSL client', 'Email certificate', 'Code signing certificate'];
   issuer = "";
   key_usages: string[] = ['digitalSignature', 'nonRepudiation', 'keyEncipherment', 'dataEncipherment', 'keyAgreement', 'encipherOnly', 'decipherOnly'];
