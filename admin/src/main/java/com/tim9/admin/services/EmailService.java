@@ -27,7 +27,7 @@ public class EmailService {
     public void sendEmailWithCertificate(String to, File certificate) throws MessagingException, IOException {
     	MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo("aleksa.goljovic4@gmail.com");
+        helper.setTo("jelenacupac99@gmail.com");
         helper.setFrom("noreply.kts.l9@gmail.com");
         helper.setSubject("NEW Certificate");
         helper.setText("Your new certificate is attached.");

@@ -47,12 +47,11 @@ public class CertUtil {
         builder.addRDN(BCStyle.CN, subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString());
         builder.addRDN(BCStyle.O, subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString());
         builder.addRDN(BCStyle.OU, subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString());
-        builder.addRDN(BCStyle.C, subject.getRDNs(BCStyle.C)[0].getFirst().getValue().toString());
-        builder.addRDN(BCStyle.EmailAddress, subject.getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString());
         builder.addRDN(BCStyle.L, subject.getRDNs(BCStyle.L)[0].getFirst().getValue().toString());
         builder.addRDN(BCStyle.ST, subject.getRDNs(BCStyle.ST)[0].getFirst().getValue().toString());
         builder.addRDN(BCStyle.SERIALNUMBER, caSerialNumber);
-
+        builder.addRDN(BCStyle.C, subject.getRDNs(BCStyle.C)[0].getFirst().getValue().toString());
+        builder.addRDN(BCStyle.EmailAddress, subject.getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString());
         return builder.build();
     }
 	
@@ -63,11 +62,8 @@ public class CertUtil {
 	
 	@SuppressWarnings("deprecation")
 	public static void addKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws Exception {
-		ArrayList<String> allowed = new ArrayList<String>( ){ /**
-			 * 
-			 */
+		ArrayList<String> allowed = new ArrayList<String>( ){ 
 			private static final long serialVersionUID = 1L;
-
 		{
 			add("digitalSignature"); 
 			add("nonRepudiation");
@@ -84,7 +80,7 @@ public class CertUtil {
 			}
 		}
 		if (usages.size() == 0 ) {
-			certGen.addExtension(X509Extensions.KeyUsage, true, new X509KeyUsage(X509KeyUsage.digitalSignature));
+			certGen.addExtension(X509Extensions.KeyUsage, true, new X509KeyUsage(X509KeyUsage.digitalSignature | X509KeyUsage.keyEncipherment));
 			return;
 		}
 		int keyUsage = 0;
@@ -118,9 +114,7 @@ public class CertUtil {
 	
 	@SuppressWarnings("deprecation")
 	public static void addExtendedKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws Exception {
-		ArrayList<String> allowed = new ArrayList<String>(){ /**
-			 * 
-			 */
+		ArrayList<String> allowed = new ArrayList<String>(){ 
 			private static final long serialVersionUID = 1L;
 
 		{
@@ -139,7 +133,6 @@ public class CertUtil {
 		Vector<KeyPurposeId> extendedKeyUsages = new Vector<>();
 		if (usages.size() == 0) {
 			extendedKeyUsages.add(KeyPurposeId.id_kp_serverAuth);
-	        extendedKeyUsages.add(KeyPurposeId.id_kp_clientAuth);
 	        certGen.addExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsages));
 	        return;
 		}
@@ -172,7 +165,7 @@ public class CertUtil {
         generalNames.add(new GeneralName(GeneralName.dNSName, "localhost"));
         GeneralNames altNamesSeq = GeneralNames.getInstance(new DERSequence(generalNames.toArray(new GeneralName[]{})));
         certGen.addExtension(SubjectAlternativeName, false, altNamesSeq);
-
+        
         generalNames.clear();
         generalNames.add(new GeneralName(GeneralName.rfc822Name, issuerEmail));
         generalNames.add(new GeneralName(GeneralName.dNSName, "localhost"));

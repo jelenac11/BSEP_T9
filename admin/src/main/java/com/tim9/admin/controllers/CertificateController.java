@@ -76,7 +76,7 @@ public class CertificateController {
 	@GetMapping("/status/{serialNumber}")
     public ResponseEntity<String> getCertificateStatus(@PathVariable(value = "serialNumber") String serialNumber) {
         try {
-            return new ResponseEntity<>(certService.checkCertStatus(serialNumber, null), HttpStatus.OK);
+            return new ResponseEntity<>(certService.checkCertStatus(serialNumber), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

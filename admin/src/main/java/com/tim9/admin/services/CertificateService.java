@@ -120,6 +120,8 @@ public class CertificateService {
         if (certificate == null) {
             throw new NoSuchElementException("Certificate with serial number" + serialNumber + " doesn't exist");
         }
+        
+        
         X500Name x500name = new JcaX509CertificateHolder(certificate).getSubject();
         RDN cn = x500name.getRDNs(BCStyle.CN)[0];
         String issuerData = certificate.getIssuerX500Principal().getName();
@@ -136,8 +138,8 @@ public class CertificateService {
         KeyStoreUtil.deleteEntry(ts, serialNumber);
         KeyStoreUtil.saveKeyStore(ts, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
         
-		emailService.sendMail(new JcaX509CertificateHolder(certificate).getIssuer().getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "Certificate Revoke", "Hi,\n\nYour CSR is rejected." + 
-				"\n\nCSR info:\n\tCommon Name: " + rc.getCommonName() +
+		emailService.sendMail(new JcaX509CertificateHolder(certificate).getIssuer().getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "Certificate Revoke", "Hi,\n\nYour Certificate is revoked." + 
+				"\n\nCertificate info:\n\tCommon Name: " + rc.getCommonName() +
 				"\n\tSerial number: " + rc.getId() +
 				"\n\tIssuer: " + rc.getIssuer() +
 				"\n\tReason: " + reason +
@@ -155,29 +157,26 @@ public class CertificateService {
 		return new PageImpl<RevokedCertResponseDTO>(revoked, pageable, revoked.size());
 	}
 
-	public String checkCertStatus(String serialNumber, KeyStore ks) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
-        if (ks == null) {
-            ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
-            X509Certificate cert = (X509Certificate) ks.getCertificate(serialNumber);
-            if (cert == null) {
-            	try {
-            		Optional<RevokedCertificate> r = revokedCertRepo.findById(Long.parseLong(serialNumber));
-                    if (r.isPresent()) {
-                        return "Certificate with serial number " + serialNumber + " is revoked!";
-                    }
-                    return "Unknown certificate with serial number " + serialNumber + "!";
-            	} catch (NumberFormatException e) {
-            		return "Unknown certificate with serial number " + serialNumber + "!";
-            	}
-            }
-            if (new Date().compareTo(cert.getNotAfter()) > 0) {
-            	return "Certificate with serial number " + serialNumber + " is not valid!";
-            }
-            if (new Date().compareTo(cert.getNotBefore()) < 0) {
-            	return "Certificate with serial number " + serialNumber + " is not valid yet!";
-            }
+	public String checkCertStatus(String serialNumber) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+        KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+        X509Certificate cert = (X509Certificate) ks.getCertificate(serialNumber);
+        if (cert == null) {
+        	try {
+        		Optional<RevokedCertificate> r = revokedCertRepo.findById(Long.parseLong(serialNumber));
+                if (r.isPresent()) {
+                    return "Certificate with serial number " + serialNumber + " is revoked!";
+                }
+                return "Unknown certificate with serial number " + serialNumber + "!";
+        	} catch (NumberFormatException e) {
+        		return "Unknown certificate with serial number " + serialNumber + "!";
+        	}
         }
-
+        if (new Date().compareTo(cert.getNotAfter()) > 0) {
+        	return "Certificate with serial number " + serialNumber + " is not valid!";
+        }
+        if (new Date().compareTo(cert.getNotBefore()) < 0) {
+        	return "Certificate with serial number " + serialNumber + " is not valid yet!";
+        }
         return "Certificate with serial number " + serialNumber + " is valid!";
 	}
 

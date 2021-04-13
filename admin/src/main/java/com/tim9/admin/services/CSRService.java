@@ -9,6 +9,7 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -174,7 +175,8 @@ public class CSRService {
 		}
 		if (dto.getNotBefore().compareTo(dto.getNotAfter()) >= 0)
 		    throw new InvalidCertificateDateException("Certificate start date must be before expiration date");
-		if (new Date().compareTo(dto.getNotBefore()) >= 0)
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		if (formatter.parse(formatter.format(new Date())).compareTo(dto.getNotBefore()) > 0)
 		    throw new InvalidCertificateDateException("Certificate start date must be after today");
 		Date novo = dto.getNotBefore();
 	    Calendar cal = Calendar.getInstance();
@@ -187,6 +189,8 @@ public class CSRService {
 	    if (!csr.isPresent()) {
 	    	throw new NoSuchElementException("CSR with given serial number doesn't exist!");
 	    }
+	    
+	    
 	    X509Certificate certCA = (X509Certificate) ks.getCertificate(dto.getIssuer());
 	    if (certCA == null) {
             throw new CertificateDoesNotExistException("CA certificate with given serial number does not exist");
@@ -194,6 +198,7 @@ public class CSRService {
 	    if (dto.getNotAfter().compareTo(certCA.getNotAfter()) > 0) {
 	    	throw new InvalidCertificateDateException("CA Certificate will expire before end date.");
 	    }
+	    certCA.checkValidity();
 	    
 	    String signingAlg = "";
 	    if (dto.getSigningAlgorithm().equals("")) {
@@ -203,17 +208,15 @@ public class CSRService {
 	    }
 	    JcaContentSignerBuilder builder = new JcaContentSignerBuilder(signingAlg);
         BouncyCastleProvider bcp = new BouncyCastleProvider();
-        builder = builder.setProvider(bcp);
-        certCA.checkValidity();
+        builder = builder.setProvider(bcp); 
         String caPassword = KEYSTORE_PASSWORD + dto.getIssuer();
         PrivateKey privateKey = (PrivateKey) ks.getKey(dto.getIssuer(), caPassword.toCharArray());
         ContentSigner contentSigner = builder.build(privateKey);
+        
         X500Name issuerName = new JcaX509CertificateHolder(certCA).getSubject();
         JcaPKCS10CertificationRequest csrData = new JcaPKCS10CertificationRequest(csr.get().getCsr());
-        
         X500Name subject = CertUtil.createSubjectX500Name(csrData.getSubject(), certCA.getSerialNumber().toString());
-        String email = csrData.getSubject().getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
-        String caEmail = issuerName.getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
+        
         X509v3CertificateBuilder certGen = new JcaX509v3CertificateBuilder(issuerName, new BigInteger(dto.getSerialNumber()), dto.getNotBefore(), dto.getNotAfter(), subject, csrData.getPublicKey());
         CertUtil.addBasicConstraints(certGen, false);
         CertUtil.addKeyUsage(certGen, dto.getKeyUsage());
@@ -221,6 +224,8 @@ public class CSRService {
         if (dto.isKeyIdentifierExtension()) {
         	CertUtil.addKeyIdentifierExtensions(certGen, csrData.getPublicKey(), certCA.getPublicKey());
         }
+        String email = csrData.getSubject().getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
+        String caEmail = issuerName.getRDNs(BCStyle.EmailAddress)[0].getFirst().getValue().toString();
         if (dto.isAlternativeNameExtension()) {
         	CertUtil.addAlternativeNamesExtensions(certGen, email, caEmail);
         }
