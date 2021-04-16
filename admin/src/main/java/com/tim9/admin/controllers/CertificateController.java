@@ -26,7 +26,7 @@ import com.tim9.admin.util.CustomPageImplementation;
 
 @RestController
 @RequestMapping(value = "/api/certificates")
-@CrossOrigin(origins = "http://localhost:4201", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:4201", maxAge = 3600, allowedHeaders = "*")
 public class CertificateController {
 	
 	@Autowired

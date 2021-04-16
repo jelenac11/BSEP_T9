@@ -81,7 +81,7 @@ public class CSRService {
         PKCS10CertificationRequest csr = p10Builder.build(signer);
         
         RestTemplate rs = new RestTemplate();
-        String response = rs.postForEntity("http://localhost:8081/api/csr", csr.getEncoded(), String.class).getBody();
+        String response = rs.postForEntity("https://localhost:8081/api/csr", csr.getEncoded(), String.class).getBody();
         System.out.println(response);
 	}
 

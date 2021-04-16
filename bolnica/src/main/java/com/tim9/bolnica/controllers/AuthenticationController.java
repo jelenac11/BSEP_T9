@@ -28,7 +28,7 @@ import com.tim9.bolnica.security.TokenUtils;
 import com.tim9.bolnica.util.UserMapper;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4205", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:4205", maxAge = 3600, allowedHeaders = "*")
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 

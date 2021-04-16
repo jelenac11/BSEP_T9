@@ -180,26 +180,4 @@ public class CertificateService {
         return "Certificate with serial number " + serialNumber + " is valid!";
 	}
 
-	public void deleteAllExceptRoot() throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
-		KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
-	    Enumeration<String> enumeration = ks.aliases();
-		while (enumeration.hasMoreElements()) {
-			String current = enumeration.nextElement();
-			if (!current.equals("root")) {
-				ks.deleteEntry(current);
-			}
-		}
-		KeyStoreUtil.saveKeyStore(ks, KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
-		ks = KeyStoreUtil.loadKeyStore(TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
-	    enumeration = ks.aliases();
-		while (enumeration.hasMoreElements()) {
-			String current = enumeration.nextElement();
-			if (!current.equals("root")) {
-				ks.deleteEntry(current);
-			}
-		}
-		KeyStoreUtil.saveKeyStore(ks, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
-		
-	}
-
 }
