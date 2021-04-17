@@ -1,1 +1,83 @@
-<p>add-ca works!</p>
+<h1 mat-dialog-title class="mb-4 font-weight-bold">Create CA</h1>
+<mat-dialog-content class="mt-3" style="width: 450px;">
+    <mat-vertical-stepper linear #stepper>
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup" (ngSubmit)="first()">
+                <ng-template matStepLabel>1</ng-template>
+                
+                <mat-form-field>
+                    <mat-label>Commmon Name</mat-label>
+                    <input formControlName="common_name" matInput placeholder="Common Name" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Organization</mat-label>
+                    <input formControlName="organization" matInput placeholder="Organization" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Organizational Unit</mat-label>
+                    <input formControlName="organizational_unit" matInput placeholder="Organizational Unit" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>City/Locality</mat-label>
+                    <input formControlName="city_locality" matInput placeholder="City/Locality" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>State/County/Region</mat-label>
+                    <input formControlName="state_county_region" matInput placeholder="State/County/Region" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Country</mat-label>
+                    <input formControlName="country" [matAutocomplete]="auto" matInput placeholder="Country" required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                          {{option}}
+                        </mat-option>
+                      </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Email address</mat-label>
+                    <input formControlName="email_address" matInput placeholder="Email address" required>
+                </mat-form-field>
+            
+                <div>
+                    <button mat-button matStepperNext type="submit" form="firstFormGroup" (click)="first()">Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup" (ngSubmit)="second()">
+                <ng-template matStepLabel>2</ng-template>
+            
+                <mat-form-field>
+                    <input matInput (dateChange)="setMinEnd($event)" [matDatepicker]="myDatepicker" [min]="minDateStart" [max]="maxDateStart" id="start-date-input" formControlName="not_before" placeholder="Not before">
+                    <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #myDatepicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="myDatepicker2" [min]="minDateEnd" [max]="maxDateEnd" id="end-date-input" formControlName="not_after" placeholder="Not after">
+                    <mat-datepicker-toggle matSuffix [for]="myDatepicker2" [disabled]='this.pickerDisable'></mat-datepicker-toggle>
+                    <mat-datepicker #myDatepicker2></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-row">
+                    <mat-label>Signing algorithm</mat-label>
+                    <mat-select formControlName="signing_algorithm">
+                        <mat-option *ngFor="let sa of algorithms" [value]="sa">
+                          {{sa}}
+                        </mat-option>
+                      </mat-select>
+                </mat-form-field>
+                <p><mat-checkbox class="example-margin" (change)="key_identifier_check($event)">Subject Key Identifier, Authority Key Identifier</mat-checkbox></p>
+                <p><mat-checkbox class="example-margin" (change)="alternative_name_check($event)">Subject Alternative Name, Issuer Alternative Name</mat-checkbox></p>
+            
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button (click)="stepper.reset()">Reset</button>
+                    <button mat-button matStepperNext type="submit" form="secondFormGroup" (click)="second()">Submit</button>
+                </div>
+            </form>
+        </mat-step>
+    </mat-vertical-stepper>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button class="ml-2 mat-raised-button" (click)="close()">Close</button>
+</mat-dialog-actions>

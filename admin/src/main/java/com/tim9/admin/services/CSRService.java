@@ -233,13 +233,15 @@ public class CSRService {
         X509CertificateHolder certHolder = certGen.build(contentSigner);
         JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
         certConverter = certConverter.setProvider(bcp);
+   
         X509Certificate newCertificate =  certConverter.getCertificate(certHolder);
+        
         ks.setCertificateEntry(dto.getSerialNumber(), newCertificate);
         KeyStoreUtil.saveKeyStore(ks, KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
         KeyStore truststore = KeyStoreUtil.loadKeyStore(TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
         truststore.setCertificateEntry(dto.getSerialNumber(), newCertificate);
         KeyStoreUtil.saveKeyStore(truststore, TRUSTSTORE_FILE_PATH, TRUSTSTORE_PASSWORD);
-        
+      
         File certFile = CertUtil.x509CertificateToPem(newCertificate, "", dto.getSerialNumber());
         
         emailService.sendEmailWithCertificate(email, certFile);
@@ -250,5 +252,4 @@ public class CSRService {
         csrRepository.delete(csr.get());
 		return "Successfully created certificate!";
 	}
-
 }

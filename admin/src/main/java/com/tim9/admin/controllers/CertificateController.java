@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.admin.dto.CaCertDTO;
 import com.tim9.admin.dto.RevokeObjectDTO;
 import com.tim9.admin.dto.response.CertificateResponseDTO;
 import com.tim9.admin.dto.response.RevokedCertResponseDTO;
@@ -26,7 +27,7 @@ import com.tim9.admin.util.CustomPageImplementation;
 
 @RestController
 @RequestMapping(value = "/api/certificates")
-@CrossOrigin(origins = "http://localhost:4201", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:4201", maxAge = 3600, allowedHeaders = "*")
 public class CertificateController {
 	
 	@Autowired
@@ -58,7 +59,16 @@ public class CertificateController {
 			String message = certService.revokeCertificate(dto.getSerialNumber(), dto.getReason());
 			return new ResponseEntity<>(message, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@PostMapping("/ca")
+	public ResponseEntity<String> createCACertificate(@Valid @RequestBody CaCertDTO ca) {
+		try {
+			return new ResponseEntity<>(certService.createCACertificate(ca), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	

@@ -27,6 +27,7 @@ import { AddCaComponent } from './add-ca/add-ca.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ApproveCsrComponent } from './approve-csr/approve-csr.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -67,6 +68,7 @@ import { InformationDialogComponent } from './information-dialog/information-dia
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatStepperModule,
     MatSnackBarModule,
     MatTabsModule,
     ButtonsModule,

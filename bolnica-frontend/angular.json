@@ -67,7 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "port": 4205,
-            "browserTarget": "bolnica-frontend:build"
+            "browserTarget": "bolnica-frontend:build",
+            "sslCert": "ssl/hospital.crt",
+            "sslKey": "ssl/hospital.key",
+            "ssl": true
           },
           "configurations": {
             "production": {

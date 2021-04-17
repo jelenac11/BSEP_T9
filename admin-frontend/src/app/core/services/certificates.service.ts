@@ -59,6 +59,10 @@ export class CertificatesService {
     return this.http.post(`${environment.api_url}csr/approve`, certificate, { headers: this.headers, responseType: 'text' });
   }
 
+  addCA(certificate: any): Observable<string> {
+    return this.http.post(`${environment.api_url}certificates/ca`, certificate, { headers: this.headers, responseType: 'text' });
+  }
+
   checkStatus(serialNumber: string): Observable<string> {
     return this.http.get(`${environment.api_url}certificates/status/${serialNumber}`, { responseType: 'text' });
   }

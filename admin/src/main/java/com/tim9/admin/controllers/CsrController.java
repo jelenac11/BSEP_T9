@@ -34,7 +34,7 @@ import com.tim9.admin.util.CustomPageImplementation;
 
 @RestController
 @RequestMapping(value = "/api/csr")
-@CrossOrigin(origins = "http://localhost:4201", maxAge = 3600, allowedHeaders = "*")
+@CrossOrigin(origins = "https://localhost:4201", maxAge = 3600, allowedHeaders = "*")
 public class CsrController {
 	
 	@Autowired
@@ -60,7 +60,7 @@ public class CsrController {
 			JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(newCSR.getCsr());
 			X500Name subject = req.getSubject();
 			emailService.sendMail(subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "CSR Verification", "Hi,\n\nClick below to confirm your CSR:\n" + 
-					"\nhttp://localhost:4201" + confirmationUrl + "\n\nCSR info:\n\tCommon Name: " + subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString() +
+					"\nhttps://localhost:4201" + confirmationUrl + "\n\nCSR info:\n\tCommon Name: " + subject.getRDNs(BCStyle.CN)[0].getFirst().getValue().toString() +
 					"\n\tOrganization: " + subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString() +
 					"\n\tOrganizational Unit: " + subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString() +
 					"\n\tCity/Locality: " + subject.getRDNs(BCStyle.L)[0].getFirst().getValue().toString() +

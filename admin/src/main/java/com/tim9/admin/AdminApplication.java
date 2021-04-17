@@ -12,7 +12,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import com.tim9.admin.model.Authority;
 import com.tim9.admin.model.User;
 import com.tim9.admin.services.AuthorityService;
-import com.tim9.admin.services.CertificateService;
 import com.tim9.admin.services.UserService;
 
 
@@ -40,8 +39,8 @@ public class AdminApplication {
 			e.printStackTrace();
 		}
 	    
-	    CertificateService cert = appContext.getBean(CertificateService.class);
-	    cert.deleteAllExceptRoot();
+	   // CertificateService cert = appContext.getBean(CertificateService.class);
+	    //cert.deleteAllExceptRoot();
 	}
 
 }

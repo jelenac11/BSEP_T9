@@ -1,13 +1,18 @@
 package com.tim9.admin.util;
 
-import static org.bouncycastle.asn1.x509.X509Extensions.IssuerAlternativeName;
-import static org.bouncycastle.asn1.x509.X509Extensions.SubjectAlternativeName;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -18,10 +23,10 @@ import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.ExtendedKeyUsage;
+import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.KeyPurposeId;
-import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
@@ -55,12 +60,10 @@ public class CertUtil {
         return builder.build();
     }
 	
-	@SuppressWarnings("deprecation")
 	public static void addBasicConstraints(X509v3CertificateBuilder certGen, boolean isCA) throws CertIOException {
-        certGen.addExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(isCA));
+        certGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(isCA));
     }
 	
-	@SuppressWarnings("deprecation")
 	public static void addKeyUsage(X509v3CertificateBuilder certGen, ArrayList<String> usages) throws Exception {
 		ArrayList<String> allowed = new ArrayList<String>( ){ 
 			private static final long serialVersionUID = 1L;
@@ -80,7 +83,7 @@ public class CertUtil {
 			}
 		}
 		if (usages.size() == 0 ) {
-			certGen.addExtension(X509Extensions.KeyUsage, true, new X509KeyUsage(X509KeyUsage.digitalSignature | X509KeyUsage.keyEncipherment));
+			certGen.addExtension(Extension.keyUsage, true, new X509KeyUsage(X509KeyUsage.digitalSignature | X509KeyUsage.keyEncipherment));
 			return;
 		}
 		int keyUsage = 0;
@@ -106,10 +109,14 @@ public class CertUtil {
 			if (usages.contains("decipherOnly")) {
 				keyUsage = keyUsage | X509KeyUsage.decipherOnly;
 			}
-	        certGen.addExtension(X509Extensions.KeyUsage, true, new X509KeyUsage(keyUsage));
+	        certGen.addExtension(Extension.keyUsage, true, new X509KeyUsage(keyUsage));
 		} else {
 			throw new Exception("Invalid key usage!");
 		}
+    }
+	
+	public static void addCAKeyUsage(X509v3CertificateBuilder certGen) throws Exception {
+		certGen.addExtension(Extension.keyUsage, true, new X509KeyUsage(X509KeyUsage.keyCertSign));
     }
 	
 	@SuppressWarnings("deprecation")
@@ -133,7 +140,7 @@ public class CertUtil {
 		Vector<KeyPurposeId> extendedKeyUsages = new Vector<>();
 		if (usages.size() == 0) {
 			extendedKeyUsages.add(KeyPurposeId.id_kp_serverAuth);
-	        certGen.addExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsages));
+	        certGen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsages));
 	        return;
 		}
 		if (valid) {
@@ -152,33 +159,30 @@ public class CertUtil {
 			if (usages.contains("timeStamping")) {
 				extendedKeyUsages.add(KeyPurposeId.id_kp_timeStamping);
 			}
-	        certGen.addExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsages));
+	        certGen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(extendedKeyUsages));
 		} else {
 			throw new Exception("Invalid extended key usage!");
 		}
     }
 	
-	@SuppressWarnings("deprecation")
 	public static void addAlternativeNamesExtensions(X509v3CertificateBuilder certGen, String subjectEmail, String issuerEmail) throws CertIOException {
         ArrayList<GeneralName> generalNames = new ArrayList<>();
         generalNames.add(new GeneralName(GeneralName.rfc822Name, subjectEmail));
         generalNames.add(new GeneralName(GeneralName.dNSName, "localhost"));
         GeneralNames altNamesSeq = GeneralNames.getInstance(new DERSequence(generalNames.toArray(new GeneralName[]{})));
-        certGen.addExtension(SubjectAlternativeName, false, altNamesSeq);
+        certGen.addExtension(Extension.subjectAlternativeName, false, altNamesSeq);
         
         generalNames.clear();
         generalNames.add(new GeneralName(GeneralName.rfc822Name, issuerEmail));
         generalNames.add(new GeneralName(GeneralName.dNSName, "localhost"));
-        altNamesSeq = GeneralNames
-                .getInstance(new DERSequence(generalNames.toArray(new GeneralName[]{})));
-        certGen.addExtension(IssuerAlternativeName, false, altNamesSeq);
+        altNamesSeq = GeneralNames.getInstance(new DERSequence(generalNames.toArray(new GeneralName[]{})));
+        certGen.addExtension(Extension.issuerAlternativeName, false, altNamesSeq);
     }
 
-    @SuppressWarnings("deprecation")
 	public static void addKeyIdentifierExtensions(X509v3CertificateBuilder certGen, PublicKey subjectKey, PublicKey issuerKey) throws IOException, NoSuchAlgorithmException {
         JcaX509ExtensionUtils extensionUtils = new JcaX509ExtensionUtils();
-        certGen.addExtension(X509Extensions.SubjectKeyIdentifier, false, extensionUtils.createSubjectKeyIdentifier(subjectKey));
-        certGen.addExtension(X509Extensions.AuthorityKeyIdentifier, false, extensionUtils.createAuthorityKeyIdentifier(issuerKey));
+        certGen.addExtension(Extension.subjectKeyIdentifier, false, extensionUtils.createSubjectKeyIdentifier(subjectKey));
+        certGen.addExtension(Extension.authorityKeyIdentifier, false, extensionUtils.createAuthorityKeyIdentifier(issuerKey));
     }
     
     public static File x509CertificateToPem(X509Certificate cert, String path, String name) throws IOException {
@@ -190,6 +194,28 @@ public class CertUtil {
         pemWriter.close();
         return f;
     }
+
+	public static X500Name createX500Name(String commonName, String organization, String organizationalUnit, String cityLocality, String stateCountyRegion, String country, String emailAddress) {
+		X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, commonName);
+        builder.addRDN(BCStyle.O, organization);
+        builder.addRDN(BCStyle.OU, organizationalUnit);
+        builder.addRDN(BCStyle.L, cityLocality);
+        builder.addRDN(BCStyle.ST, stateCountyRegion);
+        builder.addRDN(BCStyle.C, country);
+        builder.addRDN(BCStyle.EmailAddress, emailAddress);
+
+        return builder.build();
+	}
+
+	public static void createPKCS12(BigInteger serialNumber, PrivateKey privateKey, X509Certificate newCertificate) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
+        pkcs12.load(null, null);
+        pkcs12.setKeyEntry("privatekeyalias", privateKey, "entrypassphrase".toCharArray(), new Certificate[] {newCertificate});
+        try (FileOutputStream p12 = new FileOutputStream(serialNumber + ".p12")) {
+            pkcs12.store(p12, "p12passphrase".toCharArray());
+        }
+	}
     
     
 }
