@@ -1,25 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { JwtService } from '../services/jwt.service';
+import { EMPTY, Observable } from 'rxjs';
+import { AuthService } from '../services/authentication.service';
+import { filter, mergeMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpTokenInterceptor implements HttpInterceptor {
   constructor(
-    private jwtService: JwtService
+    private authService: AuthService
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.jwtService.getToken();
-    if (token) {
-      req = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token.accessToken}`
-        }
-      });
+    if (!this.authService.isAuthenticated) {
+      return EMPTY;
     }
-    return next.handle(req);
+    return this.authService.token$.pipe(
+      filter(token => typeof token === 'string'),
+      mergeMap(token => {
+        const newReq = req.clone({
+          setHeaders: {Authorization: `Bearer ${token}`}
+        });
+        return next.handle(newReq);
+      })
+    );
   }
 }

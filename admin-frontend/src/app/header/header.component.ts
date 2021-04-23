@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthenticationService } from '../core/services/authentication.service';
-import { JwtService } from '../core/services/jwt.service';
+import { AuthService } from '../core/services/authentication.service';
 
 @Component({
   selector: 'app-header',
@@ -9,27 +7,24 @@ import { JwtService } from '../core/services/jwt.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  role = '';
-  user: any = { email: '', username: '', firstName: '', lastName: '' };
+  user: any = null;
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private jwtService: JwtService,
-    private router: Router,
+    public authService: AuthService,
   ) { }
 
   ngOnInit(): void {
-    this.role = this.jwtService.getRole();
-    if (this.role) {
-      this.authenticationService.getCurrentUser().subscribe((currentUser: any) => {
-        this.user = currentUser;
-      });
+    if (this.authService.isAuthenticated) {
+      this.authService.userProfile$.subscribe(
+        (profile) => {
+          this.user = profile;
+        }
+      );
     }
   }
 
   logout(): void {
-    this.authenticationService.logout();
-    this.router.navigate(['/sign-in']);
+    this.authService.logout();
   }
 
 }

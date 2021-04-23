@@ -1,26 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CallbackComponent } from './callback/callback.component';
 import { CertificatesComponent } from './certificates/certificates.component';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 import { LogsComponent } from './logs/logs.component';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { UsersComponent } from './users/users.component';
 import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: CertificatesComponent,
-    canActivate: [RoleGuard],
-    data: {
-        expectedRoles: 'ROLE_SUPER_ADMIN'
-    }
-  },
-  {
-    path: 'sign-in',
-    component: SignInComponent,
-    canActivate: [NoAuthGuard]
+    path: 'homepage',
+    component: CallbackComponent,
+    canActivate: [NoAuthGuard],
   },
   {
     path: 'verify-csr/:token',
@@ -31,15 +22,7 @@ const routes: Routes = [
     component: CertificatesComponent,
     canActivate: [RoleGuard],
     data: {
-        expectedRoles: 'ROLE_SUPER_ADMIN'
-    }
-  },
-  {
-    path: 'users',
-    component: UsersComponent,
-    canActivate: [RoleGuard],
-    data: {
-        expectedRoles: 'ROLE_SUPER_ADMIN'
+        expectedRoles: 'read:certificates'
     }
   },
   {
@@ -47,7 +30,7 @@ const routes: Routes = [
     component: LogsComponent,
     canActivate: [RoleGuard],
     data: {
-        expectedRoles: 'ROLE_SUPER_ADMIN'
+        expectedRoles: 'read:logs'
     }
   },
 

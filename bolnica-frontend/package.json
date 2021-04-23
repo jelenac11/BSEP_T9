@@ -23,6 +23,7 @@
     "@angular/router": "~11.0.1",
     "@auth0/angular-jwt": "^5.0.2",
     "angular-bootstrap-md": "^11.0.0",
+    "auth0-js": "^9.15.0",
     "bootstrap": "^4.6.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

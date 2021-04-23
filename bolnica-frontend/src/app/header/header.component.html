@@ -34,16 +34,24 @@
         <a
           class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
           mdbWavesEffect
-          >{{ user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1) }} {{ user.lastName.charAt(0).toUpperCase() + user.lastName.slice(1) }}</a
+          >{{ user?.name }}</a
         >
       </li>
       <li class="nav-item">
-        <button *ngIf="role" mat-icon-button [matMenuTriggerFor]="menu" id="profile-circle-button">
+        <button *ngIf="authService.isAuthenticated" mat-icon-button [matMenuTriggerFor]="menu" id="profile-circle-button">
           <mat-icon>account_circle</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
           <button (click)="logout()" mat-menu-item><mat-icon>exit_to_app</mat-icon> Log out</button>
         </mat-menu>
+      </li>
+      <li class="nav-item" *ngIf="!authService.isAuthenticated">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          mdbWavesEffect
+          (click)="authService.login()"
+          >Login</a
+        >
       </li>
     </ul>
   </links>

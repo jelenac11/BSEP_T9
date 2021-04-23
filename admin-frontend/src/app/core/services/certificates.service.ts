@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CertificatesPage } from '../model/response/certificates-page.model';
 import { CSRPage } from '../model/response/csr-page.model';
 import { CSR } from '../model/response/csr.model';
 import { RevokedCertificatesPage } from '../model/response/revoked-certificates-page.model';

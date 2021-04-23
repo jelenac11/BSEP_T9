@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { UserTokenState } from '../model/response/user-token-state.model';
-import { JwtService } from 'src/app/core/services/jwt.service';
+import { AuthService } from '../services/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +9,28 @@ export class RoleGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private jwtService: JwtService
+    public auth: AuthService,
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const expectedRoles: string = route.data.expectedRoles;
-    const token: UserTokenState = this.jwtService.getToken();
-    const jwt: JwtHelperService = new JwtHelperService();
-    if (!token) {
-      this.router.navigate(['/sign-in']);
+    
+    if (!this.auth.isAuthenticated) {
+      this.router.navigate(['/homepage']);
       return false;
     }
-    const role: string = jwt.decodeToken(token.accessToken).role;
+    
+    const role = this.auth.role;
     const roles: string[] = expectedRoles.split('|', 2);
-    if (roles.indexOf(role) === -1) {
-      this.router.navigate(['/']);
+    let found = false;
+    role.forEach((curr) => { 
+      if (roles.indexOf(curr) !== -1) {
+        found = true;
+      } 
+    })
+    if (!found) {
+      this.auth.logout();
+      this.router.navigate(['/homepage']);
       return false;
     }
     return true;

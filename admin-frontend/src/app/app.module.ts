@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { CertificatesComponent } from './certificates/certificates.component';
-import { UsersComponent } from './users/users.component';
 import { LogsComponent } from './logs/logs.component';
 import { CommonModule } from '@angular/common';
 import { ButtonsModule, NavbarModule } from 'angular-bootstrap-md';
@@ -33,29 +32,29 @@ import { ApproveCsrComponent } from './approve-csr/approve-csr.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { MatSelectModule } from '@angular/material/select';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
 import { RevokeComponent } from './revoke/revoke.component';
 import {MatRadioModule} from '@angular/material/radio';
 import { InformationDialogComponent } from './information-dialog/information-dialog.component';
 
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
+import { CallbackComponent } from './callback/callback.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     CertificatesComponent,
-    UsersComponent,
     LogsComponent,
     AddCaComponent,
     ConfirmationDialogComponent,
     ApproveCsrComponent,
-    SignInComponent,
     VerifyCsrComponent,
     RevokeComponent,
-    InformationDialogComponent
+    InformationDialogComponent,
+    CallbackComponent
   ],
   imports: [
     CommonModule,
@@ -84,15 +83,12 @@ import { InformationDialogComponent } from './information-dialog/information-dia
     MatSelectModule,
     MatPaginatorModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    HttpClientModule,
   ],
   providers: [
     Snackbar,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpTokenInterceptor,
-      multi: true,
-    }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

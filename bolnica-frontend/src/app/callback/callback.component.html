@@ -1,0 +1,4 @@
+<div class="background-image">
+    <button *ngIf="!authService.isAuthenticated" mat-raised-button color="white" (click)="authService.login()">Login
+    </button>
+</div>  

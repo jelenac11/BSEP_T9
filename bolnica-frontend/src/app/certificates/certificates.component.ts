@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../core/services/authentication.service';
 
 @Component({
   selector: 'app-certificates',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CertificatesComponent implements OnInit {
 
-  constructor() { }
+  constructor(public authService: AuthService) {
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.authService.handleLoginCallback();
   }
 
 }

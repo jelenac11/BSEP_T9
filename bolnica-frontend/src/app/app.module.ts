@@ -22,16 +22,16 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Snackbar } from './snackbar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
-import { SignInComponent } from './sign-in/sign-in.component';
 import { CertificatesComponent } from './certificates/certificates.component';
+import { CallbackComponent } from './callback/callback.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CsrComponent,
     HeaderComponent,
-    SignInComponent,
-    CertificatesComponent
+    CertificatesComponent,
+    CallbackComponent
   ],
   imports: [
     CommonModule,

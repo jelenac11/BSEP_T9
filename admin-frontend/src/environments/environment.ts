@@ -6,6 +6,14 @@ export const environment = {
   production: false,
   api_url: 'https://localhost:8081/api/',
   auth_url: 'https://localhost:8081/auth/',
+  auth: {
+    clientID: 'y7wlc77pA9sceFHv7839BOMNCuw243uA',
+    domain: 'dev-lsmn3kc2.eu.auth0.com',
+    audience: 'https://localhost:8081',
+    redirect: 'https://localhost:4201/homepage',
+    logout: 'https://localhost:4201/homepage',
+    scope: 'openid profile'
+  }
 };
 
 /*
