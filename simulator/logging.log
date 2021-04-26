@@ -1,0 +1,73 @@
+25/04/2021-02:35:29 LOCAL0_NOTICE 123.107.19.18 System update failed
+25/04/2021-02:35:30 DAEMON_ERROR 73.195.255.218 Database error
+25/04/2021-02:35:31 LOCAL7_DEBUG 93.124.25.212 System update failed
+25/04/2021-02:35:32 SECURITY_WARNING 123.107.19.18 Access denied to logs view
+25/04/2021-02:35:33 NTP_DEBUG 73.195.255.218 Successful login with username username5
+25/04/2021-02:35:34 AUTH_INFORMATIONAL 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:35 LOCAL4_DEBUG 73.195.255.212 System update
+25/04/2021-02:35:36 DAEMON_INFORMATIONAL 73.195.255.212 System update failed
+25/04/2021-02:35:37 LOCAL1_DEBUG 73.195.255.212 System update
+25/04/2021-02:35:38 LOCAL7_NOTICE 90.124.124.1 System update failed
+25/04/2021-02:35:39 SOLARIS-CRON_NOTICE 73.195.255.218 System update
+25/04/2021-02:35:40 UUCP_DEBUG 73.195.255.212 System update failed
+25/04/2021-02:35:41 SECURITY_NOTICE 123.107.19.18 System update failed
+25/04/2021-02:35:42 LOCAL6_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL3_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LPR_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 AUTHPRIV_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL2_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 CRON_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 DAEMON_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL5_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 USER_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL4_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 CONSOLE_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL5_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL1_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 NTP_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL2_INFORMATIONAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL2_CRITICAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 MAIL_CRITICAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL6_CRITICAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 LOCAL2_CRITICAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:42 CONSOLE_CRITICAL 90.124.124.1 Requested resource patients.html
+25/04/2021-02:35:43 AUTHPRIV_NOTICE 93.124.25.212 System update failed
+25/04/2021-02:35:45 LOCAL3_DEBUG 90.124.124.1 Successful login with username username4
+25/04/2021-02:35:46 LPR_NOTICE 90.124.124.1 Successful login with username username3
+25/04/2021-02:35:47 MAIL_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 USER_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 CRON_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 SYSLOG_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 LOCAL4_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 LOCAL0_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 AUTHPRIV_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 LOCAL0_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 LOCAL4_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 SECURITY_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 SYSLOG_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 NEWS_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 AUTHPRIV_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 SYSLOG_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 SECURITY_INFORMATIONAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 SOLARIS-CRON_CRITICAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 CONSOLE_CRITICAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 USER_CRITICAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 LOCAL3_CRITICAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:47 AUTH_CRITICAL 73.195.255.218 Requested resource alarms.html
+25/04/2021-02:35:48 USER_INFORMATIONAL 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 USER_INFORMATIONAL 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 USER_INFORMATIONAL 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 USER_INFORMATIONAL 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 USER_INFORMATIONAL 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 AUTH_WARNING 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 AUTH_WARNING 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 AUTH_WARNING 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 AUTH_WARNING 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:48 AUTH_WARNING 123.107.19.18 Unsuccessful login attempt with username username5
+25/04/2021-02:35:49 LPR_DEBUG 73.195.255.212 System update failed
+25/04/2021-02:35:50 MAIL_NOTICE 90.124.124.1 Successful login with username username2
+25/04/2021-02:35:51 SECURITY_INFORMATIONAL 123.107.19.18 Connection from ip address128.128.199.200
+25/04/2021-02:35:52 LOCAL6_INFORMATIONAL 123.107.19.18 System update failed
+25/04/2021-02:35:53 SECURITY_INFORMATIONAL 73.195.255.212 Connection from ip address128.128.199.200
+25/04/2021-02:35:54 DAEMON_ERROR 93.124.25.212 Database error
+25/04/2021-02:35:55 KERN_INFORMATIONAL 93.124.25.212 System update failed
