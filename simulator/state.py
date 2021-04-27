@@ -6,7 +6,7 @@ from time import sleep, strftime
 from datetime import datetime
 
 FACILITY = ['KERN', 'USER', 'MAIL', 'DAEMON', 'AUTH', 'SYSLOG', 'LPR', 'NEWS',
-            'UUCP', 'SOLARIS-CRON', 'AUTHPRIV', 'FTP', 'NTP', 'CONSOLE', 'SECURITY',
+            'UUCP', 'SOLARISCRON', 'AUTHPRIV', 'FTP', 'NTP', 'CONSOLE', 'SECURITY',
             'CRON', 'LOCAL0', 'LOCAL1', 'LOCAL2', 'LOCAL3', 'LOCAL4', 'LOCAL5', 'LOCAL6', 'LOCAL7']
 SEVERITY = ['DEBUG', 'INFORMATIONAL', 'NOTICE', 'WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY']
 

@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CsrComponent } from './csr/csr.component';
@@ -24,6 +25,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
 import { CertificatesComponent } from './certificates/certificates.component';
 import { CallbackComponent } from './callback/callback.component';
+import { LogsComponent } from './logs/logs.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { CallbackComponent } from './callback/callback.component';
     CsrComponent,
     HeaderComponent,
     CertificatesComponent,
-    CallbackComponent
+    CallbackComponent,
+    LogsComponent
   ],
   imports: [
     CommonModule,
@@ -50,7 +53,8 @@ import { CallbackComponent } from './callback/callback.component';
     BrowserAnimationsModule,
     MatAutocompleteModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    NgxPaginationModule
   ],
   providers: [
     Snackbar,
