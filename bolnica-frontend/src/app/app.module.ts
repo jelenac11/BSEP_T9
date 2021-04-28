@@ -29,6 +29,7 @@ import { CertificatesComponent } from './certificates/certificates.component';
 import { CallbackComponent } from './callback/callback.component';
 import { LogsComponent } from './logs/logs.component';
 import { MatSelectModule } from '@angular/material/select';
+import { AlarmsComponent } from './alarms/alarms.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { MatSelectModule } from '@angular/material/select';
     HeaderComponent,
     CertificatesComponent,
     CallbackComponent,
-    LogsComponent
+    LogsComponent,
+    AlarmsComponent
   ],
   imports: [
     CommonModule,
