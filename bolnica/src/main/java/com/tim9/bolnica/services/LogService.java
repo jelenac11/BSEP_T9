@@ -34,11 +34,14 @@ import com.tim9.bolnica.repositories.LogRepository;
 import com.tim9.bolnica.util.DateUtil;
 
 
+
 @Service
 public class LogService {
 
 	@Autowired
 	private LogRepository logRepository;
+	@Autowired
+    private AlarmService alarmService;
 	
 	@PostConstruct
 	public void init() {
@@ -103,8 +106,9 @@ public class LogService {
 		return (ArrayList<Log>) logs;
 	}
 
-	public List<Log> save(List<Log> logs) {
-		return this.logRepository.saveAll(logs);
+	public void save(List<Log> logs) {
+		this.logRepository.saveAll(logs);
+		this.alarmService.checkAlarms(logs);
 	}
 	
 	private void readLogs(String path, long interval, String regexp) throws Exception {

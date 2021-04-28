@@ -9,7 +9,7 @@ package bsep.integration.predefined;
 rule "Login failed, same username"
     when
         $l: Log($id: id, $m: message, message.contains("Unsuccessful login"))
-        $alarms: ArrayList() from collect( Alarm())
+        $alarms: ArrayList() from collect( AdminAlarm())
         $n: Number(intValue > 2) from accumulate(
             $log : Log($id2: id, $ip: ip, message == $m)
             over window:time(10m),
@@ -17,7 +17,7 @@ rule "Login failed, same username"
             action (
                 int c = 0;
                 for(Object o : $alarms) {
-                    Alarm a = (Alarm) o;
+                    AdminAlarm a = (AdminAlarm) o;
                     if (a.getLogId() == $id2 && a.getMessage().contains("SAME USERNAME")) {
                         c += 1;
                         break;
@@ -29,17 +29,17 @@ rule "Login failed, same username"
             ),
             result (count)
         )
-        not (Alarm(logId == $id))
+        not (AdminAlarm(logId == $id))
     then
     	System.out.println("Login failed, same username")
-        insert(new Alarm(null, new Date(), "SAME USERNAME - " + $m));
+        insert(new AdminAlarm(null, new Date(), "SAME USERNAME - " + $m));
 end
 
 
 rule "Login failed, same source"
     when
         $l: Log($id: id, $m: message, message.contains("Unsuccessful login"))
-        $alarms: ArrayList() from collect( Alarm())
+        $alarms: ArrayList() from collect( AdminAlarm())
         $no: Number(intValue > 2) from accumulate(
             $log : Log($id2: id, $ip: ip, message.contains("Unsuccessful login"))
             over window:time(10m),
@@ -47,7 +47,7 @@ rule "Login failed, same source"
             action (
                 int c = 0;
                 for(Object o : $alarms) {
-                    Alarm a = (Alarm) o;
+                    AdminAlarm a = (AdminAlarm) o;
                     if (a.getLogId() == $id2 && a.getMessage().contains("SAME SOURCE")) {
                         c += 1;
                         break;
@@ -59,9 +59,9 @@ rule "Login failed, same source"
             ),
             result (count)
         )
-        not (Alarm(logId == $id))
+        not (AdminAlarm(logId == $id))
     then
     	System.out.println("Login failed, same source")
-        insert(new Alarm(null, $id, new Date(), "SAME SOURCE - Unsuccessful logins from same source - " + $ip));
+        insert(new AdminAlarm(null, $id, new Date(), "SAME SOURCE - Unsuccessful logins from same source - " + $ip));
 end
    

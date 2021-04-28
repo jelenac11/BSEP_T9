@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.kie.api.definition.type.Expires;
+import org.kie.api.definition.type.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +23,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "admin_alarms")
+@Role(Role.Type.EVENT)
+@Expires("30m")
 public class AdminAlarm {
 	
 	@Id

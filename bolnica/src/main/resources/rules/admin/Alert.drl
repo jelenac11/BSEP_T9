@@ -12,7 +12,7 @@ package bsep.integration.predefined;
            not(AdminAlarm(logId == $id))
        then
            System.out.println("Alert log appeared");
-           Alarm alarm = new Alarm(null, $id, new Date(), $log.getMessage());
+           AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), $log.getMessage());
            insert(alarm);
    end
    
