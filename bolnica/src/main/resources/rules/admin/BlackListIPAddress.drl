@@ -1,0 +1,20 @@
+package bsep.integration.predefined;
+
+   import com.tim9.bolnica.model.Log;
+   import com.tim9.bolnica.model.AdminAlarm;
+   import com.tim9.bolnica.enums.LogSeverity;
+   import java.util.Date;
+   
+
+rule "Connection from malicious IP address"
+    when
+        $log: Log($id: id, 
+            $ip: ip,
+            ip memberOf ['13.48.123.212', '128.128.199.200', '14.54.11.127', '22.54.160.93', '43.220.201.254']     
+        )
+        not (Alarm(logId == $id))
+    then
+    	System.out.println("Connection from malicous IP adress");
+        insert(new Alarm(null, $id, new Date(), "Connection from blacklisted IP address " + $ip));
+end
+   

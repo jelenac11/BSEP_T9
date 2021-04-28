@@ -1,0 +1,67 @@
+package bsep.integration.predefined;
+
+   import com.tim9.bolnica.model.Log;
+   import com.tim9.bolnica.model.AdminAlarm;
+   import com.tim9.bolnica.enums.LogSeverity;
+   import java.util.Date;
+   
+
+rule "Login failed, same username"
+    when
+        $l: Log($id: id, $m: message, message.contains("Unsuccessful login"))
+        $alarms: ArrayList() from collect( Alarm())
+        $n: Number(intValue > 2) from accumulate(
+            $log : Log($id2: id, $ip: ip, message == $m)
+            over window:time(10m),
+            init (int count = 0;),
+            action (
+                int c = 0;
+                for(Object o : $alarms) {
+                    Alarm a = (Alarm) o;
+                    if (a.getLogId() == $id2 && a.getMessage().contains("SAME USERNAME")) {
+                        c += 1;
+                        break;
+                    }
+                }
+                if (c == 0) {
+                    count += 1;
+                }
+            ),
+            result (count)
+        )
+        not (Alarm(logId == $id))
+    then
+    	System.out.println("Login failed, same username")
+        insert(new Alarm(null, new Date(), "SAME USERNAME - " + $m));
+end
+
+
+rule "Login failed, same source"
+    when
+        $l: Log($id: id, $m: message, message.contains("Unsuccessful login"))
+        $alarms: ArrayList() from collect( Alarm())
+        $no: Number(intValue > 2) from accumulate(
+            $log : Log($id2: id, $ip: ip, message.contains("Unsuccessful login"))
+            over window:time(10m),
+            init (int count = 0;),
+            action (
+                int c = 0;
+                for(Object o : $alarms) {
+                    Alarm a = (Alarm) o;
+                    if (a.getLogId() == $id2 && a.getMessage().contains("SAME SOURCE")) {
+                        c += 1;
+                        break;
+                    }
+                }
+                if (c == 0) {
+                    count += 1;
+                }
+            ),
+            result (count)
+        )
+        not (Alarm(logId == $id))
+    then
+    	System.out.println("Login failed, same source")
+        insert(new Alarm(null, $id, new Date(), "SAME SOURCE - Unsuccessful logins from same source - " + $ip));
+end
+   

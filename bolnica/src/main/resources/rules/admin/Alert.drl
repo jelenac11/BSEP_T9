@@ -1,0 +1,18 @@
+package bsep.integration.predefined;
+
+   import com.tim9.bolnica.model.Log;
+   import com.tim9.bolnica.model.AdminAlarm;
+   import com.tim9.bolnica.enums.LogSeverity;
+   import java.util.Date;
+   
+
+   rule "Alert log appeared"
+       when
+           $log: Log($id: id, log.getSeverity() == LogSeverity.ALERT)
+           not(AdminAlarm(logId == $id))
+       then
+           System.out.println("Alert log appeared");
+           Alarm alarm = new Alarm(null, $id, new Date(), $log.getMessage());
+           insert(alarm);
+   end
+   

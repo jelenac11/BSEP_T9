@@ -26,7 +26,7 @@ class State(ABC):
 
 class NormalState(State):
     def run(self, context):
-        messages = ['System update', 'System update failed', 'Successful login with username ' + random.choice(USERNAMES), 
+        messages = ['System update', 'Successful backup', 'System update failed', 'Successful login with username ' + random.choice(USERNAMES), 
         'Unsuccessful login attempt with username ' + random.choice(USERNAMES)]
 
         now = datetime.now()
@@ -81,8 +81,9 @@ class AccessDeniedState(State):
 class BlackListIPConnectionState(State):
     def run(self, context):
         now = datetime.now()
+        ip = random.choice(BLACKLIST_IP)
 
-        log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[14] + "_" + SEVERITY[1] + " " + random.choice(IP) + " " + "Connection from ip address " + random.choice(BLACKLIST_IP)
+        log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[14] + "_" + SEVERITY[1] + " " + ip + " " + "Connection from ip address " + ip
 
         f = open(PATH, "a")
         f.write(log + "\n")
