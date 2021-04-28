@@ -1,0 +1,79 @@
+<div class="container-fluid">
+    <div class="mt-2">
+        <div class="button-group">
+            <button mat-flat-button color="primary" class="button-add" (click)="addRule()">
+                Add new rule
+            </button>
+        </div>
+        <div class="mt-4">
+            <mat-tab-group mat-align-tabs="center" (selectedTabChange)="changeTab($event)" class="mt-n4">
+                <mat-tab
+                    *ngFor="let tab of tabs; let i = index"
+                    [label]="tab"
+                >
+                    <div *ngIf="currentTab == 0">
+                        <table class="table table-hover">
+                            <thead>
+                                <th scope="col" width="10%">No</th>
+                                <th scope="col" width="90%">Description</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="
+                                    let item of defaultRules.content
+                                        | paginate
+                                        : {
+                                            itemsPerPage: size,
+                                            currentPage: page,
+                                            totalItems: defaultRules.totalElements
+                                            };
+                                    let i = index"
+                                >
+                                    <th scope="col" width="10%">{{ i }}</th>
+                                    <td scope="col" width="90%">{{ item.description }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                    <div *ngIf="currentTab == 1">
+                        <table class="table table-hover">
+                            <thead>
+                                <th scope="col" width="10%">No</th>
+                                <th scope="col" width="90%">Description</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="
+                                    let item of createdRules.content
+                                        | paginate
+                                        : {
+                                            itemsPerPage: size,
+                                            currentPage: page,
+                                            totalItems: createdRules.totalElements
+                                            };
+                                    let i = index"
+                                >
+                                    <th scope="col" width="10%">{{ i }}</th>
+                                    <td scope="col" width="90%">{{ item.description }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 div-centered" *ngIf="currentTab == 0">
+                        <pagination-controls
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        (pageChange)="handlePageChange($event)"
+                        ></pagination-controls>
+                    </div>
+                    <div class="mt-3 div-centered" *ngIf="currentTab == 1">
+                        <pagination-controls
+                        previousLabel="Previous"
+                        nextLabel="Next"
+                        (pageChange)="handlePageChange($event)"
+                        ></pagination-controls>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>
