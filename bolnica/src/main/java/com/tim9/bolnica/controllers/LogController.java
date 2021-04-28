@@ -6,10 +6,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.bolnica.dto.SearchLogDTO;
 import com.tim9.bolnica.dto.response.LogResponseDTO;
 import com.tim9.bolnica.model.CustomPageImplementation;
 import com.tim9.bolnica.services.LogService;
@@ -22,10 +24,10 @@ public class LogController {
 	@Autowired
 	private LogService logService;
 	
-	@GetMapping(value = "/by-page")
-	public ResponseEntity<?> getLogs(Pageable pageable) {
+	@PostMapping(value = "/by-page")
+	public ResponseEntity<?> getLogs(Pageable pageable, @RequestBody SearchLogDTO searchLog) {
 		try {
-			return new ResponseEntity<>(createCustomPage(logService.findAll(pageable)), HttpStatus.OK);
+			return new ResponseEntity<>(createCustomPage(logService.findAll(pageable, searchLog)), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}

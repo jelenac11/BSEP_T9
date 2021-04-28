@@ -14,10 +14,10 @@ export class LogsService {
     private http: HttpClient
   ) { }
 
-  getLogs(size: number, page: number): Observable<LogsPage> {
-    let params = new HttpParams();
-    params = params.append('size', size.toString());
-    params = params.append('page', page.toString());
-    return this.http.get(`${environment.api_url}logs/by-page`, { params, responseType: 'json' });
+  getLogs(size: number, page: number, search: any): Observable<LogsPage> {
+    let pars = new HttpParams();
+    pars = pars.append('size', size.toString());
+    pars = pars.append('page', page.toString());
+    return this.http.post(`${environment.api_url}logs/by-page`, search, { headers: this.headers, params: pars, responseType: 'json' });
   }
 }

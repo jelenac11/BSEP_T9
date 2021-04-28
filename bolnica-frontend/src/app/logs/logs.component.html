@@ -2,11 +2,43 @@
     <div class="mt-2">
         <div class="button-group">
             <form [formGroup]="formSearch" id="formSearch" (ngSubmit)="search()">
-                <mat-form-field appearance="outline" class="full-row">
-                    <mat-label>Search</mat-label>
-                    <input formControlName="search" matInput placeholder="Search">
+                <mat-form-field appearance="outline" class="full-row" class="mr-2">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [formGroup]="formSearch" [rangePicker]="picker">
+                      <input matStartDate formControlName="from" placeholder="From">
+                      <input matEndDate formControlName="to" placeholder="To">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                    <mat-error *ngIf="formSearch.controls.from.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                    <mat-error *ngIf="formSearch.controls.to.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-row" class="mr-2">
+                    <mat-label>IP</mat-label>
+                    <input formControlName="ip" matInput placeholder="IP">
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-row" class="mr-2">
+                    <mat-label>Facility</mat-label>
+                    <mat-select formControlName="facility" placeholder="Facility">
+                        <mat-option *ngFor="let fac of facilities" [value]="fac">
+                          {{fac}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-row" class="mr-2">
+                    <mat-label>Severity</mat-label>
+                    <mat-select formControlName="severity" placeholder="Severity">
+                        <mat-option *ngFor="let sev of severities" [value]="sev">
+                          {{sev}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="full-row" class="mr-2">
+                    <mat-label>Message</mat-label>
+                    <input formControlName="message" matInput placeholder="Message">
                 </mat-form-field>
                 <button class="mat-raised-button mat-primary ml-2" type="submit" form="formSearch">Search</button>
+                <button class="mat-raised-button mat-primary ml-2" (click)="clear()">Clear</button>
             </form>
         </div>
         <div class="mt-4">
