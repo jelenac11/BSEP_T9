@@ -30,6 +30,9 @@ import { CallbackComponent } from './callback/callback.component';
 import { LogsComponent } from './logs/logs.component';
 import { MatSelectModule } from '@angular/material/select';
 import { AlarmsComponent } from './alarms/alarms.component';
+import { RulesComponent } from './rules/rules.component';
+import { AddRuleComponent } from './add-rule/add-rule.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,9 @@ import { AlarmsComponent } from './alarms/alarms.component';
     CertificatesComponent,
     CallbackComponent,
     LogsComponent,
-    AlarmsComponent
+    AlarmsComponent,
+    RulesComponent,
+    AddRuleComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +68,8 @@ import { AlarmsComponent } from './alarms/alarms.component';
     MatDatepickerModule, 
     MatFormFieldModule, 
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTabsModule
   ],
   providers: [
     Snackbar,
