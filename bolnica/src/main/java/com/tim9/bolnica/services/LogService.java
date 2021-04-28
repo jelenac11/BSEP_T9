@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -21,9 +22,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import com.google.gson.Gson;
+import com.tim9.bolnica.dto.SearchLogDTO;
 import com.tim9.bolnica.dto.response.LogResponseDTO;
 import com.tim9.bolnica.enums.LogFacility;
 import com.tim9.bolnica.enums.LogSeverity;
+import com.tim9.bolnica.exceptions.RequestException;
 import com.tim9.bolnica.model.Config;
 import com.tim9.bolnica.model.Log;
 import com.tim9.bolnica.model.LogConfig;
@@ -62,13 +65,42 @@ public class LogService {
 		}
 	}
 	
-	public Page<LogResponseDTO> findAll(Pageable pageable) {
-		Page<Log> logs = logRepository.findAll(pageable);
-		ArrayList<LogResponseDTO> response = new ArrayList<LogResponseDTO>();
-		for (Log l: logs) {
-			response.add(new LogResponseDTO(l));
+	public Page<LogResponseDTO> findAll(Pageable pageable, SearchLogDTO search) throws RequestException {
+		List<Log> response = logRepository.findAllByOrderByTimestampDesc();
+		ArrayList<Log> filtered = this.filter(response, search);
+		Page<Log> logPage = logRepository.findByIdIn(pageable, filtered.stream().map(Log::getId).collect(Collectors.toList())); 
+		ArrayList<LogResponseDTO> forReturn = new ArrayList<LogResponseDTO>();
+		for (Log l: logPage.getContent()) {
+			forReturn.add(new LogResponseDTO(l));
 		}
-		return new PageImpl<LogResponseDTO>(response, pageable, response.size());
+		return new PageImpl<LogResponseDTO>(forReturn, pageable, logPage.getTotalElements());
+	}
+
+	private ArrayList<Log> filter(List<Log> logs, SearchLogDTO search) throws RequestException {	
+		if (search.getTo() != null && search.getFrom() != null) {
+			if (search.getTo().compareTo(search.getFrom()) < 0) {
+				throw new RequestException("Start date must be before end date!");
+			}
+		}
+		if (!search.getSeverity().equals("")) {
+			logs = logs.stream().filter(log -> log.getSeverity().toString().equals(search.getSeverity())).collect(Collectors.toList());
+		}
+		if (!search.getFacility().equals("")) {
+			logs = logs.stream().filter(log -> log.getFacility().toString().equals(search.getFacility())).collect(Collectors.toList());
+		}
+		if (!search.getIp().equals("")) {
+			logs = logs.stream().filter(log -> log.getIp().matches(search.getIp())).collect(Collectors.toList());
+		}
+		if (!search.getMessage().equals("")) {
+			logs = logs.stream().filter(log -> log.getMessage().matches(search.getMessage())).collect(Collectors.toList());
+		}
+		if (search.getTo() != null) {
+			logs = logs.stream().filter(log -> log.getTimestamp().before(search.getTo())).collect(Collectors.toList());
+		}
+		if (search.getFrom() != null) {
+			logs = logs.stream().filter(log -> log.getTimestamp().after(search.getFrom())).collect(Collectors.toList());
+		}
+		return (ArrayList<Log>) logs;
 	}
 
 	public List<Log> save(List<Log> logs) {
