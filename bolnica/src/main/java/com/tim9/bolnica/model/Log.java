@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.kie.api.definition.type.Role;
+
 import com.tim9.bolnica.enums.LogFacility;
 import com.tim9.bolnica.enums.LogSeverity;
 
@@ -25,6 +27,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Role(Role.Type.EVENT)
 public class Log {
 
 	@Id
