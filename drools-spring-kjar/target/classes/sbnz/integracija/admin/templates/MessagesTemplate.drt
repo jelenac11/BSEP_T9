@@ -1,0 +1,23 @@
+template header
+messageRegexBefore
+messageRegexAfter
+timePeriod
+message
+
+package rules.admin.templates;
+
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+template "Messages template"
+
+rule "Messages before and after rule @{messageRegexBefore} and @{messageRegexAfter} appears in @{timePeriod} seconds"
+   when
+        $l1: Log(message matches @{messageRegexBefore})
+        $l2: Log(this after[@{timePeriod}s] $l1, message matches @{messageRegexAfter})
+    then
+    	System.out.println("Messages template rule");
+        insert(new AdminAlarm(null, null, new Date(), "@{message}"));
+   end
+
+end template

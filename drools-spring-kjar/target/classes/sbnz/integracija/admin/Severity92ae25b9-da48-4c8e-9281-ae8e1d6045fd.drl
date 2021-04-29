@@ -1,0 +1,16 @@
+package rules.admin.templates;
+import com.tim9.bolnica.model.*;
+import com.tim9.bolnica.enums.*;
+import java.util.Date;
+
+rule "Severity rule INFORMATIONAL appears 1 times in 10 seconds"
+    when
+        Number(intValue >= 1) from accumulate(
+           $l: Log(severity == LogSeverity.INFORMATIONAL) over window:time(10s),
+           count($l))
+    then
+        System.out.println("Severity template rule");
+        insert(new AdminAlarm(null, null, new Date(), "ZXCVBHNJMK"));
+end
+
+
