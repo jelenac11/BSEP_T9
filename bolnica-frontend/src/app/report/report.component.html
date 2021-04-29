@@ -1,0 +1,51 @@
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <mat-card class="col-sm-6 offset-sm-3" [class.mat-elevation-z24]='true' *ngIf="!reported">
+                <mat-card-header>
+                    <mat-card-subtitle><p class="mb-5 mt-3 subtitle">Create Report</p></mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="formReport" (ngSubmit)="onSubmit()">
+                        <mat-form-field appearance="outline" class="full-row">
+                            <mat-label>Enter a date range</mat-label>
+                            <mat-date-range-input [formGroup]="formReport" [rangePicker]="picker">
+                              <input matStartDate formControlName="from" placeholder="From">
+                              <input matEndDate formControlName="to" placeholder="To">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                            <mat-error *ngIf="formReport.controls.from.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                            <mat-error *ngIf="formReport.controls.to.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                        </mat-form-field>
+                        <button class="mr-3 px-3 mt-2 mb-4 btn sign-in">Create</button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="col-sm-6 offset-sm-3" [class.mat-elevation-z24]='true' *ngIf="reported">
+                <mat-card-header>
+                    <mat-card-subtitle><p class="mb-5 mt-3 subtitle">Report from <b>{{ report.from | date:'dd.MM.yyyy.' }}</b> - <b>{{ report.to | date:'dd.MM.yyyy.' }}</b></p></mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div style="margin-left: 20%;">
+                        <p><b>Alarm count: </b>{{ report.alarms }}</p>
+                        <p><b>Log count: </b>{{ report.logs }}</p>
+                        <p></p>
+                        <p>Number of logs with severity <b>DEBUG</b>: {{ report.debug }}</p>
+                        <p>Number of logs with severity <b>INFORMATIONAL</b>: {{ report.informational }}</p>
+                        <p>Number of logs with severity <b>NOTICE</b>: {{ report.notice }}</p>
+                        <p>Number of logs with severity <b>WARNING</b>: {{ report.warning }}</p>
+                        <p>Number of logs with severity <b>ERROR</b>: {{ report.error }}</p>
+                        <p>Number of logs with severity <b>CRITICAL</b>: {{ report.critical }}</p>
+                        <p>Number of logs with severity <b>ALERT</b>: {{ report.alert }}</p>
+                        <p>Number of logs with severity <b>EMERGENCY</b>: {{ report.emergency }}</p>
+                    </div>
+                    <div class="report">
+                        <button class="mr-3 px-3 mt-4 mb-4 btn sign-in" (click)="createNewReport()">Create new report</button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

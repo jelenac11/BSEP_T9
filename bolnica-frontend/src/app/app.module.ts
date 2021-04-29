@@ -35,6 +35,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddSeverityRuleComponent } from './add-severity-rule/add-severity-rule.component';
 import { AddMessagesRuleComponent } from './add-messages-rule/add-messages-rule.component';
+import { ReportComponent } from './report/report.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { AddMessagesRuleComponent } from './add-messages-rule/add-messages-rule.
     AlarmsComponent,
     RulesComponent,
     AddSeverityRuleComponent,
-    AddMessagesRuleComponent
+    AddMessagesRuleComponent,
+    ReportComponent
   ],
   imports: [
     CommonModule,
