@@ -31,8 +31,10 @@ import { LogsComponent } from './logs/logs.component';
 import { MatSelectModule } from '@angular/material/select';
 import { AlarmsComponent } from './alarms/alarms.component';
 import { RulesComponent } from './rules/rules.component';
-import { AddRuleComponent } from './add-rule/add-rule.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AddSeverityRuleComponent } from './add-severity-rule/add-severity-rule.component';
+import { AddMessagesRuleComponent } from './add-messages-rule/add-messages-rule.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     LogsComponent,
     AlarmsComponent,
     RulesComponent,
-    AddRuleComponent
+    AddSeverityRuleComponent,
+    AddMessagesRuleComponent
   ],
   imports: [
     CommonModule,
@@ -68,6 +71,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatDatepickerModule, 
     MatFormFieldModule, 
     MatNativeDateModule,
+    MatDialogModule,
     MatSelectModule,
     MatTabsModule
   ],

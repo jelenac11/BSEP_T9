@@ -1,0 +1,27 @@
+<h1 mat-dialog-title class="mb-4 font-weight-bold">Add Messages Rule</h1>
+<mat-dialog-content class="mt-3" style="width: 450px;">
+    <form [formGroup]="formMessagesRule" id="formMessagesRule" (ngSubmit)="add()" style="width: 100%;">
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>First message regex</mat-label>
+            <input formControlName="messageRegexBefore" matInput placeholder="First message regex">
+        </mat-form-field></p>
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Second message regex</mat-label>
+            <input formControlName="messageRegexAfter" matInput placeholder="Second message regex">
+        </mat-form-field></p>
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Time period</mat-label>
+            <input matInput type="number" placeholder="Time period" formControlName="timePeriod" min="1">
+            <span matSuffix>seconds</span>
+            <mat-error *ngIf="formMessagesRule.controls.timePeriod.invalid">Min: 1 sec</mat-error>
+        </mat-form-field></p>
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Alarm message</mat-label>
+            <input formControlName="message" matInput placeholder="Alarm message">
+        </mat-form-field></p>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button class="mat-raised-button mat-primary" type="submit" form="formMessagesRule">Add</button>
+    <button class="ml-2 mat-raised-button" (click)="close()">Close</button>
+</mat-dialog-actions>

@@ -1,0 +1,32 @@
+<h1 mat-dialog-title class="mb-4 font-weight-bold">Add Severity Rule</h1>
+<mat-dialog-content class="mt-3" style="width: 450px;">
+    <form [formGroup]="formSeverityRule" id="formSeverityRule" (ngSubmit)="add()" style="width: 100%;">
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Severity</mat-label>
+            <mat-select formControlName="severity">
+                <mat-option *ngFor="let sev of severities" [value]="sev">
+                  {{sev}}
+                </mat-option>
+              </mat-select>
+        </mat-form-field></p>
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Time period</mat-label>
+            <input matInput type="number" placeholder="Time period" formControlName="timePeriod" min="1">
+            <span matSuffix>seconds</span>
+            <mat-error *ngIf="formSeverityRule.controls.timePeriod.invalid">Min: 1 sec</mat-error>
+        </mat-form-field></p>
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Count</mat-label>
+            <input matInput type="number" placeholder="Count" formControlName="count" min="1">
+            <mat-error *ngIf="formSeverityRule.controls.count.invalid">Min: 1</mat-error>
+        </mat-form-field></p>
+        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+            <mat-label>Alarm message</mat-label>
+            <input formControlName="message" matInput placeholder="Alarm message">
+        </mat-form-field></p>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button class="mat-raised-button mat-primary" type="submit" form="formSeverityRule">Add</button>
+    <button class="ml-2 mat-raised-button" (click)="close()">Close</button>
+</mat-dialog-actions>
