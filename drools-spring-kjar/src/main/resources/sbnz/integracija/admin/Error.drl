@@ -1,0 +1,17 @@
+package sbnz.integracija.admin
+
+import java.util.Date;
+import com.tim9.bolnica.model.*;
+import com.tim9.bolnica.enums.*;
+   
+
+   rule "Error log appeared"
+       when
+           $log: Log($id: id, severity == LogSeverity.ERROR)
+           not(AdminAlarm(logId == $id))
+       then
+           System.out.println("Error log appeared");
+           AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), $log.getMessage());
+           insert(alarm);
+   end
+   

@@ -1,9 +1,7 @@
-package bsep.integration.predefined;
+package sbnz.integracija.admin
 
-   import com.tim9.bolnica.model.Log;
-   import com.tim9.bolnica.model.AdminAlarm;
-   import com.tim9.bolnica.enums.LogSeverity;
-   import java.util.Date;
+import java.util.Date;
+import com.tim9.bolnica.model.*;
    
 
 rule "Connection from malicious IP address"
