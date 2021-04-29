@@ -35,7 +35,7 @@ class NormalState(State):
         f = open(PATH, "a")
         f.write(log + "\n")
         f.close()
-        sleep(1)
+        sleep(2)
 
         context.state = get_next_state()
         context.state.run(context)
@@ -47,8 +47,8 @@ class BruteForceAttackState(State):
 
         username = random.choice(USERNAMES)
         host = random.choice(IP)
-        for i in range(10):
-            if i >= 5:
+        for i in range(5):
+            if i == 5:
                 log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[4] + "_" + SEVERITY[3] + " " + host + " " + 'Unsuccessful login attempt with username ' + username
             else:
                 log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[1] + "_" + SEVERITY[1] + " " + host + " " + 'Unsuccessful login attempt with username ' + username
@@ -56,7 +56,7 @@ class BruteForceAttackState(State):
             f = open(PATH, "a")
             f.write(log + "\n")
             f.close()
-        sleep(1)
+        sleep(2)
 
         context.state = get_next_state()
         context.state.run(context)
@@ -72,7 +72,7 @@ class AccessDeniedState(State):
         f = open(PATH, "a")
         f.write(log + "\n")
         f.close()
-        sleep(1)
+        sleep(2)
 
         context.state = get_next_state()
         context.state.run(context)
@@ -88,7 +88,7 @@ class BlackListIPConnectionState(State):
         f = open(PATH, "a")
         f.write(log + "\n")
         f.close()
-        sleep(1)
+        sleep(2)
 
         context.state = get_next_state()
         context.state.run(context)
@@ -109,7 +109,7 @@ class DoSAttackState(State):
             f = open(PATH, "a")
             f.write(log + "\n")
             f.close()
-        sleep(1)
+        sleep(2)
 
         context.state = get_next_state()
         context.state.run(context)
@@ -124,14 +124,14 @@ class DatabaseErrorState(State):
         f = open(PATH, "a")
         f.write(log + "\n")
         f.close()
-        sleep(1)
+        sleep(2)
 
         context.state = get_next_state()
         context.state.run(context)
 
 
 def get_next_state():
-    rnd = random.randint(0, 15)
+    rnd = random.randint(0, 20)
     if rnd == 1:
         return BruteForceAttackState()
     elif rnd == 2:
