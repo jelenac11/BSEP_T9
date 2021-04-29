@@ -1,0 +1,25 @@
+template header
+severity
+timePeriod
+count
+message
+
+package rules.admin.templates;
+
+import com.tim9.bolnica.model.*;
+import com.tim9.bolnica.enums.*;
+import java.util.Date;
+
+template "Severity template"
+
+rule "Severity rule @{severity} appears @{count} times in @{timePeriod} seconds"
+    when
+        Number(intValue >= 1) from accumulate(
+           $l: Log(severity == LogSeverity.@{severity}) over window:time(@{timePeriod}s),
+           count($l))
+    then
+        System.out.println("Severity template rule");
+        insert(new AdminAlarm(null, null, new Date(), "@{message}"));
+end
+
+end template

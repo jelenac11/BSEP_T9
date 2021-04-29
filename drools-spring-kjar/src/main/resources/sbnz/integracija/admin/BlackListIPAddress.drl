@@ -4,7 +4,7 @@ import java.util.Date;
 import com.tim9.bolnica.model.*;
    
 
-rule "Connection from malicious IP address"
+rule "Connection from blacklisted IP address"
     when
         $log: Log($id: id, 
             $ip: ip,
@@ -12,7 +12,7 @@ rule "Connection from malicious IP address"
         )
         not (AdminAlarm(logId == $id))
     then
-    	System.out.println("Connection from malicous IP adress");
+    	System.out.println("Connection from blacklisted IP adress");
         insert(new AdminAlarm(null, $id, new Date(), "Connection from blacklisted IP address " + $ip));
 end
    
