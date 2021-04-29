@@ -1,12 +1,12 @@
 <div class="container-fluid">
     <div class="mt-2">
-        <div class="button-group" *ngIf="currentTab == 1">
-            <button mat-flat-button color="primary" class="button-add" (click)="addSeverityRule()" *ngIf="currentTab == 1">
+        <div class="button-group">
+            <button mat-flat-button color="primary" class="button-add" (click)="addSeverityRule()">
                 Add severity rule
             </button>
         </div>
-        <div class="button-group" *ngIf="currentTab == 2">
-            <button mat-flat-button color="primary" class="button-add" (click)="addMessagesRule()" *ngIf="currentTab == 2">
+        <div class="button-group">
+            <button mat-flat-button color="primary" class="button-add" (click)="addMessagesRule()">
                 Add messages rule
             </button>
         </div>
@@ -24,9 +24,9 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="
-                                    let item of defaultRules"
+                                    let item of defaultRules; let i = index"
                                 >
-                                    <th scope="col" width="10%">{{ i }}</th>
+                                    <th scope="col" width="10%">{{ i + 1}}</th>
                                     <td scope="col" width="90%">{{ item.description }}</td>
                                 </tr>
                             </tbody>
@@ -37,14 +37,20 @@
                         <table class="table table-hover">
                             <thead>
                                 <th scope="col" width="10%">No</th>
-                                <th scope="col" width="90%">Description</th>
+                                <th scope="col" width="18%">Severity</th>
+                                <th scope="col" width="8%">Time period</th>
+                                <th scope="col" width="8%">Count</th>
+                                <th scope="col" width="56%">Alarm Message</th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="
                                     let item of severityRules"
                                 >
-                                    <th scope="col" width="10%">{{ i }}</th>
-                                    <td scope="col" width="90%">{{ item.description }}</td>
+                                    <th scope="col" width="10%">{{ i + 1}}</th>
+                                    <td scope="col" width="18%">{{ item.severity }}</td>
+                                    <td scope="col" width="8%">{{ item.timePeriod }}</td>
+                                    <td scope="col" width="8%">{{ item.count }}</td>
+                                    <td scope="col" width="56%">{{ item.message }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -54,12 +60,18 @@
                         <table class="table table-hover">
                             <thead>
                                 <th scope="col" width="10%">No</th>
-                                <th scope="col" width="90%">Description</th>
+                                <th scope="col" width="20%">First message regex</th>
+                                <th scope="col" width="20%">Second message regex</th>
+                                <th scope="col" width="8%">Time period</th>
+                                <th scope="col" width="42%">Alarm Message</th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of messagesRules">
-                                    <th scope="col" width="10%">{{ i }}</th>
-                                    <td scope="col" width="90%">{{ item.description }}</td>
+                                    <th scope="col" width="10%">{{ i + 1}}</th>
+                                    <td scope="col" width="20%">{{ item.messageRegexBefore }}</td>
+                                    <td scope="col" width="20%">{{ item.messageRegexAfter }}</td>
+                                    <td scope="col" width="8%">{{ item.timePeriod }}</td>
+                                    <td scope="col" width="42%">{{ item.message }}</td>
                                 </tr>
                             </tbody>
                         </table>
