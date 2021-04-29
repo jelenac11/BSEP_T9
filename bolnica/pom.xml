@@ -17,6 +17,7 @@
 		<java.version>1.8</java.version>
 		<jjwt.version>0.4</jjwt.version>
 		<runtime.version>6.4.0.Final</runtime.version>
+		<kie.version>7.17.0.Final</kie.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -100,26 +101,23 @@
 			<version>2.4</version>
 		</dependency>
 		
-		<dependency>	
-			<groupId>org.kie</groupId>
-	        <artifactId>kie-api</artifactId>
-    	    <version>${runtime.version}</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.drools</groupId>
-	        <artifactId>drools-core</artifactId>
-	        <version>${runtime.version}</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.drools</groupId>
-	        <artifactId>drools-decisiontables</artifactId>
-	        <version>${runtime.version}</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.jbpm</groupId>
-	        <artifactId>jbpm-test</artifactId>
-	        <version>${runtime.version}</version>
-	    </dependency>
+	   <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-ci</artifactId>
+            <version>${kie.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-spring</artifactId>
+            <version>${kie.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>sbnz.integracija</groupId>
+  			<artifactId>drools-spring-kjar</artifactId>
+			<type>jar</type>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

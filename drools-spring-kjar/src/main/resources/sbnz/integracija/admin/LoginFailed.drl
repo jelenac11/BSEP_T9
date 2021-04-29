@@ -1,0 +1,67 @@
+package sbnz.integracija.admin
+
+
+import java.util.Date;
+import java.util.ArrayList;
+import com.tim9.bolnica.model.*;
+   
+
+rule "Login failed, same username"
+    when
+        $l: Log($id: id, $m: message, message.contains("Unsuccessful login"))
+        $alarms: ArrayList() from collect( AdminAlarm())
+        $n: Number(intValue > 4) from accumulate(
+            $log : Log($id2: id, $ip: ip, message == $m)
+            over window:time(1m),
+            init (int count = 0;),
+            action (
+                int c = 0;
+                for(Object o : $alarms) {
+                    AdminAlarm a = (AdminAlarm) o;
+                    if (a.getLogId() == $id2 && a.getMessage().contains("SAME USERNAME")) {
+                        c += 1;
+                        break;
+                    }
+                }
+                if (c == 0) {
+                    count += 1;
+                }
+            ),
+            result (count)
+        )
+        not (AdminAlarm(logId == $id))
+    then
+    	System.out.println("Login failed, same username");
+        insert(new AdminAlarm(null, $id, new Date(), "SAME USERNAME - " + $m));
+end
+
+
+rule "Login failed, same source"
+    when
+        $l: Log($id: id, $m: message, message.contains("Unsuccessful login"), $ip2: ip)
+        $alarms: ArrayList() from collect( AdminAlarm())
+        $no: Number(intValue > 4) from accumulate(
+            $log : Log($id2: id, ip == $ip2, message.contains("Unsuccessful login"))
+            over window:time(1m),
+            init (int count = 0;),
+            action (
+                int c = 0;
+                for(Object o : $alarms) {
+                    AdminAlarm a = (AdminAlarm) o;
+                    if (a.getLogId() == $id2 && a.getMessage().contains("SAME SOURCE")) {
+                        c += 1;
+                        break;
+                    }
+                }
+                if (c == 0) {
+                    count += 1;
+                }
+            ),
+            result (count)
+        )
+        not (AdminAlarm(logId == $id))
+    then
+    	System.out.println("Login failed, same source");
+        insert(new AdminAlarm(null, $id, new Date(), "SAME SOURCE - Unsuccessful logins from same source - " + $ip2));
+end
+   

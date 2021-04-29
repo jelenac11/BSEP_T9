@@ -26,14 +26,14 @@ public class AlarmService {
 	
 	@Autowired
 	private AlarmAdminRepository alarmRepository;
-	public static KieSession kieSession;
+	//public static KieSession kieSession;
 	@Autowired
     KieContainer kieContainer;
 	
-	@EventListener(ApplicationReadyEvent.class)
+	/*@EventListener(ApplicationReadyEvent.class)
     public void initializeSessions() {
         kieSession = getKieSession();
-    }
+    }*/
 	
 	public Page<AlarmResponseDTO> findAll(Pageable pageable) {
 		ArrayList<AlarmResponseDTO> resp = new ArrayList<AlarmResponseDTO>();
@@ -48,6 +48,7 @@ public class AlarmService {
     }
 	
 	public void checkAlarms(List<Log> logs) {
+		KieSession kieSession = getKieSession();
 		for (Log log: logs) {
             kieSession.insert(log);
         }

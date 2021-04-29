@@ -1,0 +1,18 @@
+package sbnz.integracija.admin
+
+import java.util.Date;
+import com.tim9.bolnica.model.*;
+   
+
+rule "Connection from malicious IP address"
+    when
+        $log: Log($id: id, 
+            $ip: ip,
+            ip memberOf ['13.48.123.212', '128.128.199.200', '14.54.11.127', '22.54.160.93', '43.220.201.254']     
+        )
+        not (AdminAlarm(logId == $id))
+    then
+    	System.out.println("Connection from malicous IP adress");
+        insert(new AdminAlarm(null, $id, new Date(), "Connection from blacklisted IP address " + $ip));
+end
+   

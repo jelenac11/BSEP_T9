@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
 
 import com.tim9.bolnica.enums.LogFacility;
@@ -28,6 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Role(Role.Type.EVENT)
+@Expires("5m")
 public class Log {
 
 	@Id

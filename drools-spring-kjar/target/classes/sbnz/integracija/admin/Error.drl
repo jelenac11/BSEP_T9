@@ -1,14 +1,13 @@
-package bsep.integration.predefined;
+package sbnz.integracija.admin
 
-   import com.tim9.bolnica.model.Log;
-   import com.tim9.bolnica.model.AdminAlarm;
-   import com.tim9.bolnica.enums.LogSeverity;
-   import java.util.Date;
+import java.util.Date;
+import com.tim9.bolnica.model.*;
+import com.tim9.bolnica.enums.*;
    
 
    rule "Error log appeared"
        when
-           $log: Log($id: id, log.getSeverity() == LogSeverity.ERROR)
+           $log: Log($id: id, severity == LogSeverity.ERROR)
            not(AdminAlarm(logId == $id))
        then
            System.out.println("Error log appeared");

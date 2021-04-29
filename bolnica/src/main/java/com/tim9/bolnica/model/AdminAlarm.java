@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "admin_alarms")
 @Role(Role.Type.EVENT)
-@Expires("30m")
+@Expires("10m")
 public class AdminAlarm {
 	
 	@Id
