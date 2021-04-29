@@ -20,11 +20,26 @@ export class RulesService {
     return this.http.get(`${environment.api_url}rules/default/by-page`, { params, responseType: 'json' });
   }
 
-  getCreatedRules(size: number, page: number): Observable<any> {
+  getSeverityRules(size: number, page: number): Observable<any> {
     let params = new HttpParams();
     params = params.append('size', size.toString());
     params = params.append('page', page.toString());
-    return this.http.get(`${environment.api_url}rules/created/by-page`, { params, responseType: 'json' });
+    return this.http.get(`${environment.api_url}rules/severity/by-page`, { params, responseType: 'json' });
+  }
+
+  getMessagesRules(size: number, page: number): Observable<any> {
+    let params = new HttpParams();
+    params = params.append('size', size.toString());
+    params = params.append('page', page.toString());
+    return this.http.get(`${environment.api_url}rules/messages/by-page`, { params, responseType: 'json' });
+  }
+
+  addSeverityRule(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/severity`, rule, { headers: this.headers, responseType: 'text' });
+  }
+
+  addMessagesRule(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/messages`, rule, { headers: this.headers, responseType: 'text' });
   }
 
 }

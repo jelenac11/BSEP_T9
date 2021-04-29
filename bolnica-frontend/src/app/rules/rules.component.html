@@ -1,8 +1,13 @@
 <div class="container-fluid">
     <div class="mt-2">
-        <div class="button-group">
-            <button mat-flat-button color="primary" class="button-add" (click)="addRule()">
-                Add new rule
+        <div class="button-group" *ngIf="currentTab == 1">
+            <button mat-flat-button color="primary" class="button-add" (click)="addSeverityRule()" *ngIf="currentTab == 1">
+                Add severity rule
+            </button>
+        </div>
+        <div class="button-group" *ngIf="currentTab == 2">
+            <button mat-flat-button color="primary" class="button-add" (click)="addMessagesRule()" *ngIf="currentTab == 2">
+                Add messages rule
             </button>
         </div>
         <div class="mt-4">
@@ -19,14 +24,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="
-                                    let item of defaultRules.content
-                                        | paginate
-                                        : {
-                                            itemsPerPage: size,
-                                            currentPage: page,
-                                            totalItems: defaultRules.totalElements
-                                            };
-                                    let i = index"
+                                    let item of defaultRules"
                                 >
                                     <th scope="col" width="10%">{{ i }}</th>
                                     <td scope="col" width="90%">{{ item.description }}</td>
@@ -43,14 +41,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="
-                                    let item of createdRules.content
-                                        | paginate
-                                        : {
-                                            itemsPerPage: size,
-                                            currentPage: page,
-                                            totalItems: createdRules.totalElements
-                                            };
-                                    let i = index"
+                                    let item of severityRules"
                                 >
                                     <th scope="col" width="10%">{{ i }}</th>
                                     <td scope="col" width="90%">{{ item.description }}</td>
@@ -58,19 +49,20 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="mt-3 div-centered" *ngIf="currentTab == 0">
-                        <pagination-controls
-                        previousLabel="Previous"
-                        nextLabel="Next"
-                        (pageChange)="handlePageChange($event)"
-                        ></pagination-controls>
-                    </div>
-                    <div class="mt-3 div-centered" *ngIf="currentTab == 1">
-                        <pagination-controls
-                        previousLabel="Previous"
-                        nextLabel="Next"
-                        (pageChange)="handlePageChange($event)"
-                        ></pagination-controls>
+
+                    <div *ngIf="currentTab == 2">
+                        <table class="table table-hover">
+                            <thead>
+                                <th scope="col" width="10%">No</th>
+                                <th scope="col" width="90%">Description</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of messagesRules">
+                                    <th scope="col" width="10%">{{ i }}</th>
+                                    <td scope="col" width="90%">{{ item.description }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </mat-tab>
             </mat-tab-group>

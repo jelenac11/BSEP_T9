@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RulesService } from '../core/services/rules.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { AddRuleComponent } from '../add-rule/add-rule.component';
+import { AddSeverityRuleComponent } from '../add-severity-rule/add-severity-rule.component';
+import { AddMessagesRuleComponent } from '../add-messages-rule/add-messages-rule.component';
 
 @Component({
   selector: 'app-rules',
@@ -11,9 +12,10 @@ import { AddRuleComponent } from '../add-rule/add-rule.component';
 })
 export class RulesComponent implements OnInit {
   clicked = 'a';
-  tabs: string[] = ['Default rules', 'Created rules'];
-  defaultRules = { content: [], totalElements: 0 };
-  createdRules = { content: [], totalElements: 0 };
+  tabs: string[] = ['Default rules', 'Severity rules', 'Messages rules'];
+  defaultRules = [];
+  severityRules = [];
+  messagesRules = [];
   page = 1;
   size = 10;
   currentTab = 0;
@@ -31,11 +33,15 @@ export class RulesComponent implements OnInit {
   getRules(): void {
     if (this.currentTab === 0) {
       this.rulesService.getDefaultRules(this.size, this.page - 1).subscribe((data) => {
-        this.defaultRules = { content: data.content, totalElements: data.totalElements };
+        this.defaultRules = data;
       });
-    } else {
-      this.rulesService.getCreatedRules(this.size, this.page - 1).subscribe((data) => {
-        this.createdRules = { content: data.content, totalElements: data.totalElements };
+    } else if (this.currentTab === 1) {
+      this.rulesService.getSeverityRules(this.size, this.page - 1).subscribe((data) => {
+        this.severityRules = data;
+      });
+    } else if (this.currentTab === 2) {
+      this.rulesService.getMessagesRules(this.size, this.page - 1).subscribe((data) => {
+        this.messagesRules = data;
       });
     }
   }
@@ -51,12 +57,25 @@ export class RulesComponent implements OnInit {
     this.getRules();
   }
 
-  addRule(): void {
+  addSeverityRule(): void {
     const dialogConfig: MatDialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.minHeight = '440px';
     dialogConfig.minWidth = '400px';
-    const dialogRef = this.dialog.open(AddRuleComponent, dialogConfig);
+    const dialogRef = this.dialog.open(AddSeverityRuleComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.getRules();
+      }
+    });
+  }
+
+  addMessagesRule(): void {
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.minHeight = '440px';
+    dialogConfig.minWidth = '400px';
+    const dialogRef = this.dialog.open(AddMessagesRuleComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
         this.getRules();
