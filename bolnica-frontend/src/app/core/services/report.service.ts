@@ -14,6 +14,6 @@ export class ReportService {
   ) { }
 
   getReport(request: any): Observable<any> {
-    return this.http.post(`${environment.api_url}reports`, request, { headers: this.headers, responseType: 'text' });
+    return this.http.post(`${environment.api_url}reports`, request, { headers: this.headers });
   }
 }
