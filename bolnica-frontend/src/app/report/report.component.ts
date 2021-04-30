@@ -34,6 +34,7 @@ export class ReportComponent implements OnInit {
       to: this.formReport.controls.to.value
     };
     this.reportService.getReport(request).subscribe((data) => {
+      console.log(data)
       this.report = data;
     });
   }
