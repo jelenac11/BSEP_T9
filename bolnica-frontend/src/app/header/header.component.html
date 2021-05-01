@@ -11,6 +11,7 @@
           routerLink="/csr"
           routerLinkActive="active"
           mdbWavesEffect
+          *ngIf="permissions?.includes('write:csr')"
           >Create CSR</a
         >
       </li>
@@ -19,6 +20,7 @@
           class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
           routerLink="/logs"
           mdbWavesEffect
+          *ngIf="permissions?.includes('read:logs')"
           >Logs</a
         >
       </li>
@@ -27,6 +29,7 @@
           class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
           routerLink="/alarms"
           mdbWavesEffect
+          *ngIf="permissions?.includes('read:alarms')"
           >Alarms</a
         >
       </li>
@@ -35,6 +38,7 @@
           class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
           routerLink="/rules"
           mdbWavesEffect
+          *ngIf="permissions?.includes('read:rules')"
           >Rules</a
         >
       </li>
@@ -43,7 +47,35 @@
           class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
           routerLink="/report"
           mdbWavesEffect
+          *ngIf="permissions?.includes('read:reports')"
           >Report</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          routerLink="/messages"
+          mdbWavesEffect
+          *ngIf="permissions?.includes('read:messages')"
+          >Messages</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          routerLink="/alarms-doctor"
+          mdbWavesEffect
+          *ngIf="permissions?.includes('read:alarmsDoctor')"
+          >Alarms</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
+          routerLink="/rules-doctor"
+          mdbWavesEffect
+          *ngIf="permissions?.includes('read:rulesDoctor')"
+          >Rules</a
         >
       </li>
     </ul>
