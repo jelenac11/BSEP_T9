@@ -30,18 +30,18 @@ public class DeviceService {
 		}).start();
 	}
 	
-	private void monitorPatients() {
-		while (true) {
-			try {
-				String text = String.format("Timestamp=%s patient=%d temperature=%d systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
-						DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
-				//this.restTemplate.postForEntity(MESSAGES_API, new MessageDTO(text), String.class);
-				Thread.sleep(SLEEP_INTERVAL);
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
+	public void monitorPatients() {
+		//while (true) {
+		try {
+			String text = String.format("Timestamp=%s patient=%d temperature=%d systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
+					DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
+			this.restTemplate.postForEntity("https://localhost:8080/api/messages", new MessageDTO(text), String.class);
+			Thread.sleep(SLEEP_INTERVAL);
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		//}
 	}
 	
 	private int getRandomNumber(int min, int max) {
