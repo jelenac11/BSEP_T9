@@ -32,14 +32,7 @@ public class DeviceService {
 		}).start();
 	}
 	
-<<<<<<< Updated upstream
-	private void monitorPatients() {
-		while (true) {
-			try {
-				String text = String.format("Timestamp=%s patient=%d temperature=%d systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
-						DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
-				//this.restTemplate.postForEntity(MESSAGES_API, new MessageDTO(text), String.class);
-=======
+
 	public void monitorPatients() {
 		while (true) {
 			try {
@@ -47,7 +40,6 @@ public class DeviceService {
 						DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
 				MessageDTO message = smService.sign(text);
 				this.restTemplate.postForEntity("https://localhost:8080/api/messages", message, String.class);
->>>>>>> Stashed changes
 				Thread.sleep(SLEEP_INTERVAL);
 			}
 			catch(Exception e) {
