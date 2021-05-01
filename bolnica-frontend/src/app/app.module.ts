@@ -25,7 +25,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Snackbar } from './snackbar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
-import { CertificatesComponent } from './certificates/certificates.component';
 import { CallbackComponent } from './callback/callback.component';
 import { LogsComponent } from './logs/logs.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,20 +35,25 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddSeverityRuleComponent } from './add-severity-rule/add-severity-rule.component';
 import { AddMessagesRuleComponent } from './add-messages-rule/add-messages-rule.component';
 import { ReportComponent } from './report/report.component';
+import { MessagesComponent } from './messages/messages.component';
+import { AlarmsDoctorComponent } from './alarms-doctor/alarms-doctor.component';
+import { RulesDoctorComponent } from './rules-doctor/rules-doctor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CsrComponent,
     HeaderComponent,
-    CertificatesComponent,
     CallbackComponent,
     LogsComponent,
     AlarmsComponent,
     RulesComponent,
     AddSeverityRuleComponent,
     AddMessagesRuleComponent,
-    ReportComponent
+    ReportComponent,
+    MessagesComponent,
+    AlarmsDoctorComponent,
+    RulesDoctorComponent
   ],
   imports: [
     CommonModule,

@@ -8,6 +8,7 @@ import { AuthService } from '../core/services/authentication.service';
 })
 export class HeaderComponent implements OnInit {
   user: any = null;
+  permissions: any = null;
 
   constructor(
     public authService: AuthService,
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit {
           this.user = profile;
         }
       );
+      this.permissions = this.authService.role;
     }
   }
 
