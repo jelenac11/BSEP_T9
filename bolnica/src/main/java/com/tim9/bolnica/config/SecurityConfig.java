@@ -46,10 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     	http.cors().and().csrf().disable().authorizeRequests()
         
         .antMatchers(HttpMethod.POST, "/api/csr/**").hasAuthority("SCOPE_write:csr")
-        .antMatchers(HttpMethod.GET, "/api/logs/**").hasAuthority("SCOPE_read:logs")
+        .antMatchers(HttpMethod.GET, "/api/logs/**").hasAuthority("SCOPE_read:logs");
         
-        .antMatchers("**").authenticated()
-        .and().oauth2ResourceServer().jwt();
+       // .antMatchers("**").authenticated()
+        //.and().oauth2ResourceServer().jwt();
     }
     
 }

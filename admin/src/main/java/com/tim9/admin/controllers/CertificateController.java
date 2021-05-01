@@ -92,6 +92,15 @@ public class CertificateController {
         }
     }
 	
+	@GetMapping("/validate/{serialNumber}")
+    public ResponseEntity<Boolean> getCertificateValidate(@PathVariable(value = "serialNumber") String serialNumber) {
+        try {
+            return new ResponseEntity<>(certService.checkCert(serialNumber), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+        }
+    }
+	
 	private CustomPageImplementation<RevokedCertResponseDTO> createCustomPage(Page<RevokedCertResponseDTO> page) {
 		return new CustomPageImplementation<>(page.getContent(), page.getNumber(), page.getSize(),
 				page.getTotalElements(), null, page.isLast(), page.getTotalPages(), null, page.isFirst(),
