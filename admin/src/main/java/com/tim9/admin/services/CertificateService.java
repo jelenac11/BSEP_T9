@@ -177,7 +177,6 @@ public class CertificateService {
 			String alias = enumeration.nextElement();
 			X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
 			if (certificate.getIssuerDN().equals(ca.getSubjectDN())) {
-				System.out.println(alias + "******************************************************");
 				RevokedCertificate rc = createRevokedCertificate(certificate);
 		        revokedCertRepo.save(rc);
 		        
@@ -335,6 +334,29 @@ public class CertificateService {
             e.printStackTrace();
         }
         return null;
+	}
+
+	public boolean checkCert(String serialNumber) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, NoSuchProviderException, IOException {
+		KeyStore ks = KeyStoreUtil.loadKeyStore(KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
+        X509Certificate cert = (X509Certificate) ks.getCertificate(serialNumber);
+        if (cert == null) {
+        	try {
+        		Optional<RevokedCertificate> r = revokedCertRepo.findById(Long.parseLong(serialNumber));
+                if (r.isPresent()) {
+                    return false;
+                }
+                return false;
+        	} catch (NumberFormatException e) {
+        		return false;
+        	}
+        }
+        if (new Date().compareTo(cert.getNotAfter()) > 0) {
+        	return false;
+        }
+        if (new Date().compareTo(cert.getNotBefore()) < 0) {
+        	return false;
+        }
+        return true;
 	}
 
 }

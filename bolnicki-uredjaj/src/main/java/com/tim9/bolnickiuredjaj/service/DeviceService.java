@@ -2,10 +2,10 @@ package com.tim9.bolnickiuredjaj.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +19,8 @@ public class DeviceService {
 	private static final int NO_PATIENTS = 40;
 	
 	private final RestTemplate restTemplate = new RestTemplate();
+	@Autowired
+	private SignMessageService smService;
 	
 	@PostConstruct
 	public void init() {
@@ -30,12 +32,22 @@ public class DeviceService {
 		}).start();
 	}
 	
+<<<<<<< Updated upstream
 	private void monitorPatients() {
 		while (true) {
 			try {
 				String text = String.format("Timestamp=%s patient=%d temperature=%d systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
 						DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
 				//this.restTemplate.postForEntity(MESSAGES_API, new MessageDTO(text), String.class);
+=======
+	public void monitorPatients() {
+		while (true) {
+			try {
+				String text = String.format("Timestamp=%s patient=%d temperature=%.2f systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
+						DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
+				MessageDTO message = smService.sign(text);
+				this.restTemplate.postForEntity("https://localhost:8080/api/messages", message, String.class);
+>>>>>>> Stashed changes
 				Thread.sleep(SLEEP_INTERVAL);
 			}
 			catch(Exception e) {
@@ -44,31 +56,31 @@ public class DeviceService {
 		}
 	}
 	
-	private int getRandomNumber(int min, int max) {
-	    return (int) ((Math.random() * (max - min)) + min);
+	private double getRandomNumber(int min, int max) {
+	    return ((Math.random() * (max - min)) + min);
 	}
 	
 	private Date getTimestamp() {
 		return new Date();
 	}
 	
-	private int getTemperature() {
+	private double getTemperature() {
 		return getRandomNumber(32, 46);
 	}
 	
 	private int getSystolicBloodPressure() {
-		return getRandomNumber(80, 211);
+		return (int) getRandomNumber(80, 211);
 	}
 	
 	private int getDiastolicBloodPressure() {
-		return getRandomNumber(50, 110);
+		return (int) getRandomNumber(50, 110);
 	}
 	
 	private int getHeartRate() {
-		return getRandomNumber(60, 161);
+		return (int) getRandomNumber(60, 161);
 	}
 	
 	private int getOxygenLevel() {
-		return getRandomNumber(60, 131);
+		return (int) getRandomNumber(60, 131);
 	}
 }
