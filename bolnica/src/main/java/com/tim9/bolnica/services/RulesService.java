@@ -1,7 +1,6 @@
 package com.tim9.bolnica.services;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

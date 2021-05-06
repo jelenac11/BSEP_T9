@@ -1,16 +1,20 @@
 package com.tim9.bolnica.services;
 
-import java.security.PublicKey;
-import java.security.Signature;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.cms.ContentInfo;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSProcessable;
+import org.bouncycastle.cms.CMSSignedData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tim9.bolnica.dto.FilterDTO;
-import com.tim9.bolnica.dto.MessageDTO;
 import com.tim9.bolnica.dto.response.MessageResponseDTO;
 import com.tim9.bolnica.model.Message;
 import com.tim9.bolnica.model.Patient;
@@ -35,24 +38,16 @@ public class MessageService {
 	@Autowired
 	private PatientRepository patientRepo;
 	
-	public void checkSign(@Valid MessageDTO message, PublicKey publicKey) throws Exception {
-        String m = message.toString();
-        String recievedSignature = message.getSignature();
-        Signature signature = Signature.getInstance("SHA256withRSA");
-        signature.initVerify(publicKey);
-        signature.update(m.getBytes());
-        byte[] recievedBytes = Base64.getDecoder().decode(recievedSignature);
-        boolean match = signature.verify(recievedBytes);
-
-        if(!match){
-            throw new Exception("Invalid signature");
-        }
-	}
-
-	public void save(@Valid MessageDTO dto) throws ParseException {
+	public void save(@Valid byte[] signedMessage) throws ParseException, CMSException, IOException {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(signedMessage);
+        ASN1InputStream asnInputStream = new ASN1InputStream(inputStream);
+        CMSSignedData cmsSignedData = new CMSSignedData(ContentInfo.getInstance(asnInputStream.readObject()));
+        CMSProcessable msg = cmsSignedData.getSignedContent();
+        System.out.println(new String((byte[]) msg.getContent()));
+        String dto = new String((byte[]) msg.getContent());
+        
 		Message message = new Message();
-		dto.setText(dto.getText().replace(',', '.'));
-		String[] array = dto.getText().split(" ");
+		String[] array = dto.split(" ");
 		message.setTimestamp(DateUtil.parse(array[0].trim().split("=")[1].trim()));
 		message.setPatientId(Long.parseLong(array[1].trim().split("=")[1].trim()));
 		message.setTemperature(Double.parseDouble(array[2].trim().split("=")[1].trim()));
@@ -64,7 +59,7 @@ public class MessageService {
 	}
 
 	public Page<MessageResponseDTO> findAll(Pageable pageable, FilterDTO filter) {
-		List<Message> all = messageRepo.findAllOrderByTimestampDesc();
+		List<Message> all = messageRepo.findAllByOrderByTimestampDesc();
 		ArrayList<Message> filtered = this.filter(all, filter);
 		Page<Message> logPage = messageRepo.findByIdIn(pageable, filtered.stream().map(Message::getId).collect(Collectors.toList())); 
 		ArrayList<MessageResponseDTO> forReturn = new ArrayList<MessageResponseDTO>();
@@ -81,9 +76,8 @@ public class MessageService {
 	
 	private ArrayList<Message> filter(List<Message> all, FilterDTO f) {
 		if (f.getId() != null) {
-			return (ArrayList<Message>) all.stream().filter(c -> c.getId() == f.getId()).collect(Collectors.toList());
+			return (ArrayList<Message>) all.stream().filter(c -> c.getPatientId() == f.getId()).collect(Collectors.toList());
 		}
 		return (ArrayList<Message>) all;
 	}
-
 }

@@ -25,8 +25,7 @@ export class AuthService {
 
   token$ = new BehaviorSubject<string>(null);
   userProfile$ = new BehaviorSubject<any>(null);
-  onAuthSuccessUrlAdmin = '/csr';
-  onAuthSuccessUrlDoctor = '/messages';
+  onAuthSuccessUrl = '/csr';
   onAuthFailureUrl = '/';
   logoutUrl = environment.auth.logout;
 
@@ -44,11 +43,7 @@ export class AuthService {
       this.parseHash$().subscribe(
         authResult => {
           this.localLogin(authResult);
-          if (this.role.includes('write:csr')) {
-            this.router.navigate([this.onAuthSuccessUrlAdmin]).then();
-          } else if (this.role.includes('read:messages')) {
-            this.router.navigate([this.onAuthSuccessUrlDoctor]).then();
-          }
+          this.router.navigate([this.onAuthSuccessUrl]).then();
         },
         err => this.handleError(err)
       );

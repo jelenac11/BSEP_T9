@@ -42,21 +42,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
-    	http.cors().and().csrf().disable().authorizeRequests()
+    	http.cors().and().csrf().disable();/*.authorizeRequests()
         
     	.antMatchers(HttpMethod.GET, "/api/csr/**").hasAuthority("SCOPE_read:csr")
-        .antMatchers(HttpMethod.POST, "/api/csr/**").hasAuthority("SCOPE_write:csr")
         .antMatchers(HttpMethod.DELETE, "/api/csr/**").hasAuthority("SCOPE_delete:csr")
-        .antMatchers("/api/csr/by-page").hasAuthority("SCOPE_read:csr")
-        .antMatchers("/api/csr/verify-csr").permitAll()
+        .antMatchers("/api/csr/by-page/**").hasAuthority("SCOPE_read:csr")
+        
         
         .antMatchers(HttpMethod.GET, "/api/certificates/**").hasAuthority("SCOPE_read:certificates")
         .antMatchers(HttpMethod.POST, "/api/certificates/**").hasAuthority("SCOPE_write:certificates")
         .antMatchers(HttpMethod.DELETE, "/api/certificates/**").hasAuthority("SCOPE_delete:certificates")
-        .antMatchers("/api/certificates/revoke").hasAuthority("SCOPE_delete:certificates")
+        .antMatchers("/api/certificates/revoke").hasAuthority("SCOPE_delete:certificates");
         
-        .antMatchers("**").authenticated()
-        .and().oauth2ResourceServer().jwt();
+        //.antMatchers("**").authenticated()
+        //.and().oauth2ResourceServer().jwt();
+         
+         */
     }
     
 }

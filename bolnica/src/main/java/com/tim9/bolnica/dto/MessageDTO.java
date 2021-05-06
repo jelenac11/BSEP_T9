@@ -13,7 +13,4 @@ public class MessageDTO {
 
 	@NotBlank(message = "Text cannot be blank")
 	private String text;
-	
-	@NotBlank(message = "Message must be signed")
-	private String signature;
 }

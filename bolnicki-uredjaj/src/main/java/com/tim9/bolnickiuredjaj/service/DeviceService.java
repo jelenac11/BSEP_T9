@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.tim9.bolnickiuredjaj.dto.MessageDTO;
-
 @Service
 public class DeviceService {
 
@@ -37,8 +35,8 @@ public class DeviceService {
 		while (true) {
 			try {
 				String text = String.format("Timestamp=%s patient=%d temperature=%.2f systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
-						DATE_FORMAT.format(this.getTimestamp()), this.getRandomNumber(0, NO_PATIENTS), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
-				MessageDTO message = smService.sign(text);
+						DATE_FORMAT.format(this.getTimestamp()), (int) this.getRandomNumber(1, NO_PATIENTS + 1), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
+				byte[] message = smService.sign(text);
 				this.restTemplate.postForEntity("https://localhost:8080/api/messages", message, String.class);
 				Thread.sleep(SLEEP_INTERVAL);
 			}
