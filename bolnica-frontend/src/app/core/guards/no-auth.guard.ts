@@ -14,11 +14,7 @@ export class NoAuthGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.auth.isAuthenticated) {
-      if (this.auth.role.includes('write:csr')) {
-        this.router.navigate(['/csr']);
-      } else {
-        this.router.navigate(['/messages']);
-      }
+      this.router.navigate(['/csr']);
       return false;
     }
     return true;

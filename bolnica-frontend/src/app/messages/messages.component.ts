@@ -45,7 +45,7 @@ export class MessagesComponent implements OnInit {
 
   getMessages(): void {
     let filter = { 
-      patient: this.formFilter.controls.patient.value 
+      id: this.formFilter.controls.patient.value 
     };
     this.messagesService.getMessages(this.size, this.page - 1, filter).subscribe((data: any) => {
       this.messages = data;

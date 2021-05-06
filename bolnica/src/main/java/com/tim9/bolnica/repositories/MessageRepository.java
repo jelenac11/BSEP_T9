@@ -14,6 +14,6 @@ public interface MessageRepository extends JpaRepository<Message, Long>{
 
 	Page<Message> findByIdIn(Pageable pageable, List<Long> collect);
 
-	List<Message> findAllOrderByTimestampDesc();
+	List<Message> findAllByOrderByTimestampDesc();
 
 }

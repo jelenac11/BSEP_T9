@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -49,7 +50,7 @@ public class RestTemplateConfiguration {
 	                trustStorePass.toCharArray());
 	        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(
 	                new SSLContextBuilder().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
-	                .loadKeyMaterial(keyStore, keyStorePass.toCharArray()).build());
+	                .loadKeyMaterial(keyStore, keyStorePass.toCharArray()).build(), NoopHostnameVerifier.INSTANCE);
 	        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
 	        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
 	        return new RestTemplate(requestFactory);
