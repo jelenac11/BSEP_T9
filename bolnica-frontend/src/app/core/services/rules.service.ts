@@ -42,4 +42,20 @@ export class RulesService {
     return this.http.post(`${environment.api_url}rules/create-mtr`, rule, { headers: this.headers, responseType: 'text' });
   }
 
+  addTemperatureRuleHigher(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/create-hight`, rule, { headers: this.headers, responseType: 'text' });
+  }
+
+  addTemperatureRuleLower(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/create-lowt`, rule, { headers: this.headers, responseType: 'text' });
+  }
+
+  addLowOxygenLevelRule(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/create-olr`, rule, { headers: this.headers, responseType: 'text' });
+  }
+
+  addPressureRule(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/create-prule`, rule, { headers: this.headers, responseType: 'text' });
+  }
+
 }

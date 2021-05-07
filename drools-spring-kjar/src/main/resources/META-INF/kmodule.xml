@@ -4,5 +4,8 @@
    <kbase name="rules" eventProcessingMode="stream" default="true" packages="sbnz.integracija.admin">
         <ksession clockType="realtime" name="admin-session" />
     </kbase>
+    <kbase name="rules2" eventProcessingMode="stream" packages="sbnz.integracija.doctor">
+        <ksession clockType="realtime" name="doctor-session" />
+    </kbase>
     
 </kmodule>

@@ -1,0 +1,26 @@
+template header
+id
+systolicFrom
+systolicTo
+diastolicFrom
+diastolicTo
+heartRateFrom
+heartRateTo
+message
+
+package rules.doctor.templates;
+
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+template "Pressure template"
+
+rule "Pressure @{id} "
+    when
+    	Message($patient: patientId, systolic < @{systolicTo}, systolic> @{systolicFrom}, diastolic < @{diastolicTo}, diastolic> @{diastolicFrom}, heartRate < @{heartRateTo}, heartRate > @{heartRateFrom})
+    then
+        System.out.println("Pressure template rule");
+        insert(new DoctorAlarm(null, $patient, new Date(), "@{message}"));
+   end
+
+end template

@@ -1,0 +1,21 @@
+template header
+id
+temperature
+message
+
+package rules.doctor.templates;
+
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+template "High temperature template"
+
+rule "High temperature over @{temperature} @{id} "
+    when
+    	Message(temperature > @{temperature}, $patient: patientId)
+    then
+        System.out.println("High temperature template rule");
+        insert(new DoctorAlarm(null, $patient, new Date(), "@{message}"));
+   end
+
+end template
