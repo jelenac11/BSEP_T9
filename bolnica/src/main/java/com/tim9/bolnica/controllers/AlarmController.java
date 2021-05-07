@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.bolnica.dto.response.AlarmDoctorResponseDTO;
 import com.tim9.bolnica.dto.response.AlarmResponseDTO;
 import com.tim9.bolnica.model.CustomPageImplementation;
 import com.tim9.bolnica.services.AlarmService;
@@ -30,7 +31,18 @@ public class AlarmController {
 		return new ResponseEntity<>(createCustomPage(alarmService.findAll(pageable)), HttpStatus.OK);
     }
     
+    @GetMapping(value = "/by-page-doctor")
+    public ResponseEntity<?> findAllDoctorAlarms(Pageable pageable) {
+		return new ResponseEntity<>(createCustomPageDoctor(alarmService.findAllDoctorAlarms(pageable)), HttpStatus.OK);
+    }
+    
     private CustomPageImplementation<AlarmResponseDTO> createCustomPage(Page<AlarmResponseDTO> page) {
+		return new CustomPageImplementation<>(page.getContent(), page.getNumber(), page.getSize(),
+				page.getTotalElements(), null, page.isLast(), page.getTotalPages(), null, page.isFirst(),
+				page.getNumberOfElements());
+	}
+    
+    private CustomPageImplementation<AlarmDoctorResponseDTO> createCustomPageDoctor(Page<AlarmDoctorResponseDTO> page) {
 		return new CustomPageImplementation<>(page.getContent(), page.getNumber(), page.getSize(),
 				page.getTotalElements(), null, page.isLast(), page.getTotalPages(), null, page.isFirst(),
 				page.getNumberOfElements());

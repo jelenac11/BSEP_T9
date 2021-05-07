@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AlarmsComponent } from './alarms/alarms.component';
 import { CallbackComponent } from './callback/callback.component';
-import { CertificatesComponent } from './certificates/certificates.component';
+import { AlarmsDoctorComponent } from './alarms-doctor/alarms-doctor.component';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 import { CsrComponent } from './csr/csr.component';
 import { LogsComponent } from './logs/logs.component';
 import { ReportComponent } from './report/report.component';
 import { RulesComponent } from './rules/rules.component';
+import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
   {
@@ -57,11 +58,19 @@ const routes: Routes = [
     }
   },
   {
-    path: 'certificates',
-    component: CertificatesComponent,
+    path: 'messages',
+    component: MessagesComponent,
     canActivate: [RoleGuard],
     data: {
-        expectedRoles: 'read:certificates'
+        expectedRoles: 'read:messages'
+    }
+  },
+  {
+    path: 'alarms-doctor',
+    component: AlarmsDoctorComponent,
+    canActivate: [RoleGuard],
+    data: {
+        expectedRoles: 'read:alarmsDoctor'
     }
   }
 ];

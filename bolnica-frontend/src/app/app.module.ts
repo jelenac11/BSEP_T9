@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 
+import {MatRadioModule} from '@angular/material/radio';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +26,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Snackbar } from './snackbar';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
-import { CertificatesComponent } from './certificates/certificates.component';
 import { CallbackComponent } from './callback/callback.component';
 import { LogsComponent } from './logs/logs.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -36,20 +36,29 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddSeverityRuleComponent } from './add-severity-rule/add-severity-rule.component';
 import { AddMessagesRuleComponent } from './add-messages-rule/add-messages-rule.component';
 import { ReportComponent } from './report/report.component';
+import { AlarmsDoctorComponent } from './alarms-doctor/alarms-doctor.component';
+import { MessagesComponent } from './messages/messages.component';
+import { AddTemperatureRuleComponent } from './add-temperature-rule/add-temperature-rule.component';
+import { AddLowOxygenLevelRuleComponent } from './add-low-oxygen-level-rule/add-low-oxygen-level-rule.component';
+import { AddPressureRuleComponent } from './add-pressure-rule/add-pressure-rule.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CsrComponent,
     HeaderComponent,
-    CertificatesComponent,
     CallbackComponent,
     LogsComponent,
     AlarmsComponent,
     RulesComponent,
     AddSeverityRuleComponent,
     AddMessagesRuleComponent,
-    ReportComponent
+    ReportComponent,
+    AlarmsDoctorComponent,
+    MessagesComponent,
+    AddTemperatureRuleComponent,
+    AddLowOxygenLevelRuleComponent,
+    AddPressureRuleComponent
   ],
   imports: [
     CommonModule,
@@ -75,7 +84,8 @@ import { ReportComponent } from './report/report.component';
     MatNativeDateModule,
     MatDialogModule,
     MatSelectModule,
-    MatTabsModule
+    MatTabsModule,
+    MatRadioModule
   ],
   providers: [
     Snackbar,

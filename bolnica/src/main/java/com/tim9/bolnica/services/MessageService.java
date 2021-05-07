@@ -38,6 +38,9 @@ public class MessageService {
 	@Autowired
 	private PatientRepository patientRepo;
 	
+	@Autowired
+    private AlarmService alarmService;
+	
 	public void save(@Valid byte[] signedMessage) throws ParseException, CMSException, IOException {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(signedMessage);
         ASN1InputStream asnInputStream = new ASN1InputStream(inputStream);
@@ -56,6 +59,7 @@ public class MessageService {
 		message.setHeartRate(Integer.parseInt(array[5].trim().split("=")[1].trim()));
 		message.setOxygenLevel(Integer.parseInt(array[6].trim().split("=")[1].trim()));
 		this.messageRepo.save(message);
+		this.alarmService.checkDoctorAlarms(message);
 	}
 
 	public Page<MessageResponseDTO> findAll(Pageable pageable, FilterDTO filter) {

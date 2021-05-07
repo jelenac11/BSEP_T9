@@ -4,8 +4,6 @@ insert into default_rules (description) values('Alarm is raised when there is a 
 insert into default_rules (description) values('Alarm is raised when there are more than 15 consecutive logs in one minute that have same source IP address');
 insert into default_rules (description) values('Alarm is raised when there are more than 5 unsuccessful login logs in one minute with the same username.');
 insert into default_rules (description) values('Alarm is raised when there are more than 5 unsuccessful login logs in one minute with the same source IP address .');
-<<<<<<< Updated upstream
-=======
 
 insert into patients (insured_number, first_name, last_name, birth_day, height, weight, gender, blood_type) values('1', 'Ime1', 'Prezime1', '1998-06-30', 165, 50, 'MALE', 'A');
 insert into patients (insured_number, first_name, last_name, birth_day, height, weight, gender, blood_type) values('2', 'Ime2', 'Prezime2', '1998-06-30', 165, 50, 'MALE', 'A');
@@ -47,4 +45,3 @@ insert into patients (insured_number, first_name, last_name, birth_day, height, 
 insert into patients (insured_number, first_name, last_name, birth_day, height, weight, gender, blood_type) values('38', 'Ime38', 'Prezime38', '1998-06-30', 165, 50, 'MALE', 'A');
 insert into patients (insured_number, first_name, last_name, birth_day, height, weight, gender, blood_type) values('39', 'Ime39', 'Prezime39', '1998-06-30', 165, 50, 'MALE', 'A');
 insert into patients (insured_number, first_name, last_name, birth_day, height, weight, gender, blood_type) values('40', 'Ime40', 'Prezime40', '1998-06-30', 165, 50, 'MALE', 'A');
->>>>>>> Stashed changes

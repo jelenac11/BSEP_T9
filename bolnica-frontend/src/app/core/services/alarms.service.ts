@@ -20,4 +20,12 @@ export class AlarmsService {
     pars = pars.append('page', page.toString());
     return this.http.get(`${environment.api_url}alarms/by-page`, { params: pars, responseType: 'json' });
   }
+
+  getAlarmsDoctor(size: number, page: number): Observable<AlarmsPage> {
+    let pars = new HttpParams();
+    pars = pars.append('size', size.toString());
+    pars = pars.append('page', page.toString());
+    return this.http.get(`${environment.api_url}alarms-doctor/by-page`, { params: pars, responseType: 'json' });
+  }
+  
 }
