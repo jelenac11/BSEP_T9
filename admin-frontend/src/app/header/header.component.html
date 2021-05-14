@@ -14,14 +14,6 @@
           >Certificates</a
         >
       </li>
-      <li class="nav-item">
-        <a
-          class="nav-link waves-light font-weight-bolder ml-2 mt-2 h6"
-          routerLink="/logs"
-          mdbWavesEffect
-          >Logs</a
-        >
-      </li>
     </ul>
     <ul class="navbar-nav ml-auto nav-flex-icons">
       <li class="nav-item">
@@ -36,6 +28,7 @@
           <mat-icon>account_circle</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
+          <button (click)="switchApp()" mat-menu-item><mat-icon>local_hospital</mat-icon> Go to Hospital App</button>
           <button (click)="logout()" mat-menu-item><mat-icon>exit_to_app</mat-icon> Log out</button>
         </mat-menu>
       </li>

@@ -72,7 +72,11 @@ const routes: Routes = [
     data: {
         expectedRoles: 'read:alarmsDoctor'
     }
-  }
+  },
+  {
+    path: '**',
+    component: CallbackComponent,
+  },
 ];
 
 @NgModule({

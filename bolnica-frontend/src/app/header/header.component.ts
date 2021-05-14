@@ -29,4 +29,8 @@ export class HeaderComponent implements OnInit {
     this.authService.logout();
   }
 
+  switchApp(): void {
+    window.location.replace('https://localhost:4201/certificates');
+  }
+
 }

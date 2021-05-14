@@ -15,10 +15,10 @@ export class AppComponent {
     private authService: AuthService
   ) {
     this.router.events.subscribe((url: any) => {
-      if (this.router.url.startsWith('/verify-csr/') || this.router.url.startsWith('/homepage')) {
-        this.showNavbar = false;
-      } else {
+      if (this.router.url.startsWith('/certificates')) {
         this.showNavbar = true;
+      } else {
+        this.showNavbar = false;
       }
     });
   }

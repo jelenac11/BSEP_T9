@@ -83,6 +83,7 @@
           <mat-icon>account_circle</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
+          <button *ngIf="user?.name.includes('superadmin')" (click)="switchApp()" mat-menu-item><mat-icon>settings</mat-icon> Go to Admin App</button>
           <button (click)="logout()" mat-menu-item><mat-icon>exit_to_app</mat-icon> Log out</button>
         </mat-menu>
       </li>
