@@ -52,6 +52,7 @@ export class AuthService {
 
   private localLogin(authResult) {
     this.token$.next(authResult.accessToken);
+    console.log(authResult.accessToken);
     this.userProfile$.next(authResult.idTokenPayload);
     localStorage.setItem(this.authFlag, JSON.stringify(true));
 

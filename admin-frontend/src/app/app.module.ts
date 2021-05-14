@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { CertificatesComponent } from './certificates/certificates.component';
-import { LogsComponent } from './logs/logs.component';
 import { CommonModule } from '@angular/common';
 import { ButtonsModule, NavbarModule } from 'angular-bootstrap-md';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -47,7 +46,6 @@ import { CallbackComponent } from './callback/callback.component';
     AppComponent,
     HeaderComponent,
     CertificatesComponent,
-    LogsComponent,
     AddCaComponent,
     ConfirmationDialogComponent,
     ApproveCsrComponent,

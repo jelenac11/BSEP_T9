@@ -15,10 +15,10 @@ export class AppComponent {
     private authService: AuthService
   ) {
     this.router.events.subscribe((url: any) => {
-      if (this.router.url.startsWith('/homepage')) {
-        this.showNavbar = false;
-      } else {
+      if (this.router.url.startsWith('/logs') || this.router.url.startsWith('/alarms') || this.router.url.startsWith('/rules') || this.router.url.startsWith('/report') || this.router.url.startsWith('/csr') || this.router.url.startsWith('/messages') || this.router.url.startsWith('/alarms-doctor')) {
         this.showNavbar = true;
+      } else {
+        this.showNavbar = false;
       }
     });
   }
