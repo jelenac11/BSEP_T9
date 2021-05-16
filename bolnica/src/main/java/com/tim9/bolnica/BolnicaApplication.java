@@ -15,12 +15,12 @@ public class BolnicaApplication {
 		ConfigurableApplicationContext appContext = SpringApplication.run(BolnicaApplication.class, args);
 	}
 
-	@Bean
+	/*@Bean
     public KieContainer kieContainer() {
         KieServices ks = KieServices.Factory.get();
         KieContainer kContainer = ks.newKieContainer(ks.newReleaseId("sbnz.integracija", "drools-spring-kjar", "0.0.1-SNAPSHOT"));
         KieScanner kScanner = ks.newKieScanner(kContainer);
         kScanner.start(10_000);
         return kContainer;
-    }
+    }*/
 }

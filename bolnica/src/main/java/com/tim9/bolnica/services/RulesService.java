@@ -9,13 +9,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.drools.template.ObjectDataCompiler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,30 +22,12 @@ import com.tim9.bolnica.dto.MessagesTemplateRuleDTO;
 import com.tim9.bolnica.dto.OxygenLevelRuleDTO;
 import com.tim9.bolnica.dto.PressureRuleDTO;
 import com.tim9.bolnica.dto.SeverityTemplateRuleDTO;
-import com.tim9.bolnica.dto.response.DefaultRuleResponseDTO;
-import com.tim9.bolnica.dto.response.MessagesTRuleResponseDTO;
-import com.tim9.bolnica.dto.response.SeverityTRuleResponseDTO;
 import com.tim9.bolnica.exceptions.RequestException;
-import com.tim9.bolnica.model.DefaultRule;
-import com.tim9.bolnica.model.MessagesTemplateRule;
-import com.tim9.bolnica.model.SeverityTemplateRule;
-import com.tim9.bolnica.repositories.DefaultRulesRepository;
-import com.tim9.bolnica.repositories.MessagesTemplateRuleRepository;
-import com.tim9.bolnica.repositories.SeverityTemplateRuleRepository;
 import com.tim9.bolnica.util.RuleBasedSystemUtil;
 
 
 @Service
 public class RulesService {
-
-	@Autowired
-	private DefaultRulesRepository defaultRepo;
-	
-	@Autowired
-	private MessagesTemplateRuleRepository mrtRepo;
-	
-	@Autowired
-	private SeverityTemplateRuleRepository strRepo;
 	
 	@Value("${rules.template.severity}")
     private String severityTemplate;
@@ -85,26 +65,7 @@ public class RulesService {
 	@Value("${rules.drl.pressure}")
     private String pressureDRL;
 	
-	public List<DefaultRuleResponseDTO> findAllDefault() {
-		List<DefaultRule> defaultRules = defaultRepo.findAll();
-		List<DefaultRuleResponseDTO> resp = defaultRules.stream().map(DefaultRuleResponseDTO::new).collect(Collectors.toList());
-		return resp;
-	}
-
-	public List<MessagesTRuleResponseDTO> findAllMTR() {
-		List<MessagesTemplateRule> mtRules = mrtRepo.findAll();
-		List<MessagesTRuleResponseDTO> resp = mtRules.stream().map(MessagesTRuleResponseDTO::new).collect(Collectors.toList());
-		return resp;
-	}
-
-	public List<SeverityTRuleResponseDTO> findAllSTR() {
-		List<SeverityTemplateRule> mtRules = strRepo.findAll();
-		List<SeverityTRuleResponseDTO> resp = mtRules.stream().map(SeverityTRuleResponseDTO::new).collect(Collectors.toList());
-		return resp;
-	}
-
 	public void addSTR(@Valid SeverityTemplateRuleDTO dto) throws IOException, MavenInvocationException {
-		strRepo.save(new SeverityTemplateRule(null, dto.getSeverity(), dto.getTimePeriod(), dto.getCount(), dto.getMessage()));
 		List<SeverityTemplateRuleDTO> data = new ArrayList<>();
         data.add(dto);
         InputStream template = new FileInputStream(severityTemplate);
@@ -115,7 +76,6 @@ public class RulesService {
 	}
 
 	public void addMTR(@Valid MessagesTemplateRuleDTO dto) throws IOException, MavenInvocationException {
-		mrtRepo.save(new MessagesTemplateRule(null, dto.getMessageRegexBefore(), dto.getMessageRegexAfter(), dto.getTimePeriod(), dto.getMessage()));
 		List<MessagesTemplateRuleDTO> data = new ArrayList<>();
         data.add(dto);
         InputStream template = new FileInputStream(messagesTemplate);
