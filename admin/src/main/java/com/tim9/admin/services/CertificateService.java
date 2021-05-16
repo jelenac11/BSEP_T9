@@ -96,6 +96,11 @@ public class CertificateService {
 		while (enumeration.hasMoreElements()) {
 			String alias = enumeration.nextElement();
 			X509Certificate certificate = (X509Certificate) ks.getCertificate(alias);
+			boolean[] keyusage = certificate.getKeyUsage();
+			boolean isCa = false;
+			if (keyusage != null && keyusage[5]) {
+				isCa = true;
+			}
 			String commonName = new JcaX509CertificateHolder(certificate).getSubject().getRDNs(BCStyle.CN)[0].getFirst().getValue().toString();
 			String issuer = certificate.getIssuerX500Principal().getName();
 			String [] rdns = issuer.split("CN=");
@@ -104,7 +109,7 @@ public class CertificateService {
 				len = rdns[1].length();
 			else 
 				len = rdns[1].indexOf(',');
-			CertificateResponseDTO dto = new CertificateResponseDTO(alias, commonName, rdns[1].substring(0, len), certificate.getNotBefore(), certificate.getNotAfter());
+			CertificateResponseDTO dto = new CertificateResponseDTO(alias, commonName, rdns[1].substring(0, len), certificate.getNotBefore(), certificate.getNotAfter(), isCa);
 			certificates.add(dto);
 		}
 		return certificates;
@@ -127,7 +132,7 @@ public class CertificateService {
 					len = rdns[1].length();
 				else 
 					len = rdns[1].indexOf(',');
-				CertificateResponseDTO dto = new CertificateResponseDTO(alias, commonName, rdns[1].substring(0, len), certificate.getNotBefore(), certificate.getNotAfter());
+				CertificateResponseDTO dto = new CertificateResponseDTO(alias, commonName, rdns[1].substring(0, len), certificate.getNotBefore(), certificate.getNotAfter(), true);
 				certificates.add(dto);
 			}
 		}

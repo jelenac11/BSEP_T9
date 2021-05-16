@@ -8,7 +8,6 @@ import { RoleGuard } from './core/guards/role.guard';
 import { CsrComponent } from './csr/csr.component';
 import { LogsComponent } from './logs/logs.component';
 import { ReportComponent } from './report/report.component';
-import { RulesComponent } from './rules/rules.component';
 import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
@@ -31,14 +30,6 @@ const routes: Routes = [
     canActivate: [RoleGuard],
     data: {
         expectedRoles: 'read:alarms'
-    }
-  },
-  {
-    path: 'rules',
-    component: RulesComponent,
-    canActivate: [RoleGuard],
-    data: {
-        expectedRoles: 'read:rules'
     }
   },
   {

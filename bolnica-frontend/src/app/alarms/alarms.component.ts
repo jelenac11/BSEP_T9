@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AddMessagesRuleComponent } from '../add-messages-rule/add-messages-rule.component';
+import { AddSeverityRuleComponent } from '../add-severity-rule/add-severity-rule.component';
 import { AlarmsPage } from '../core/model/response/alarms-page.model';
 import { AlarmsService } from '../core/services/alarms.service';
+import { Snackbar } from '../snackbar';
 
 @Component({
   selector: 'app-alarms',
@@ -14,7 +18,9 @@ export class AlarmsComponent implements OnInit {
   loggedIn = '';
 
   constructor(
-    private alarmsService: AlarmsService
+    private alarmsService: AlarmsService,
+    private dialog: MatDialog,
+    private snackBar: Snackbar,
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +41,32 @@ export class AlarmsComponent implements OnInit {
   handlePageChange($event: number): void {
     this.page = $event;
     this.getAlarms();
+  }
+
+  addSeverityRule(): void {
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.minHeight = '440px';
+    dialogConfig.minWidth = '400px';
+    const dialogRef = this.dialog.open(AddSeverityRuleComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.snackBar.success("Severity Rule added successfully!");
+      }
+    });
+  }
+
+  addMessagesRule(): void {
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.minHeight = '440px';
+    dialogConfig.minWidth = '400px';
+    const dialogRef = this.dialog.open(AddMessagesRuleComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.snackBar.success("Messages Rule added successfully!");
+      }
+    });
   }
 
 }

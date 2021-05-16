@@ -38,10 +38,10 @@ public class AlarmService {
 	@Autowired
 	private PatientRepository patientRepo;
 	
-	@Autowired
+	//@Autowired
     KieContainer kieContainer;
 	
-	@Autowired
+	//@Autowired
     KieContainer kieContainerD;
 	
 	public Page<AlarmResponseDTO> findAll(Pageable pageable) {

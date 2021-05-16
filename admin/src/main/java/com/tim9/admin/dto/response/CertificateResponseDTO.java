@@ -18,4 +18,5 @@ public class CertificateResponseDTO {
     private String issuer;
     private Date notBefore;
     private Date notAfter;
+    private boolean isCa;
 }

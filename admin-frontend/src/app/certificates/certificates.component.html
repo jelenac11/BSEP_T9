@@ -61,20 +61,22 @@
                     <div *ngIf="currentTab == 1">
                         <table class="table table-hover">
                             <thead>
-                                <th scope="col" width="10%">Serial number</th>
+                                <th scope="col" width="8%">Serial number</th>
                                 <th scope="col" width="20%">Common Name</th>
-                                <th scope="col" width="20%">Issuer</th>
-                                <th scope="col" width="20%">Not before</th>
-                                <th scope="col" width="20%">Not after</th>
+                                <th scope="col" width="18%">Issuer</th>
+                                <th scope="col" width="18%">Not before</th>
+                                <th scope="col" width="18%">Not after</th>
+                                <th scope="col" width="8%">CA</th>
                                 <th scope="col" width="10%"></th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of certificates">
-                                    <th scope="col" width="10%">{{ item.serialNumber }}</th>
+                                    <th scope="col" width="8%">{{ item.serialNumber }}</th>
                                     <td scope="col" width="20%">{{ item.commonName }}</td>
-                                    <td scope="col" width="20%">{{ item.issuer }}</td>
-                                    <td scope="col" width="20%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
-                                    <td scope="col" width="20%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="18%">{{ item.issuer }}</td>
+                                    <td scope="col" width="18%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="18%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="8%">{{ item.isCa }}</td>
                                     <td scope="col" width="10%"><button mat-flat-button color="warn" *ngIf="item.serialNumber !== 'root'" class="button-class" (click)="revoke(item.serialNumber)" >Revoke</button></td>
                                 </tr>
                             </tbody>
@@ -84,12 +86,13 @@
                     <div *ngIf="currentTab == 2">
                         <table class="table table-hover">
                             <thead>
-                                <th scope="col" width="10%">Serial number</th>
+                                <th scope="col" width="9%">Serial number</th>
                                 <th scope="col" width="20%">Common Name</th>
                                 <th scope="col" width="18%">Issuer</th>
-                                <th scope="col" width="17%">Not before</th>
-                                <th scope="col" width="17%">Not after</th>
-                                <th scope="col" width="17%">Revoke date</th>
+                                <th scope="col" width="15%">Not before</th>
+                                <th scope="col" width="15%">Not after</th>
+                                <th scope="col" width="15%">Revoke date</th>
+                                <th scope="col" width="8%">CA</th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="
@@ -102,12 +105,13 @@
                                             };
                                     let i = index"
                                 >
-                                    <th scope="col" width="10%">{{ item.serialNumber }}</th>
+                                    <th scope="col" width="9%">{{ item.serialNumber }}</th>
                                     <td scope="col" width="20%">{{ item.commonName }}</td>
                                     <td scope="col" width="18%">{{ item.issuer }}</td>
-                                    <td scope="col" width="17%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
-                                    <td scope="col" width="17%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
-                                    <td scope="col" width="17%">{{ item.revokeDate|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="15%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="15%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="15%">{{ item.revokeDate|date : 'dd/MM/yyyy' }}</td>
+                                    <td scope="col" width="8%">{{ item.isCa }}</td>
                                 </tr>
                             </tbody>
                         </table>

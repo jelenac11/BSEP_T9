@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,21 +26,6 @@ public class RulesController {
 	@Autowired
 	private RulesService rulesService;
 
-	@GetMapping(value = "/default")
-    public ResponseEntity<?> findAllDefault() {
-		return new ResponseEntity<>(rulesService.findAllDefault(), HttpStatus.OK);
-    }
-	
-	@GetMapping(value = "/mtr")
-    public ResponseEntity<?> findAllMTR() {
-		return new ResponseEntity<>(rulesService.findAllMTR(), HttpStatus.OK);
-    }
-	
-	@GetMapping(value = "/str")
-    public ResponseEntity<?> findAllSTR() {
-		return new ResponseEntity<>(rulesService.findAllSTR(), HttpStatus.OK);
-    }
-	
 	@PostMapping(value = "/create-str")
     public ResponseEntity<?> createStr(@Valid @RequestBody SeverityTemplateRuleDTO dto) {
 		try {

@@ -30,7 +30,6 @@ import { CallbackComponent } from './callback/callback.component';
 import { LogsComponent } from './logs/logs.component';
 import { MatSelectModule } from '@angular/material/select';
 import { AlarmsComponent } from './alarms/alarms.component';
-import { RulesComponent } from './rules/rules.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddSeverityRuleComponent } from './add-severity-rule/add-severity-rule.component';
@@ -50,7 +49,6 @@ import { AddPressureRuleComponent } from './add-pressure-rule/add-pressure-rule.
     CallbackComponent,
     LogsComponent,
     AlarmsComponent,
-    RulesComponent,
     AddSeverityRuleComponent,
     AddMessagesRuleComponent,
     ReportComponent,
