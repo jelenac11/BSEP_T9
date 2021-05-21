@@ -1,7 +1,7 @@
 package com.tim9.bolnica.controllers;
 
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,16 +23,20 @@ import com.tim9.bolnica.services.AlarmService;
 @CrossOrigin(origins = "https://localhost:4205", maxAge = 3600, allowedHeaders = "*")
 public class AlarmController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(AlarmController.class);
+	
 	@Autowired
     private AlarmService alarmService;
 
     @GetMapping(value = "/by-page")
     public ResponseEntity<?> findAll(Pageable pageable) {
+    	logger.trace("Security alarm view requested");
 		return new ResponseEntity<>(createCustomPage(alarmService.findAll(pageable)), HttpStatus.OK);
     }
     
     @GetMapping(value = "/by-page-doctor")
     public ResponseEntity<?> findAllDoctorAlarms(Pageable pageable) {
+    	logger.trace("Patient alarm view requested");
 		return new ResponseEntity<>(createCustomPageDoctor(alarmService.findAllDoctorAlarms(pageable)), HttpStatus.OK);
     }
     

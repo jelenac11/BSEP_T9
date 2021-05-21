@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
@@ -43,13 +44,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
-    	http.cors().and().csrf().disable(); /*.authorizeRequests()
+    	http.cors().and().csrf().disable().authorizeRequests()
         
-        .antMatchers(HttpMethod.POST, "/api/csr/**").hasAuthority("SCOPE_write:csr")
-        .antMatchers(HttpMethod.GET, "/api/logs/**").hasAuthority("SCOPE_read:logs")
+    	.antMatchers(HttpMethod.GET, "/api/alarms/by-page").hasAuthority("SCOPE_read:alarms")
+    	.antMatchers(HttpMethod.GET, "/api/alarms/by-page-doctor").hasAuthority("SCOPE_read:alarmsDoctor")
+        .antMatchers(HttpMethod.POST, "/api/csr").hasAuthority("SCOPE_write:csr")
+        .antMatchers(HttpMethod.POST, "/api/logs/by-page").hasAuthority("SCOPE_read:logs")
+        .antMatchers(HttpMethod.POST, "/api/messages/by-page").hasAuthority("SCOPE_read:messages")
+        .antMatchers(HttpMethod.GET, "/api/patients").hasAuthority("SCOPE_read:patients")
+        .antMatchers(HttpMethod.POST, "/api/reports").hasAuthority("SCOPE_read:reports")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-str").hasAuthority("SCOPE_write:rules")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-mtr").hasAuthority("SCOPE_write:rules")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-lowt").hasAuthority("SCOPE_write:rulesDoctor")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-hight").hasAuthority("SCOPE_write:rulesDoctor")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-orl").hasAuthority("SCOPE_write:rulesDoctor")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-prule").hasAuthority("SCOPE_write:rulesDoctor")
         
         .antMatchers("**").authenticated()
-        .and().oauth2ResourceServer().jwt();*/
+        .and().oauth2ResourceServer().jwt();
     }
     
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/api/messages");
+    }
 }

@@ -9,8 +9,12 @@ import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RuleBasedSystemUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(RuleBasedSystemUtil.class);
 
 	public static void mavenCleanAndInstall() throws MavenInvocationException {
         InvocationRequest request = new DefaultInvocationRequest();
@@ -21,8 +25,11 @@ public class RuleBasedSystemUtil {
         invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
         InvocationResult result = invoker.execute(request);
         if (result.getExitCode() != 0) {
+        	logger.info("Maven clean and install failed");
             System.out.println(result.getExecutionException().toString());
             System.out.println(result.getExitCode());
+        } else {
+        	logger.error("Successfully finished maven clean and install");
         }
     }
 }

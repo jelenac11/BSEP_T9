@@ -24,44 +24,46 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SignMessageService {
-	
+
 	@Value("${keystore.password}")
-    private String keyStorePassword;
-	
-    private KeyStore keystore;
-    
-    private PrivateKey privateKey;
-    
-    private X509Certificate cert;
-    
-    @Value("${key.alias}")
-    private String alias;
-    
-    @Value("${keystore.filepath}")
-    private String keyStoreFilePath;
+	private String keyStorePassword;
 
+	private KeyStore keystore;
 
-    public byte[] sign(String text) throws Exception {
-        keystore = KeyStore.getInstance("JKS", "SUN");
-        keystore.load(new FileInputStream(keyStoreFilePath), keyStorePassword.toCharArray());
-        if (keystore.isKeyEntry(alias)) {
-    		privateKey = (PrivateKey) keystore.getKey(alias, keyStorePassword.toCharArray());
-        }
-        cert = (X509Certificate) keystore.getCertificate(alias);
-        Security.addProvider(new BouncyCastleProvider());
-        List<X509Certificate> certList = new ArrayList<X509Certificate>();
-        certList.add(cert);
-        Store certificateStore = new JcaCertStore(certList);
-        
-        CMSTypedData cmsData = new CMSProcessableByteArray(text.getBytes());
-        CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
+	private PrivateKey privateKey;
 
-        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256withRSA").build(privateKey);
-        cmsGenerator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build()).build(contentSigner, cert));
-        cmsGenerator.addCertificates(certificateStore);
+	private X509Certificate cert;
 
-        CMSSignedData cms = cmsGenerator.generate(cmsData, true);
-        byte[] signedMessage = cms.getEncoded();
-        return signedMessage;
-    }
+	@Value("${key.alias}")
+	private String alias;
+
+	@Value("${keystore.filepath}")
+	private String keyStoreFilePath;
+
+	@SuppressWarnings("rawtypes")
+	public byte[] sign(String text) throws Exception {
+		keystore = KeyStore.getInstance("JKS", "SUN");
+		keystore.load(new FileInputStream(keyStoreFilePath), keyStorePassword.toCharArray());
+		if (keystore.isKeyEntry(alias)) {
+			privateKey = (PrivateKey) keystore.getKey(alias, keyStorePassword.toCharArray());
+		}
+		cert = (X509Certificate) keystore.getCertificate(alias);
+		Security.addProvider(new BouncyCastleProvider());
+		List<X509Certificate> certList = new ArrayList<X509Certificate>();
+		certList.add(cert);
+		Store certificateStore = new JcaCertStore(certList);
+
+		CMSTypedData cmsData = new CMSProcessableByteArray(text.getBytes());
+		CMSSignedDataGenerator cmsGenerator = new CMSSignedDataGenerator();
+
+		ContentSigner contentSigner = new JcaContentSignerBuilder("SHA256withRSA").build(privateKey);
+		cmsGenerator.addSignerInfoGenerator(
+				new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build())
+						.build(contentSigner, cert));
+		cmsGenerator.addCertificates(certificateStore);
+
+		CMSSignedData cms = cmsGenerator.generate(cmsData, true);
+		byte[] signedMessage = cms.getEncoded();
+		return signedMessage;
+	}
 }

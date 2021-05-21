@@ -25,7 +25,7 @@ export class AlarmsService {
     let pars = new HttpParams();
     pars = pars.append('size', size.toString());
     pars = pars.append('page', page.toString());
-    return this.http.get(`${environment.api_url}alarms-doctor/by-page`, { params: pars, responseType: 'json' });
+    return this.http.get(`${environment.api_url}alarms/by-page-doctor`, { params: pars, responseType: 'json' });
   }
   
 }

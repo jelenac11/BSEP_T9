@@ -1,5 +1,6 @@
 package com.tim9.bolnica.dto.response;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import com.tim9.bolnica.model.AdminAlarm;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AlarmResponseDTO {
 	
-	private Long id;
+	private BigInteger id;
 	private Date timestamp;
 	private String message;
 	

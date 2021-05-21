@@ -14,6 +14,8 @@ import javax.validation.Valid;
 
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.drools.template.ObjectDataCompiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,8 @@ import com.tim9.bolnica.util.RuleBasedSystemUtil;
 
 @Service
 public class RulesService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(RulesService.class);
 	
 	@Value("${rules.template.severity}")
     private String severityTemplate;
@@ -72,6 +76,7 @@ public class RulesService {
         String drl = (new ObjectDataCompiler()).compile(data, template);
         UUID id = UUID.randomUUID();
         Files.write(Paths.get(severityDRL + id.toString() + ".drl"), drl.getBytes(), StandardOpenOption.CREATE);
+        logger.info("New severity template rule created");
         RuleBasedSystemUtil.mavenCleanAndInstall();
 	}
 
@@ -82,6 +87,7 @@ public class RulesService {
         String drl = (new ObjectDataCompiler()).compile(data, template);
         UUID id = UUID.randomUUID();
         Files.write(Paths.get(messagesDRL + id.toString() + ".drl"), drl.getBytes(), StandardOpenOption.CREATE);
+        logger.info("New messages template rule created");
         RuleBasedSystemUtil.mavenCleanAndInstall();	
 	}
 
@@ -93,9 +99,11 @@ public class RulesService {
         String templatePath;
         String drlPath;
         if (low) {
+        	logger.info("New low temperature template rule created");
         	templatePath = lowTemperatureTemplate;
         	drlPath = lowTemperatureDRL;
         } else {
+        	logger.info("New high temperature template rule created");
         	templatePath = highTemperatureTemplate;
         	drlPath = highTemperatureDRL;
         }
@@ -114,12 +122,14 @@ public class RulesService {
         InputStream template = new FileInputStream(lowOxygenLevelTemplate);
         String drl = (new ObjectDataCompiler()).compile(data, template);
         Files.write(Paths.get(lowOxygenLevelDRL + id.toString() + ".drl"), drl.getBytes(), StandardOpenOption.CREATE);
+        logger.info("New low oxygen level template rule created");
         RuleBasedSystemUtil.mavenCleanAndInstall();	
 		
 	}
 
 	public void addPressureRule(@Valid PressureRuleDTO dto) throws IOException, MavenInvocationException, RequestException {
 		if (dto.getSystolicFrom() > dto.getSystolicTo() || dto.getDiastolicFrom() > dto.getDiastolicTo() || dto.getHeartRateFrom() > dto.getHeartRateTo()) {
+			logger.info("Invalid params for creating pressure rule");
 			throw new RequestException("Invalid params for creating pressure rule!");
 		}
 		List<PressureRuleDTO> data = new ArrayList<>();
@@ -129,6 +139,7 @@ public class RulesService {
         InputStream template = new FileInputStream(pressureTemplate);
         String drl = (new ObjectDataCompiler()).compile(data, template);
         Files.write(Paths.get(pressureDRL + id.toString() + ".drl"), drl.getBytes(), StandardOpenOption.CREATE);
+        logger.info("New pressure template rule created");
         RuleBasedSystemUtil.mavenCleanAndInstall();	
 	}
 

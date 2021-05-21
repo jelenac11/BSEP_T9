@@ -1,5 +1,6 @@
 package com.tim9.bolnica.dto.response;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import com.tim9.bolnica.enums.LogFacility;
@@ -18,11 +19,12 @@ import lombok.Setter;
 @Setter
 public class LogResponseDTO {
 
-	private Long id;
+	private BigInteger id;
 	private Date timestamp;
 	private LogFacility facility;
 	private LogSeverity severity;
 	private String ip;
+	private String source;
 	private String message;
 	
 	public LogResponseDTO(Log log) {
@@ -32,5 +34,6 @@ public class LogResponseDTO {
 		this.severity = log.getSeverity();
 		this.ip = log.getIp();
 		this.message = log.getMessage();
+		this.source = log.getSource();
 	}
 }

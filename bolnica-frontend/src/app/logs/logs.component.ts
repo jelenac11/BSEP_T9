@@ -17,7 +17,7 @@ export class LogsComponent implements OnInit {
   facilities = ['KERN', 'USER', 'MAIL', 'DAEMON', 'AUTH', 'SYSLOG', 'LPR', 'NEWS',
     'UUCP', 'SOLARISCRON', 'AUTHPRIV', 'FTP', 'NTP', 'CONSOLE', 'SECURITY',
     'CRON', 'LOCAL0', 'LOCAL1', 'LOCAL2', 'LOCAL3', 'LOCAL4', 'LOCAL5', 'LOCAL6', 'LOCAL7'];
-  severities = ['DEBUG', 'INFORMATIONAL', 'NOTICE', 'WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'];
+  severities = ['DEBUG', 'INFORMATIONAL', 'NOTICE', 'WARNING', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY', 'TRACE'];
 
   constructor(
     private fb: FormBuilder,
@@ -32,6 +32,7 @@ export class LogsComponent implements OnInit {
       facility: [""],
       severity: [""],
       message: [""],
+      source: [""],
     });
     this.getLogs();
   }
@@ -49,6 +50,7 @@ export class LogsComponent implements OnInit {
       facility: [""],
       severity: [""],
       message: [""],
+      source: [""],
     });
     this.page = 1;
     this.getLogs();
@@ -61,7 +63,8 @@ export class LogsComponent implements OnInit {
       ip: this.formSearch.controls.ip.value, 
       facility: this.formSearch.controls.facility.value, 
       severity: this.formSearch.controls.severity.value, 
-      message: this.formSearch.controls.message.value 
+      message: this.formSearch.controls.message.value,
+      source: this.formSearch.controls.source.value 
     };
     this.logsService.getLogs(this.size, this.page - 1, search).subscribe((data: LogsPage) => {
       this.logs = data;

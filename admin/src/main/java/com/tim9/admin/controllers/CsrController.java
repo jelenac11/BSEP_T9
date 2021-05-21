@@ -80,7 +80,7 @@ public class CsrController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("CSR verified!.", HttpStatus.OK);
+		return new ResponseEntity<>("CSR verified!", HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/by-page")

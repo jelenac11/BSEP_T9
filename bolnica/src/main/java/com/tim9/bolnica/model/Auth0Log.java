@@ -1,4 +1,4 @@
-package com.tim9.bolnica.dto;
+package com.tim9.bolnica.model;
 
 import java.util.Date;
 
@@ -11,13 +11,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchLogDTO {
+public class Auth0Log {
 
-	private Date from;
-	private Date to;
-	private String facility;
-	private String severity;
+	private String log_id;
+	private Date date;
+	private String type;
 	private String ip;
-	private String message;
-	private String source;
+	private String user_name;
+	private String hostname;
 }

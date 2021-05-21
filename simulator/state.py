@@ -16,6 +16,7 @@ BLACKLIST_IP = ['13.48.123.212', '128.128.199.200', '14.54.11.127', '22.54.160.9
 USERNAMES = ['username1', 'username2', 'username3', 'username4', 'username5']
 RESOURCES = ['index.html', 'home.html', 'patients.html', 'alarms.html']
 
+HOSTNAMES = ['SBS1', 'SBS2', 'SBS3']
 PATH = 'logging.log'
 
 class State(ABC):
@@ -30,7 +31,7 @@ class NormalState(State):
         'Unsuccessful login attempt with username ' + random.choice(USERNAMES)]
 
         now = datetime.now()
-        log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + random.choice(FACILITY) + "_" + SEVERITY[random.randint(0, 2)] + " " + random.choice(IP) + " " + random.choice(messages)
+        log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + random.choice(HOSTNAMES) + "-" + random.choice(IP) + " " + random.choice(FACILITY) + "_" + SEVERITY[random.randint(0, 2)] + " " + random.choice(messages)
 
         f = open(PATH, "a")
         f.write(log + "\n")
@@ -47,11 +48,12 @@ class BruteForceAttackState(State):
 
         username = random.choice(USERNAMES)
         host = random.choice(IP)
+        hostname = random.choice(HOSTNAMES)
         for i in range(5):
             if i == 5:
-                log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[4] + "_" + SEVERITY[3] + " " + host + " " + 'Unsuccessful login attempt with username ' + username
+                log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + hostname + "-" + host + " " + FACILITY[4] + "_" + SEVERITY[3] + " " + 'Unsuccessful login attempt with username ' + username
             else:
-                log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[1] + "_" + SEVERITY[1] + " " + host + " " + 'Unsuccessful login attempt with username ' + username
+                log = now.strftimey("%Y-%m-%d %H:%M:%S") + " " + hostname + "-" + host + " "+ FACILITY[1] + "_" + SEVERITY[1] + " " +'Unsuccessful login attempt with username ' + username
        
             f = open(PATH, "a")
             f.write(log + "\n")
@@ -67,7 +69,7 @@ class AccessDeniedState(State):
         messages = ['Access denied to patients view', 'Access denied to logs view', 'Access denied to alarms view']
         now = datetime.now()
 
-        log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[14] + "_" + SEVERITY[3] + " " + random.choice(IP) + " " + random.choice(messages)
+        log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + random.choice(HOSTNAMES) + "-" + random.choice(IP) + " " + FACILITY[14] + "_" + SEVERITY[3] + " " + random.choice(messages)
 
         f = open(PATH, "a")
         f.write(log + "\n")
@@ -83,7 +85,7 @@ class BlackListIPConnectionState(State):
         now = datetime.now()
         ip = random.choice(BLACKLIST_IP)
 
-        log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[14] + "_" + SEVERITY[1] + " " + ip + " " + "Connection from ip address " + ip
+        log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + random.choice(HOSTNAMES) + "-" + ip + " " + FACILITY[14] + "_" + SEVERITY[1] + " " + "Connection from ip address " + ip
 
         f = open(PATH, "a")
         f.write(log + "\n")
@@ -100,11 +102,12 @@ class DoSAttackState(State):
 
         resource = random.choice(RESOURCES)
         host = random.choice(IP)
+        hostname = random.choice(HOSTNAMES)
         for i in range(20):
             if i >= 15:
-                log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + random.choice(FACILITY) + "_" + SEVERITY[5] + " " + host + " " + 'Requested resource ' + resource
+                log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + hostname + "-" + host + " " +  random.choice(FACILITY) + "_" + SEVERITY[5] + " " + 'Requested resource ' + resource
             else:
-                log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + random.choice(FACILITY) + "_" + SEVERITY[1] + " " + host + " " + 'Requested resource ' + resource
+                log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + hostname + "-" + host + " " +  random.choice(FACILITY) + "_" + SEVERITY[1] + " " + 'Requested resource ' + resource
        
             f = open(PATH, "a")
             f.write(log + "\n")
@@ -119,7 +122,7 @@ class DatabaseErrorState(State):
     def run(self, context):
         now = datetime.now()
 
-        log = now.strftime("%d/%m/%Y-%H:%M:%S") + " " + FACILITY[3] + "_" + SEVERITY[random.choice([4, 6])] + " " + random.choice(IP) + " " + 'Database error'
+        log = now.strftime("%Y-%m-%d %H:%M:%S") + " " + random.choice(HOSTNAMES) + "-" + random.choice(IP) + " " +  FACILITY[3] + "_" + SEVERITY[random.choice([4, 6])] + " " + 'Database error'
        
         f = open(PATH, "a")
         f.write(log + "\n")

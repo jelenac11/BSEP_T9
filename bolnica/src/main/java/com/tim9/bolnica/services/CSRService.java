@@ -23,6 +23,8 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.bouncycastle.util.io.pem.PemObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,6 +43,8 @@ public class CSRService {
 	 * https://debugged.it/blog/working-with-certificates-in-java/
 	 * 
 	 */
+	
+	private static final Logger logger = LoggerFactory.getLogger(CSRService.class);
 	
 	public KeyPair generateKeyPair() {
 		try {
@@ -80,6 +84,7 @@ public class CSRService {
         ContentSigner signer = csBuilder.build(privateKey);
         PKCS10CertificationRequest csr = p10Builder.build(signer);
         
+        logger.info("New certificate signing request sent");
         RestTemplate rs = new RestTemplate();
         String response = rs.postForEntity("https://localhost:8081/api/csr", csr.getEncoded(), String.class).getBody();
         System.out.println(response);

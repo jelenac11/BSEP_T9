@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class DeviceService {
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss");
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static final long SLEEP_INTERVAL = 4000;
 	private static final int NO_PATIENTS = 40;
 	
@@ -34,7 +34,7 @@ public class DeviceService {
 	public void monitorPatients() {
 		while (true) {
 			try {
-				String text = String.format("Timestamp=%s patient=%d temperature=%.2f systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
+				String text = String.format("%s patient=%d temperature=%.2f systolic=%d diastolic=%d heart_rate=%d oxygen_level=%d", 
 						DATE_FORMAT.format(this.getTimestamp()), (int) this.getRandomNumber(1, NO_PATIENTS + 1), this.getTemperature(), this.getSystolicBloodPressure(), this.getDiastolicBloodPressure(), this.getHeartRate(), this.getOxygenLevel());
 				byte[] message = smService.sign(text);
 				this.restTemplate.postForEntity("https://localhost:8080/api/messages", message, String.class);

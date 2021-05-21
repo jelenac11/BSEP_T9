@@ -198,7 +198,11 @@ public class CSRService {
 	    if (dto.getNotAfter().compareTo(certCA.getNotAfter()) > 0) {
 	    	throw new InvalidCertificateDateException("CA Certificate will expire before end date.");
 	    }
-	    certCA.checkValidity();
+	    try {
+	    	certCA.checkValidity();
+	    } catch (Exception e) {
+	    	throw new InvalidCertificateDateException("CA Certificate is not valid.");
+	    }
 	    
 	    String signingAlg = "";
 	    if (dto.getSigningAlgorithm().equals("")) {

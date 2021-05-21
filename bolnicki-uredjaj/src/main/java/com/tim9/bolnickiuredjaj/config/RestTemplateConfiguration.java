@@ -37,8 +37,8 @@ public class RestTemplateConfiguration {
 
     @Value("${keystore.password}")
     private String keyStorePass;
-
     
+	@SuppressWarnings("deprecation")
 	@Bean
 	 RestTemplate restTemplate() throws KeyStoreException, IOException, NoSuchAlgorithmException,
 	            UnrecoverableKeyException, KeyManagementException, CertificateException {

@@ -20,9 +20,14 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SignatureUtil {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SignatureUtil.class);
 
+	@SuppressWarnings({ "resource", "unchecked" })
 	public static X509Certificate extractCertificate(byte[] msg) throws IOException, CMSException, CertificateException {
         Security.addProvider(new BouncyCastleProvider());
         ByteArrayInputStream inputStream = new ByteArrayInputStream(msg);
@@ -37,6 +42,7 @@ public class SignatureUtil {
         return new JcaX509CertificateConverter().setProvider( "BC" ).getCertificate(certHolder);
     }
 	
+	@SuppressWarnings("resource")
 	public static boolean verifySignature(byte[] msg, X509Certificate certificate) throws IOException, CMSException, OperatorCreationException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(msg);
         ASN1InputStream asnInputStream = new ASN1InputStream(inputStream);
@@ -44,6 +50,7 @@ public class SignatureUtil {
         SignerInformationStore signers = cmsSignedData.getSignerInfos();
         SignerInformation signer = signers.getSigners().iterator().next();
 
+        logger.info("Verifying message signature");
         return signer.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certificate.getPublicKey()));
     }
 }

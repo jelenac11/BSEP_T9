@@ -1,18 +1,13 @@
 package com.tim9.bolnica.model;
 
+import java.math.BigInteger;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.tim9.bolnica.enums.LogFacility;
 import com.tim9.bolnica.enums.LogSeverity;
@@ -22,8 +17,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "logs")
+
+@Document(collection = "logs")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -33,25 +28,24 @@ import lombok.Setter;
 public class Log {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-    private Long id;
+    private BigInteger id;
 	
-	@Column
+	@Indexed
 	private Date timestamp;
 	
-	@Column
-	@Enumerated(EnumType.STRING)
+	@Indexed
+	private String source;
+	
+	@Indexed
 	private LogFacility facility;
 	
-	@Column
-	@Enumerated(EnumType.STRING)
+	@Indexed
 	private LogSeverity severity;
 	
-	@Column
+	@Indexed
 	private String ip;
 	
-	@Column
+	@Indexed
 	private String message;
 	
 	

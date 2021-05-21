@@ -42,22 +42,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
-    	http.cors().and().csrf().disable();/*.authorizeRequests()
+    	http.cors().and().csrf().disable().authorizeRequests()
         
     	.antMatchers(HttpMethod.GET, "/api/csr/**").hasAuthority("SCOPE_read:csr")
+    	.antMatchers(HttpMethod.POST, "/api/csr/approve").hasAuthority("SCOPE_write:certificates")
+    	.antMatchers(HttpMethod.POST, "/api/csr").permitAll()
         .antMatchers(HttpMethod.DELETE, "/api/csr/**").hasAuthority("SCOPE_delete:csr")
-        .antMatchers("/api/csr/by-page/**").hasAuthority("SCOPE_read:csr")
         
+        .antMatchers(HttpMethod.GET, "/api/certificates").hasAuthority("SCOPE_read:certificates")
+        .antMatchers(HttpMethod.GET, "/api/certificates/ca").hasAuthority("SCOPE_read:certificates")
+        .antMatchers(HttpMethod.POST, "/api/certificates/ca").hasAuthority("SCOPE_write:certificates")
+        .antMatchers(HttpMethod.GET, "/api/certificates/validate/**").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/certificates/revoke").hasAuthority("SCOPE_delete:certificates")
+        .antMatchers(HttpMethod.GET, "/api/certificates/revoked/by-page").hasAuthority("SCOPE_read:certificates")
+        .antMatchers(HttpMethod.GET, "/api/certificates/status/**").hasAuthority("SCOPE_read:certificates")
         
-        .antMatchers(HttpMethod.GET, "/api/certificates/**").hasAuthority("SCOPE_read:certificates")
-        .antMatchers(HttpMethod.POST, "/api/certificates/**").hasAuthority("SCOPE_write:certificates")
-        .antMatchers(HttpMethod.DELETE, "/api/certificates/**").hasAuthority("SCOPE_delete:certificates")
-        .antMatchers("/api/certificates/revoke").hasAuthority("SCOPE_delete:certificates");
-        
-        //.antMatchers("**").authenticated()
-        //.and().oauth2ResourceServer().jwt();
-         
-         */
+        .antMatchers("**").authenticated()
+        .and().oauth2ResourceServer().jwt();
     }
     
 }

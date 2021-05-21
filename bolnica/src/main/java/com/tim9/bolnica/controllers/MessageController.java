@@ -2,6 +2,8 @@ package com.tim9.bolnica.controllers;
 
 import java.security.cert.X509Certificate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,8 @@ import com.tim9.bolnica.util.SignatureUtil;
 @CrossOrigin(origins = "https://localhost:4205", maxAge = 3600, allowedHeaders = "*")
 public class MessageController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(MessageController.class);
+	
 	@Autowired
 	private CertificateService certService;
 	
@@ -38,15 +42,18 @@ public class MessageController {
 			X509Certificate cert = SignatureUtil.extractCertificate(msg);
 			boolean valid = certService.validateCert(cert);
 			if (!valid) {
+				logger.debug("Message is signed with non trusted certificate.");
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			}
 			boolean validMessage = SignatureUtil.verifySignature(msg, cert);
 			if (!validMessage) {
+				logger.debug("Message signature not valid.");
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 			}
 			messageService.save(msg);
 			return new ResponseEntity<>("OK",HttpStatus.OK);
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -54,8 +61,10 @@ public class MessageController {
 	@PostMapping(value = "/by-page")
 	public ResponseEntity<?> getMessages(Pageable pageable, @RequestBody FilterDTO filter) {
 		try {
+			logger.trace("Patient messages view requested");
 			return new ResponseEntity<>(createCustomPage(messageService.findAll(pageable, filter)), HttpStatus.OK);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

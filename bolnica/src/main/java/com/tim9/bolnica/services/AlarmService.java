@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.drools.core.ClassObjectFilter;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,6 +30,8 @@ import com.tim9.bolnica.repositories.PatientRepository;
 
 @Service
 public class AlarmService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AlarmService.class);
 	
 	@Autowired
 	private AlarmAdminRepository alarmRepository;
@@ -38,10 +42,10 @@ public class AlarmService {
 	@Autowired
 	private PatientRepository patientRepo;
 	
-	//@Autowired
+	@Autowired
     KieContainer kieContainer;
 	
-	//@Autowired
+	@Autowired
     KieContainer kieContainerD;
 	
 	public Page<AlarmResponseDTO> findAll(Pageable pageable) {
@@ -49,14 +53,17 @@ public class AlarmService {
 		Page<AdminAlarm> page = alarmRepository.findAllByOrderByTimestampDesc(pageable);
 		for (AdminAlarm a : page.getContent())
 			resp.add(new AlarmResponseDTO(a));
+		logger.info("Reading security alarms from database");
 		return new PageImpl<AlarmResponseDTO>(resp, pageable, page.getTotalElements());
 	}
 
 	public AdminAlarm save(AdminAlarm alarm) {
+		logger.info("New security alarm is created");
         return alarmRepository.save(alarm);
     }
 	
 	public DoctorAlarm saveDoctorAlarm(DoctorAlarm alarm) {
+		logger.info("New patient alarm is created");
         return alarmDoctorRepository.save(alarm);
     }
 	
@@ -108,6 +115,7 @@ public class AlarmService {
 			ad.setMessage(a.getMessage());
 			resp.add(ad);
 		}
+		logger.info("Reading patient alarms from database");
 		return new PageImpl<AlarmDoctorResponseDTO>(resp, pageable, page.getTotalElements());
 	}
 }

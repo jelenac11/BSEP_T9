@@ -11,8 +11,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class KeyStoreUtil {
     
     public static String getCertificateAlias(Certificate certificate, String path, String pass){

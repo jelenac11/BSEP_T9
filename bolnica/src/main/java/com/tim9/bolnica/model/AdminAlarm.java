@@ -1,5 +1,6 @@
 package com.tim9.bolnica.model;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Table;
 
 import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,24 +23,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "admin_alarms")
+@Document(collection = "admin_alarms")
 @Role(Role.Type.EVENT)
 @Expires("10m")
 public class AdminAlarm {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	private Long id;
+	private BigInteger id;
 	
-	@Column
-	private Long logId;
+	private BigInteger logId;
 	
-	@Column
 	private Date timestamp;
 	
-	@Column
 	private String message;
 
 }

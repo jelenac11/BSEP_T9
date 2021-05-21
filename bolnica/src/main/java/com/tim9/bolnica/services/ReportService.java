@@ -2,6 +2,8 @@ package com.tim9.bolnica.services;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,12 @@ import com.tim9.bolnica.repositories.LogRepository;
 
 @Service
 public class ReportService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
 	@Autowired
 	private LogRepository logRepo;
+	
 	@Autowired
 	private AlarmAdminRepository alarmRepo;
 	
@@ -31,6 +36,7 @@ public class ReportService {
 		int critical = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.CRITICAL, dto.getFrom(), dto.getTo()).size();
 		int alert = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.ALERT, dto.getFrom(), dto.getTo()).size();
 		int emergency = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.EMERGENCY, dto.getFrom(), dto.getTo()).size();
+		logger.info("New log report created");
 		return new ReportResponseDTO(dto.getFrom(), dto.getTo(), logs, debug, informational, notice, warning, error, critical, alert, emergency, alarms);
 	}
 
