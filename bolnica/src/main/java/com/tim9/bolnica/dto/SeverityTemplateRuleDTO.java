@@ -1,5 +1,7 @@
 package com.tim9.bolnica.dto;
 
+import java.util.UUID;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -13,6 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeverityTemplateRuleDTO {
+	
+	private UUID id;
 	@NotBlank(message = "Severity before must not be empty")
 	private String severity;
 	@Min(1)

@@ -3,9 +3,7 @@ package com.tim9.bolnica.services;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,28 +26,31 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.tim9.bolnica.dto.SearchLogDTO;
 import com.tim9.bolnica.dto.response.LogResponseDTO;
-import com.tim9.bolnica.enums.Auth0Type;
-import com.tim9.bolnica.enums.LogFacility;
-import com.tim9.bolnica.enums.LogSeverity;
 import com.tim9.bolnica.exceptions.RequestException;
-import com.tim9.bolnica.model.Auth0Log;
 import com.tim9.bolnica.model.Config;
 import com.tim9.bolnica.model.Log;
 import com.tim9.bolnica.model.LogConfig;
 import com.tim9.bolnica.repositories.LogRepository;
+import com.tim9.bolnica.util.ApplicationLogParser;
+import com.tim9.bolnica.util.Auth0Parser;
 import com.tim9.bolnica.util.Auth0Util;
-import com.tim9.bolnica.util.DateUtil;
+import com.tim9.bolnica.util.LogParser;
+import com.tim9.bolnica.util.SimulatorLogParser;
 
 @Service
 public class LogService {
 
 	@Autowired
 	private LogRepository logRepository;
+	
 	@Autowired
 	private AlarmService alarmService;
+	
+	private static LogParser applicationLogParser = new ApplicationLogParser();
+	private static LogParser simulatorLogParser = new SimulatorLogParser();
+	private static LogParser auth0LogParser = new Auth0Parser();
 
 	@PostConstruct
 	public void init() {
@@ -164,7 +164,7 @@ public class LogService {
 			String line = reader.readLine();
 			boolean setNewThreshold = false;
 			while (line != null) {
-				Log log = this.parseLogFromApplication(line);
+				Log log = applicationLogParser.parse(line);
 				if (!setNewThreshold) {
 					newThreshold = log.getTimestamp();
 					setNewThreshold = true;
@@ -181,29 +181,6 @@ public class LogService {
 		Collections.reverse(logs);
 		this.save(logs);
 		return newThreshold;
-	}
-	
-	private Log parseLogFromApplication(String line) {
-		String[] tokens = line.split(" ");
-
-		Date date = null;
-		try {
-			date = DateUtil.parse(tokens[0] + " " + tokens[1]);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
-		String source = tokens[4];
-		String ip = "";
-		String severity = tokens[2];
-		if (severity.equals("INFO")) {
-			severity = "INFORMATIONAL";
-		} else if (severity.equals("WARN")) {
-			severity = "WARNING";
-		}
-		String message = String.join(" ", Arrays.asList(tokens).subList(6, Arrays.asList(tokens).size()));
-
-		return new Log(null, date, source, LogFacility.LOCAL0, LogSeverity.valueOf(severity), ip, message);
 	}
 
 	private void readLogs(String path, long interval, String regexp) throws Exception {
@@ -222,7 +199,7 @@ public class LogService {
 			String line = reader.readLine();
 			boolean setNewThreshold = false;
 			while (line != null) {
-				Log log = this.parseLogFromSimulator(line);
+				Log log = simulatorLogParser.parse(line);
 				if (!setNewThreshold) {
 					newThreshold = log.getTimestamp();
 					setNewThreshold = true;
@@ -242,27 +219,6 @@ public class LogService {
 		Collections.reverse(logs);
 		this.save(logs);
 		return newThreshold;
-	}
-
-	private Log parseLogFromSimulator(String line) {
-		String[] tokens = line.split(" ");
-
-		Date date = null;
-		try {
-			date = DateUtil.parse(tokens[0] + " " + tokens[1]);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
-		}
-		String[] host = tokens[2].split("-");
-		String source = host[0];
-		String ip = host[1];
-		String[] fS = tokens[3].split("_");
-		LogFacility lf = LogFacility.valueOf(fS[0]);
-		LogSeverity ls = LogSeverity.valueOf(fS[1]);
-		String message = String.join(" ", Arrays.asList(tokens).subList(4, Arrays.asList(tokens).size()));
-
-		return new Log(null, date, source, lf, ls, ip, message);
 	}
 	
 	private void readAuth0Logs() throws Exception {
@@ -289,39 +245,22 @@ public class LogService {
 				HttpMethod.GET, entity, String.class);
 
 		ArrayList<Log> logs = new ArrayList<>();
-		List<Auth0Log> list = Arrays.asList(new GsonBuilder().create().fromJson(result.getBody(), Auth0Log[].class));
-
 		String newThreshold = threshold;
-		boolean setNewThreshold = false;
-		for (Auth0Log auth0Log : list) {
-			if (!setNewThreshold) {
-				newThreshold = auth0Log.getLog_id();
-				setNewThreshold = true;
+		try {
+			String[] list = result.getBody().substring(2, result.getBody().length() - 2).split("\\},\\{");
+			boolean setNewThreshold = false;
+			for (String auth0Log : list) {
+				if (!setNewThreshold) {
+					newThreshold = auth0Log.split("log_id")[1].split("\"")[2];
+					setNewThreshold = true;
+				}
+				Log log = auth0LogParser.parse(auth0Log);
+				logs.add(log);
 			}
-			Log log = this.parseAut0Log(auth0Log);
-			logs.add(log);
-		}
 
-		this.save(logs);
+			this.save(logs);
+		} catch (Exception e) {}
 		return newThreshold;
-	}
-
-	private Log parseAut0Log(Auth0Log auth0Log) {
-		String hostname = "Auth0";
-		String ip = "";
-		String message = Auth0Type.valueOf(auth0Log.getType()).getValue();
-		if (auth0Log.getHostname() != null) {
-			if (!auth0Log.getHostname().equals("")) {
-				hostname = auth0Log.getHostname();	
-			}
-		}
-		if (auth0Log.getUser_name() != null) {
-			if (!auth0Log.getUser_name().equals("")) {
-				message = message + " Username: " + auth0Log.getUser_name();
-			}
-		}
-		if (auth0Log.getIp() != null) ip = auth0Log.getIp();
-		return new Log(null, auth0Log.getDate(), hostname, LogFacility.AUTH, LogSeverity.INFORMATIONAL, ip, message);
 	}
 
 }

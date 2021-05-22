@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddLowOxygenLevelRuleComponent } from '../add-low-oxygen-level-rule/add-low-oxygen-level-rule.component';
+import { AddLowOxygenLevelTemperatureRuleComponent } from '../add-low-oxygen-level-temperature-rule/add-low-oxygen-level-temperature-rule.component';
 import { AddPressureRuleComponent } from '../add-pressure-rule/add-pressure-rule.component';
 import { AddTemperatureRuleComponent } from '../add-temperature-rule/add-temperature-rule.component';
 import { AlarmsService } from '../core/services/alarms.service';
@@ -66,6 +67,19 @@ export class AlarmsDoctorComponent implements OnInit {
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
         this.snackBar.success("Low Oxygen Level Rule added successfully!");
+      }
+    });
+  }
+
+  addLowOxygenLevelAndTemperatureRule(): void {
+    const dialogConfig: MatDialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.minHeight = '440px';
+    dialogConfig.minWidth = '400px';
+    const dialogRef = this.dialog.open(AddLowOxygenLevelTemperatureRuleComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.snackBar.success("Low Oxygen Level and Temperature Rule added successfully!");
       }
     });
   }

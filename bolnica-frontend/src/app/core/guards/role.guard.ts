@@ -29,8 +29,11 @@ export class RoleGuard implements CanActivate {
       } 
     })
     if (!found) {
-      this.auth.logout();
-      this.router.navigate(['/homepage']);
+      if (role.indexOf('read:logs') !== -1) {
+        this.router.navigate(['/logs']);
+      } else if (role.indexOf('read:messages') !== -1) {
+        this.router.navigate(['/messages']);
+      }
       return false;
     }
     return true;

@@ -22,5 +22,7 @@ public interface LogRepository extends MongoRepository<Log, BigInteger> {
 	List<Log> findAllBySeverityAndTimestampBetween(LogSeverity string, Date from, Date to);
 
 	Page<Log> findByIdIn(Pageable pageable, List<BigInteger> collect);
+	
+    int countBySeverityEqualsAndTimestampBetween(LogSeverity severity, Date startDate, Date endDate);
 
 }

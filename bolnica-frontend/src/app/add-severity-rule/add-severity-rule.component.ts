@@ -44,7 +44,6 @@ export class AddSeverityRuleComponent implements OnInit {
     rule.count = this.formSeverityRule.value.count;
     rule.message = this.formSeverityRule.value.message;
     this.rulesService.addSeverityRule(rule).subscribe((data: any) => {
-      this.snackBar.success("You have succesfully added severity rule.");
       this.dialogRef.close(true);
     },
     error => {

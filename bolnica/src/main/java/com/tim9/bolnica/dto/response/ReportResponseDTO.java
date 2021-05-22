@@ -17,6 +17,7 @@ public class ReportResponseDTO {
 	private Date to;
 	private int logs;
 	private int debug;
+	private int trace;
 	private int informational;
 	private int notice;
 	private int warning;

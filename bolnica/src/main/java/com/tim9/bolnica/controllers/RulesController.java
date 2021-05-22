@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.bolnica.dto.TemperatureRuleDTO;
 import com.tim9.bolnica.dto.MessagesTemplateRuleDTO;
 import com.tim9.bolnica.dto.OxygenLevelRuleDTO;
+import com.tim9.bolnica.dto.OxygenLevelTemperatureRuleDTO;
 import com.tim9.bolnica.dto.PressureRuleDTO;
 import com.tim9.bolnica.dto.SeverityTemplateRuleDTO;
 import com.tim9.bolnica.services.RulesService;
@@ -83,6 +84,18 @@ public class RulesController {
 		try {
 			logger.trace("Oxygen level template rule creation requested");
 			rulesService.addOLR(dto);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+	
+	@PostMapping(value = "/create-oltr")
+    public ResponseEntity<?> createOxygenTemperatureRule(@Valid @RequestBody OxygenLevelTemperatureRuleDTO dto) {
+		try {
+			logger.trace("Oxygen level and temperature template rule creation requested");
+			rulesService.addOxygenLevelTemperatureRule(dto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

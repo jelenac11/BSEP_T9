@@ -1,6 +1,8 @@
 package com.tim9.bolnica.dto;
 
 
+import java.util.UUID;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -15,6 +17,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MessagesTemplateRuleDTO {
 
+	private UUID id;
 	@NotBlank(message = "Message regex before must not be empty")
 	private String messageRegexBefore;
 	@NotBlank(message = "Message regex after must not be empty")

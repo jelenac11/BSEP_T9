@@ -1,0 +1,22 @@
+template header
+id
+temperature
+oxygenLevel
+message
+
+package rules.doctor.templates;
+
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+template "Temperature and oxygen level template"
+
+rule "Temperature higher than @{temperature} and oxygen level lower than @{oxygenLevel} @{id}"
+    when
+    	Message($patient: patientId, oxygenLevel <= @{oxygenLevel}, temperature >= @{temperature})
+    then
+        System.out.println("Temperature and oxygen level template");
+        insert(new DoctorAlarm(null, $patient, new Date(), "@{message}"));
+   end
+
+end template

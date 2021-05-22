@@ -1,4 +1,5 @@
 template header
+id
 messageRegexBefore
 messageRegexAfter
 timePeriod
@@ -11,7 +12,7 @@ import java.util.Date;
 
 template "Messages template"
 
-rule "Messages before and after rule @{messageRegexBefore} and @{messageRegexAfter} appears in @{timePeriod} seconds"
+rule "Messages before and after rule @{messageRegexBefore} and @{messageRegexAfter} appears in @{timePeriod} seconds @{id}"
    when
         $l1: Log(message matches "@{messageRegexBefore}")
         $l2: Log(this after[@{timePeriod}s] $l1, message matches "@{messageRegexAfter}")

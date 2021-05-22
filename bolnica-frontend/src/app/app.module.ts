@@ -40,6 +40,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { AddTemperatureRuleComponent } from './add-temperature-rule/add-temperature-rule.component';
 import { AddLowOxygenLevelRuleComponent } from './add-low-oxygen-level-rule/add-low-oxygen-level-rule.component';
 import { AddPressureRuleComponent } from './add-pressure-rule/add-pressure-rule.component';
+import { AddLowOxygenLevelTemperatureRuleComponent } from './add-low-oxygen-level-temperature-rule/add-low-oxygen-level-temperature-rule.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { AddPressureRuleComponent } from './add-pressure-rule/add-pressure-rule.
     MessagesComponent,
     AddTemperatureRuleComponent,
     AddLowOxygenLevelRuleComponent,
-    AddPressureRuleComponent
+    AddPressureRuleComponent,
+    AddLowOxygenLevelTemperatureRuleComponent
   ],
   imports: [
     CommonModule,

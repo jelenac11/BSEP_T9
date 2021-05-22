@@ -39,7 +39,8 @@
                                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                                   {{option}}
                                 </mat-option>
-                              </mat-autocomplete>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="f.country.errors?.match">Country code does not exists.</mat-error>
                         </mat-form-field></p>
                         <p><mat-form-field appearance="outline" class="full-row">
                             <mat-label>Email address</mat-label>

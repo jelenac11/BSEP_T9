@@ -43,7 +43,6 @@ export class AddMessagesRuleComponent implements OnInit {
     rule.timePeriod = this.formMessagesRule.value.timePeriod;
     rule.message = this.formMessagesRule.value.message;
     this.rulesService.addMessagesRule(rule).subscribe((data: any) => {
-      this.snackBar.success("You have succesfully added messages rule.");
       this.dialogRef.close(true);
     },
     error => {

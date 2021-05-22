@@ -29,15 +29,15 @@ public class ReportService {
 		int alarms = alarmRepo.findAllByTimestampBetween(dto.getFrom(), dto.getTo()).size();
 		int logs = logRepo.findAllByTimestampBetween(dto.getFrom(), dto.getTo()).size();
 		int debug = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.DEBUG, dto.getFrom(), dto.getTo()).size();
-		int informational = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.INFORMATIONAL, dto.getFrom(), dto.getTo()).size();
-		int notice = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.NOTICE, dto.getFrom(), dto.getTo()).size();
-		int warning = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.WARNING, dto.getFrom(), dto.getTo()).size();
-		int error = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.ERROR, dto.getFrom(), dto.getTo()).size();
-		int critical = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.CRITICAL, dto.getFrom(), dto.getTo()).size();
-		int alert = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.ALERT, dto.getFrom(), dto.getTo()).size();
-		int emergency = logRepo.findAllBySeverityAndTimestampBetween(LogSeverity.EMERGENCY, dto.getFrom(), dto.getTo()).size();
+		int informational = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.INFORMATIONAL, dto.getFrom(), dto.getTo());
+		int notice = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.NOTICE, dto.getFrom(), dto.getTo());
+		int warning = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.WARNING, dto.getFrom(), dto.getTo());
+		int error = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.ERROR, dto.getFrom(), dto.getTo());
+		int critical = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.CRITICAL, dto.getFrom(), dto.getTo());
+		int alert = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.ALERT, dto.getFrom(), dto.getTo());
+		int emergency = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.EMERGENCY, dto.getFrom(), dto.getTo());
 		logger.info("New log report created");
-		return new ReportResponseDTO(dto.getFrom(), dto.getTo(), logs, debug, informational, notice, warning, error, critical, alert, emergency, alarms);
+		return new ReportResponseDTO(dto.getFrom(), dto.getTo(), logs, 0, debug, informational, notice, warning, error, critical, alert, emergency, alarms);
 	}
 
 }

@@ -57,11 +57,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.POST, "/api/rules/create-mtr").hasAuthority("SCOPE_write:rules")
         .antMatchers(HttpMethod.POST, "/api/rules/create-lowt").hasAuthority("SCOPE_write:rulesDoctor")
         .antMatchers(HttpMethod.POST, "/api/rules/create-hight").hasAuthority("SCOPE_write:rulesDoctor")
-        .antMatchers(HttpMethod.POST, "/api/rules/create-orl").hasAuthority("SCOPE_write:rulesDoctor")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-olt").hasAuthority("SCOPE_write:rulesDoctor")
+        .antMatchers(HttpMethod.POST, "/api/rules/create-oltr").hasAuthority("SCOPE_write:rulesDoctor")
         .antMatchers(HttpMethod.POST, "/api/rules/create-prule").hasAuthority("SCOPE_write:rulesDoctor")
         
         .antMatchers("**").authenticated()
         .and().oauth2ResourceServer().jwt();
+    	
+    	http.headers()
+        .xssProtection()
+        .and()
+        .contentSecurityPolicy("script-src 'self'");
     }
     
     @Override

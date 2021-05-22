@@ -54,6 +54,10 @@ export class RulesService {
     return this.http.post(`${environment.api_url}rules/create-olr`, rule, { headers: this.headers, responseType: 'text' });
   }
 
+  addLowOxygenLevelAndTemperatureRule(rule: any): Observable<string> {
+    return this.http.post(`${environment.api_url}rules/create-oltr`, rule, { headers: this.headers, responseType: 'text' });
+  }
+
   addPressureRule(rule: any): Observable<string> {
     return this.http.post(`${environment.api_url}rules/create-prule`, rule, { headers: this.headers, responseType: 'text' });
   }
