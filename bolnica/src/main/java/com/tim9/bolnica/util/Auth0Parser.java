@@ -27,7 +27,7 @@ public class Auth0Parser extends LogParser {
 			}
 		}
 		if (auth0Log.getIp() != null) ip = auth0Log.getIp();
-		return new Log(null, auth0Log.getDate(), hostname, LogFacility.AUTH, LogSeverity.INFORMATIONAL, ip, message);
+		return new Log(null, auth0Log.getDate(), hostname, LogFacility.AUTH, LogSeverity.INFORMATIONAL, ip, message, "");
 	}
 
 }

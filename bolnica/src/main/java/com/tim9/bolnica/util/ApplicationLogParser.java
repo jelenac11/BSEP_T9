@@ -30,7 +30,7 @@ public class ApplicationLogParser extends LogParser {
 		}
 		String message = String.join(" ", Arrays.asList(tokens).subList(6, Arrays.asList(tokens).size()));
 
-		return new Log(null, date, source, LogFacility.LOCAL0, LogSeverity.valueOf(severity), ip, message);
+		return new Log(null, date, source, LogFacility.LOCAL0, LogSeverity.valueOf(severity), ip, message, "");
 	}
 
 }

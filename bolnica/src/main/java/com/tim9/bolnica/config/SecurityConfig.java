@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.POST, "/api/messages/by-page").hasAuthority("SCOPE_read:messages")
         .antMatchers(HttpMethod.GET, "/api/patients").hasAuthority("SCOPE_read:patients")
         .antMatchers(HttpMethod.POST, "/api/reports").hasAuthority("SCOPE_read:reports")
+        .antMatchers(HttpMethod.POST, "/api/configuration").permitAll()
         .antMatchers(HttpMethod.POST, "/api/rules/create-str").hasAuthority("SCOPE_write:rules")
         .antMatchers(HttpMethod.POST, "/api/rules/create-mtr").hasAuthority("SCOPE_write:rules")
         .antMatchers(HttpMethod.POST, "/api/rules/create-lowt").hasAuthority("SCOPE_write:rulesDoctor")
