@@ -15,6 +15,7 @@ export class CallbackComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.authService.login();
     this.authService.handleLoginCallback();
     if (this.authService.isAuthenticated) {
       this.router.navigate(['/certificates']).then();
