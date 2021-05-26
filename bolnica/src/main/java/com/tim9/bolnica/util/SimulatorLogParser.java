@@ -29,7 +29,7 @@ public class SimulatorLogParser extends LogParser {
 		LogSeverity ls = LogSeverity.valueOf(fS[1]);
 		String message = String.join(" ", Arrays.asList(tokens).subList(4, Arrays.asList(tokens).size()));
 
-		return new Log(null, date, source, lf, ls, ip, message);
+		return new Log(null, date, source, lf, ls, ip, message, "");
 	}
 
 }

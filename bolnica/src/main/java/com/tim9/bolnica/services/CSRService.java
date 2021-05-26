@@ -1,7 +1,6 @@
 package com.tim9.bolnica.services;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
@@ -17,7 +16,6 @@ import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.openssl.jcajce.JcaPKCS8Generator;
 import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import org.bouncycastle.pkcs.PKCS10CertificationRequestBuilder;
@@ -29,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.tim9.bolnica.dto.CSRDTO;
+import com.tim9.bolnica.util.Auth0Util;
 
 @Service
 public class CSRService {
@@ -58,7 +57,11 @@ public class CSRService {
         return null;
 	}
 	
-	public void createCSR(CSRDTO csrDTO) throws IOException, OperatorCreationException {
+	public void createCSR(CSRDTO csrDTO) throws Exception {
+		String hospitalName = Auth0Util.getAdminHospital();
+        if (!csrDTO.getOrganizationalUnit().equals(hospitalName)) {
+        	throw new Exception("Wrong Organizational Unit. You have to enter name of your hospital.");
+        }
 		
 		KeyPair keypair = generateKeyPair();	
 		PublicKey publicKey = keypair.getPublic();

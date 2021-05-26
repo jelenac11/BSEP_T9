@@ -1,4 +1,4 @@
-package com.tim9.bolnica.model;
+package com.tim9.admin.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,18 +13,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "default_rules")
+@Table(name = "hospitals")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DefaultRule {
-
+public class Hospital {
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
     private Long id;
 	
 	@Column
-	private String description;
+    private String name;
+	
+	@Column
+    private String admin;
+
 }

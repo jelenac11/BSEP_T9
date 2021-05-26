@@ -4,8 +4,14 @@ import java.util.HashMap;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.client.RestTemplate;
+
+import com.tim9.bolnica.model.Doctor;
 
 import net.minidev.json.JSONObject;
 
@@ -32,4 +38,37 @@ public class Auth0Util {
 
 	    apiToken = result.get("access_token");
 	}
+	
+	public static String getAdminHospital() {
+		String user = ((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getSubject();
+		HttpHeaders headers = new HttpHeaders();
+		getManagementApiToken();
+        headers.set("Authorization", "Bearer " + apiToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> result = restTemplate.exchange("https://dev-lsmn3kc2.eu.auth0.com/api/v2/users/" + user + "?fields=user_metadata", HttpMethod.GET, entity, String.class);
+        try {
+        	return result.getBody().split("\"")[5];
+        } catch(Exception e) {
+        	return "";
+        }
+	}
+	
+	public static Doctor getDoctor() {
+		String user = ((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getSubject();
+		HttpHeaders headers = new HttpHeaders();
+		getManagementApiToken();
+        headers.set("Authorization", "Bearer " + apiToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> result = restTemplate.exchange("https://dev-lsmn3kc2.eu.auth0.com/api/v2/users/" + user + "?fields=user_metadata", HttpMethod.GET, entity, String.class);
+        try {
+        	return new Doctor(result.getBody().split("\"")[5], result.getBody().split("\"")[9]);
+        } catch(Exception e) {
+        	return new Doctor();
+        }
+	}
+	
 }

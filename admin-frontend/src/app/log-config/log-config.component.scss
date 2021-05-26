@@ -1,0 +1,33 @@
+@use '../../base';
+
+.jumbotron {
+    @extend %auth-background;
+}
+
+.mat-card-header {
+    @extend %auth-card-header;
+}
+
+.title {
+    @extend %auth-title;
+}
+
+.subtitle {
+    @extend %auth-subtitle;
+}
+
+.full-row {
+    width: 90% !important;
+}
+
+.sign-in {
+    @extend %auth-card;
+}
+
+.report {
+    @extend %content-center;
+}
+
+form {
+    @extend %content-center;
+}

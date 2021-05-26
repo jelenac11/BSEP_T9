@@ -1,0 +1,42 @@
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <mat-card class="col-sm-6 offset-sm-3" [class.mat-elevation-z24]='true'>
+                <mat-card-header>
+                    <mat-card-subtitle><p class="mb-5 mt-3 subtitle">Create Log Configuration</p></mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="formLog" (ngSubmit)="onSubmit()">
+                        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+                            <mat-label>Hospital</mat-label>
+                            <mat-select formControlName="hospital">
+                                <mat-option *ngFor="let h of hospitals" [value]="h.name">
+                                  {{h.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field></p>
+                        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+                            <mat-label>File Path</mat-label>
+                            <mat-select formControlName="filePath">
+                                <mat-option *ngFor="let path of paths" [value]="path">
+                                  {{path}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field></p>
+                        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+                            <mat-label>Interval</mat-label>
+                            <input matInput type="number" placeholder="Interval" formControlName="interval" min="1">
+                            <span matSuffix>seconds</span>
+                            <mat-error *ngIf="formLog.controls.interval.invalid">Min: 1 sec</mat-error>
+                        </mat-form-field></p>
+                        <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
+                            <mat-label>Regexp</mat-label>
+                            <input formControlName="regexp" matInput placeholder="Regexp">
+                        </mat-form-field></p>
+                        <button class="mr-3 px-3 mt-2 mb-4 btn sign-in">Create</button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

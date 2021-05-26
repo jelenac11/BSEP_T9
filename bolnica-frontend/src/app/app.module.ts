@@ -41,6 +41,7 @@ import { AddTemperatureRuleComponent } from './add-temperature-rule/add-temperat
 import { AddLowOxygenLevelRuleComponent } from './add-low-oxygen-level-rule/add-low-oxygen-level-rule.component';
 import { AddPressureRuleComponent } from './add-pressure-rule/add-pressure-rule.component';
 import { AddLowOxygenLevelTemperatureRuleComponent } from './add-low-oxygen-level-temperature-rule/add-low-oxygen-level-temperature-rule.component';
+import { PatientsComponent } from './patients/patients.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { AddLowOxygenLevelTemperatureRuleComponent } from './add-low-oxygen-leve
     AddTemperatureRuleComponent,
     AddLowOxygenLevelRuleComponent,
     AddPressureRuleComponent,
-    AddLowOxygenLevelTemperatureRuleComponent
+    AddLowOxygenLevelTemperatureRuleComponent,
+    PatientsComponent
   ],
   imports: [
     CommonModule,

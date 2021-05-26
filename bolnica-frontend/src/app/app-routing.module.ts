@@ -9,6 +9,7 @@ import { CsrComponent } from './csr/csr.component';
 import { LogsComponent } from './logs/logs.component';
 import { ReportComponent } from './report/report.component';
 import { MessagesComponent } from './messages/messages.component';
+import { PatientsComponent } from './patients/patients.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,14 @@ const routes: Routes = [
     canActivate: [RoleGuard],
     data: {
         expectedRoles: 'read:messages'
+    }
+  },
+  {
+    path: 'patients',
+    component: PatientsComponent,
+    canActivate: [RoleGuard],
+    data: {
+        expectedRoles: 'read:patients'
     }
   },
   {

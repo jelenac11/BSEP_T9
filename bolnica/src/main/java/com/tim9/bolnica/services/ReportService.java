@@ -36,8 +36,9 @@ public class ReportService {
 		int critical = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.CRITICAL, dto.getFrom(), dto.getTo());
 		int alert = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.ALERT, dto.getFrom(), dto.getTo());
 		int emergency = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.EMERGENCY, dto.getFrom(), dto.getTo());
+		int trace = logRepo.countBySeverityEqualsAndTimestampBetween(LogSeverity.TRACE, dto.getFrom(), dto.getTo());
 		logger.info("New log report created");
-		return new ReportResponseDTO(dto.getFrom(), dto.getTo(), logs, 0, debug, informational, notice, warning, error, critical, alert, emergency, alarms);
+		return new ReportResponseDTO(dto.getFrom(), dto.getTo(), logs, debug, trace, informational, notice, warning, error, critical, alert, emergency, alarms);
 	}
 
 }

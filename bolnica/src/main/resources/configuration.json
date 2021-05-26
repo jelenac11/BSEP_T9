@@ -1,9 +1,1 @@
-{
-	"logConfigs": [
-		{
-			"filePath": "C:\\Users\\Home\\Downloads\\Domaci1\\logging.log",
-			"interval": 5000,
-			"regexp": ".*"
-		}
-	]
-}
+{"logConfigs":[]}

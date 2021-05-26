@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -59,13 +58,12 @@ public class LogService {
 			Gson gson = new Gson();
 			File file = ResourceUtils.getFile("classpath:configuration.json");
 			Config config = gson.fromJson(new FileReader(file), Config.class);
-
 			for (LogConfig lc : config.getLogConfigs()) {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
 						try {
-							readLogs(lc.getFilePath(), lc.getInterval(), lc.getRegexp());
+							readLogs(lc.getFilePath(), lc.getInterval(), lc.getRegexp(), lc.getHospital());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -96,51 +94,28 @@ public class LogService {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public void addNewConfig(LogConfig lc) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					readLogs(lc.getFilePath(), lc.getInterval(), lc.getRegexp(), lc.getHospital());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
 
 	public Page<LogResponseDTO> findAll(Pageable pageable, SearchLogDTO search) throws RequestException {
-		List<Log> response = logRepository.findAll();
-		ArrayList<Log> filtered = this.filter(response, search);
-		Page<Log> logPage = logRepository.findByIdIn(pageable,
-				filtered.stream().map(Log::getId).collect(Collectors.toList()));
+		String hospital = Auth0Util.getAdminHospital();
+		Page<Log> logPage = logRepository.searchLogs(search.getFrom(), search.getTo(), search.getIp(), search.getFacility(), search.getSeverity(), search.getMessage(), search.getSource(), hospital, pageable);
 		ArrayList<LogResponseDTO> forReturn = new ArrayList<LogResponseDTO>();
 		for (Log l : logPage.getContent()) {
 			forReturn.add(new LogResponseDTO(l));
 		}
 		return new PageImpl<LogResponseDTO>(forReturn, pageable, logPage.getTotalElements());
-	}
-
-	private ArrayList<Log> filter(List<Log> logs, SearchLogDTO search) throws RequestException {
-		if (search.getTo() != null && search.getFrom() != null) {
-			if (search.getTo().compareTo(search.getFrom()) < 0) {
-				throw new RequestException("Start date must be before end date!");
-			}
-		}
-		if (!search.getSeverity().equals("")) {
-			logs = logs.stream().filter(log -> log.getSeverity().toString().equals(search.getSeverity()))
-					.collect(Collectors.toList());
-		}
-		if (!search.getFacility().equals("")) {
-			logs = logs.stream().filter(log -> log.getFacility().toString().equals(search.getFacility()))
-					.collect(Collectors.toList());
-		}
-		if (!search.getIp().equals("")) {
-			logs = logs.stream().filter(log -> log.getIp().matches(search.getIp())).collect(Collectors.toList());
-		}
-		if (!search.getMessage().equals("")) {
-			logs = logs.stream().filter(log -> log.getMessage().matches(search.getMessage()))
-					.collect(Collectors.toList());
-		}
-		if (search.getTo() != null) {
-			logs = logs.stream().filter(log -> log.getTimestamp().before(search.getTo())).collect(Collectors.toList());
-		}
-		if (search.getFrom() != null) {
-			logs = logs.stream().filter(log -> log.getTimestamp().after(search.getFrom())).collect(Collectors.toList());
-		}
-		if (!search.getSource().equals("")) {
-			logs = logs.stream().filter(log -> log.getSource().matches(search.getSource()))
-					.collect(Collectors.toList());
-		}
-		return (ArrayList<Log>) logs;
 	}
 
 	public void save(List<Log> logs) {
@@ -183,15 +158,15 @@ public class LogService {
 		return newThreshold;
 	}
 
-	private void readLogs(String path, long interval, String regexp) throws Exception {
+	private void readLogs(String path, long interval, String regexp, String hospital) throws Exception {
 		Date threshold = new Date();
 		while (true) {
-			threshold = this.readSimulatorLogs(threshold, regexp, path);
+			threshold = this.readSimulatorLogs(threshold, regexp, path, hospital);
 			Thread.sleep(interval);
 		}
 	}
 
-	private Date readSimulatorLogs(Date threshold, String regexp, String path) throws IOException {
+	private Date readSimulatorLogs(Date threshold, String regexp, String path, String hospital) throws IOException {
 		ArrayList<Log> logs = new ArrayList<>();
 		ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(path));
 		Date newThreshold = new Date();
@@ -200,6 +175,7 @@ public class LogService {
 			boolean setNewThreshold = false;
 			while (line != null) {
 				Log log = simulatorLogParser.parse(line);
+				log.setHospital(hospital);
 				if (!setNewThreshold) {
 					newThreshold = log.getTimestamp();
 					setNewThreshold = true;

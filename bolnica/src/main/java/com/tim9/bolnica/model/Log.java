@@ -48,5 +48,6 @@ public class Log {
 	@Indexed
 	private String message;
 	
-	
+	@Indexed
+	private String hospital;
 }

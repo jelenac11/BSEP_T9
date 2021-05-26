@@ -25,35 +25,37 @@ import org.springframework.stereotype.Service;
 
 import com.tim9.bolnica.dto.FilterDTO;
 import com.tim9.bolnica.dto.response.MessageResponseDTO;
+import com.tim9.bolnica.model.Doctor;
 import com.tim9.bolnica.model.Message;
 import com.tim9.bolnica.model.Patient;
 import com.tim9.bolnica.repositories.MessageRepository;
 import com.tim9.bolnica.repositories.PatientRepository;
+import com.tim9.bolnica.util.Auth0Util;
 import com.tim9.bolnica.util.DateUtil;
 
 @Service
 public class MessageService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MessageService.class);
 
 	@Autowired
 	private MessageRepository messageRepo;
-	
+
 	@Autowired
 	private PatientRepository patientRepo;
-	
+
 	@Autowired
-    private AlarmService alarmService;
-	
+	private AlarmService alarmService;
+
 	@SuppressWarnings("resource")
 	public void save(@Valid byte[] signedMessage) throws ParseException, CMSException, IOException {
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(signedMessage);
-        ASN1InputStream asnInputStream = new ASN1InputStream(inputStream);
-        CMSSignedData cmsSignedData = new CMSSignedData(ContentInfo.getInstance(asnInputStream.readObject()));
-        CMSProcessable msg = cmsSignedData.getSignedContent();
-        String dto = new String((byte[]) msg.getContent());
-        
-        this.parseMessage(dto);
+		ASN1InputStream asnInputStream = new ASN1InputStream(inputStream);
+		CMSSignedData cmsSignedData = new CMSSignedData(ContentInfo.getInstance(asnInputStream.readObject()));
+		CMSProcessable msg = cmsSignedData.getSignedContent();
+		String dto = new String((byte[]) msg.getContent());
+
+		this.parseMessage(dto);
 	}
 
 	private void parseMessage(String dto) throws ParseException {
@@ -77,11 +79,13 @@ public class MessageService {
 	}
 
 	public Page<MessageResponseDTO> findAll(Pageable pageable, FilterDTO filter) {
-		List<Message> all = messageRepo.findAllByOrderByTimestampDesc();
+		Doctor doctor = Auth0Util.getDoctor();
+		List<Long> patientIds = ((ArrayList<Patient>) this.patientRepo.findByHospitalAndDepartment(doctor.getHospital(), doctor.getDepartment())).stream().map(Patient::getId).collect(Collectors.toList());
+		List<Message> all = messageRepo.findByPatientIdInOrderByTimestampDesc(patientIds);
 		ArrayList<Message> filtered = this.filter(all, filter);
-		Page<Message> logPage = messageRepo.findByIdIn(pageable, filtered.stream().map(Message::getId).collect(Collectors.toList())); 
+		Page<Message> logPage = messageRepo.findByIdIn(pageable, filtered.stream().map(Message::getId).collect(Collectors.toList()));
 		ArrayList<MessageResponseDTO> forReturn = new ArrayList<MessageResponseDTO>();
-		for (Message l: logPage.getContent()) {
+		for (Message l : logPage.getContent()) {
 			MessageResponseDTO mr = new MessageResponseDTO(l);
 			Optional<Patient> p = patientRepo.findById(l.getPatientId());
 			if (p.isPresent()) {
@@ -92,11 +96,12 @@ public class MessageService {
 		logger.info("Reading messages from database");
 		return new PageImpl<MessageResponseDTO>(forReturn, pageable, logPage.getTotalElements());
 	}
-	
+
 	private ArrayList<Message> filter(List<Message> all, FilterDTO f) {
 		if (f.getId() != null) {
 			logger.info("Messages filtered");
-			return (ArrayList<Message>) all.stream().filter(c -> c.getPatientId() == f.getId()).collect(Collectors.toList());
+			return (ArrayList<Message>) all.stream().filter(c -> c.getPatientId() == f.getId())
+					.collect(Collectors.toList());
 		}
 		return (ArrayList<Message>) all;
 	}

@@ -57,6 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.GET, "/api/certificates/revoked/by-page").hasAuthority("SCOPE_read:certificates")
         .antMatchers(HttpMethod.GET, "/api/certificates/status/**").hasAuthority("SCOPE_read:certificates")
         
+        .antMatchers(HttpMethod.GET, "/api/configuration/hospitals").hasAuthority("SCOPE_read:hospitals")
+        
         .antMatchers("**").authenticated()
         .and().oauth2ResourceServer().jwt();
     }

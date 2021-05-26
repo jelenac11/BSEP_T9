@@ -8,7 +8,7 @@ import { ReportService } from '../core/services/report.service';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit {
-  report = { from: 0, to: 0, logs: 0, alarms: 0, debug: 0, informational: 0, notice: 0, warning: 0, error: 0, critical: 0, alert: 0, emergency: 0 };
+  report = { from: 0, to: 0, logs: 0, alarms: 0, debug: 0, informational: 0, notice: 0, warning: 0, error: 0, critical: 0, alert: 0, emergency: 0, trace: 0 };
   reported = false;
   formReport: FormGroup;
 
@@ -41,7 +41,7 @@ export class ReportComponent implements OnInit {
 
   createNewReport(): void {
     this.reported = false;
-    this.report = { from: 0, to: 0,logs: 0, alarms: 0, debug: 0, informational: 0, notice: 0, warning: 0, error: 0, critical: 0, alert: 0, emergency: 0 };
+    this.report = { from: 0, to: 0,logs: 0, alarms: 0, debug: 0, informational: 0, notice: 0, warning: 0, error: 0, critical: 0, alert: 0, emergency: 0, trace: 0 };
   }
 
 }

@@ -40,6 +40,7 @@ import { InformationDialogComponent } from './information-dialog/information-dia
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './core/interceptors/http.token.interceptor';
 import { CallbackComponent } from './callback/callback.component';
+import { LogConfigComponent } from './log-config/log-config.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { CallbackComponent } from './callback/callback.component';
     VerifyCsrComponent,
     RevokeComponent,
     InformationDialogComponent,
-    CallbackComponent
+    CallbackComponent,
+    LogConfigComponent
   ],
   imports: [
     CommonModule,

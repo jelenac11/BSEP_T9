@@ -76,7 +76,7 @@
                                     <td scope="col" width="18%">{{ item.issuer }}</td>
                                     <td scope="col" width="18%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
                                     <td scope="col" width="18%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
-                                    <td scope="col" width="8%">{{ item.isCa }}</td>
+                                    <td scope="col" width="8%">{{ item.ca }}</td>
                                     <td scope="col" width="10%"><button mat-flat-button color="warn" *ngIf="item.serialNumber !== 'root'" class="button-class" (click)="revoke(item.serialNumber)" >Revoke</button></td>
                                 </tr>
                             </tbody>

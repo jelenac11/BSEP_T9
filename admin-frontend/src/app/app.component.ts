@@ -15,7 +15,7 @@ export class AppComponent {
     private authService: AuthService
   ) {
     this.router.events.subscribe((url: any) => {
-      if (this.router.url.startsWith('/certificates')) {
+      if (this.router.url.startsWith('/certificates') || this.router.url.startsWith('/log-configuration')) {
         this.showNavbar = true;
       } else {
         this.showNavbar = false;

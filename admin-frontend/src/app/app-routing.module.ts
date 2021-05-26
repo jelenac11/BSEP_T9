@@ -4,6 +4,7 @@ import { CallbackComponent } from './callback/callback.component';
 import { CertificatesComponent } from './certificates/certificates.component';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { LogConfigComponent } from './log-config/log-config.component';
 import { VerifyCsrComponent } from './verify-csr/verify-csr.component';
 
 const routes: Routes = [
@@ -15,6 +16,14 @@ const routes: Routes = [
   {
     path: 'verify-csr/:token',
     component: VerifyCsrComponent,
+  },
+  {
+    path: 'log-configuration',
+    component: LogConfigComponent,
+    canActivate: [RoleGuard],
+    data: {
+        expectedRoles: 'write:logConfigs'
+    }
   },
   {
     path: 'certificates',

@@ -1,4 +1,4 @@
-package com.tim9.bolnica.model;
+package com.tim9.admin.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.Setter;
 public class LogConfig {
 	
 	private String filePath;
-	private long interval;
+	private int interval;
 	private String regexp;
 	private String hospital;
 }

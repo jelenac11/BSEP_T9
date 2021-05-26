@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <div class="mt-2">
+        <div class="mt-4">
+            <table class="table table-hover">
+                <thead>
+                    <th scope="col" width="8%">Insured number</th>
+                    <th scope="col" width="15%">Full name</th>
+                    <th scope="col" width="10%">Birthday</th>
+                    <th scope="col" width="8%">Height</th>
+                    <th scope="col" width="8%">Weight</th>
+                    <th scope="col" width="8%">Gender</th>
+                    <th scope="col" width="8%">Blood type</th>
+                    <th scope="col" width="35%">Medical history</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of patients"
+                    >
+                        <td scope="col" width="8%">{{ item.insuredNumber }}</td>
+                        <td scope="col" width="15%">{{ item.firstName + ' ' + item.lastName }}</td>
+                        <td scope="col" width="10%">{{ item.birthDay | date:'dd.MM.YYYY.' }}</td>
+                        <td scope="col" width="8%">{{ item.height }}</td>
+                        <td scope="col" width="8%">{{ item.weight }}</td>
+                        <td scope="col" width="8%">{{ item.gender }}</td>
+                        <td scope="col" width="8%">{{ item.bloodType }}</td>
+                        <td scope="col" width="35%">{{ item.medicalHistory }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
