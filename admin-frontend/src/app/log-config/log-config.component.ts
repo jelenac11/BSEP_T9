@@ -45,6 +45,11 @@ export class LogConfigComponent implements OnInit {
     };
     this.logService.createLogConfig(log).subscribe((data) => {
       this.snackbar.success("Successfully created log configuration.");
+      this.formLog.reset();
+      this.formLog.controls.hospital.setErrors(null);
+      this.formLog.controls.filePath.setErrors(null);
+      this.formLog.controls.regexp.setErrors(null);
+
     });
   }
 

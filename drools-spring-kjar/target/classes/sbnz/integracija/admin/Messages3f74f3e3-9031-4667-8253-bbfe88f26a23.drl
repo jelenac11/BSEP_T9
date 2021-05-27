@@ -1,0 +1,14 @@
+package rules.admin.templates;
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+rule "Messages before and after rule .*database.* and .*database.* appears in 1 seconds 3f74f3e3-9031-4667-8253-bbfe88f26a23"
+   when
+        $l1: Log(message matches ".*database.*", $t:timestamp)
+        $l2: Log(new Date(timestamp.getTime() - 1*1000) < $t, new Date(timestamp.getTime()) > $t, message matches ".*database.*")
+    then
+    	System.out.println("Messages template rule");
+        insert(new AdminAlarm(null, null, new Date(), "PLIZZZZZZZZZZZZZZZZ"));
+   end
+
+

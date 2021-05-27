@@ -25,11 +25,11 @@ public class RuleBasedSystemUtil {
         invoker.setMavenHome(new File(System.getenv("MAVEN_HOME")));
         InvocationResult result = invoker.execute(request);
         if (result.getExitCode() != 0) {
-        	logger.info("Maven clean and install failed");
+        	logger.error("Maven clean and install failed");
             System.out.println(result.getExecutionException().toString());
             System.out.println(result.getExitCode());
         } else {
-        	logger.error("Successfully finished maven clean and install");
+        	logger.info("Successfully finished maven clean and install");
         }
     }
 }

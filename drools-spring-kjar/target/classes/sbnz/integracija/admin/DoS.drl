@@ -12,25 +12,12 @@ rule "DoS attack"
         $no: Number(intValue > 15) from accumulate(
             $log : Log($id2: id, ip == $ip, message == $m)
             over window:time(1m),
-            init (int count = 0;),
-            action (
-                int c = 0;
-                for(Object o : $alarms) {
-                    AdminAlarm a = (AdminAlarm) o;
-                    if (a.getLogId() == $id2 && a.getMessage().contains("DOS ATTACK")) {
-                        c += 1;
-                        break;
-                    }
-                }
-                if (c == 0) {
-                    count += 1;
-                }
-            ),
-            result (count)
+            count($log)
         )
         not(AdminAlarm(logId == $id))
+        not(AdminAlarm(message.contains($ip), message.contains("DOS ATTACK"), new Date(timestamp.getTime() + 60*1000) > new Date()))
     then
         System.out.println("DoS attack");
-        AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "DOS ATTACK - " + $m);
+        AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "DOS ATTACK - " + $m + ", from ip: " + $ip);
         insert(alarm);
 end

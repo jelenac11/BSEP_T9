@@ -78,11 +78,11 @@ public class RulesService {
 	
 	public void addSTR(@Valid SeverityTemplateRuleDTO dto) throws IOException, MavenInvocationException {
 		List<SeverityTemplateRuleDTO> data = new ArrayList<>();
+		UUID id = UUID.randomUUID();
+        dto.setId(id);
         data.add(dto);
         InputStream template = new FileInputStream(severityTemplate);
         String drl = (new ObjectDataCompiler()).compile(data, template);
-        UUID id = UUID.randomUUID();
-        dto.setId(id);
         Files.write(Paths.get(severityDRL + id.toString() + ".drl"), drl.getBytes(), StandardOpenOption.CREATE);
         logger.info("New severity template rule created");
         RuleBasedSystemUtil.mavenCleanAndInstall();
@@ -90,11 +90,11 @@ public class RulesService {
 	
 	public void addMTR(@Valid MessagesTemplateRuleDTO dto) throws IOException, MavenInvocationException {
 		List<MessagesTemplateRuleDTO> data = new ArrayList<>();
+		UUID id = UUID.randomUUID();
+        dto.setId(id);
         data.add(dto);
         InputStream template = new FileInputStream(messagesTemplate);
         String drl = (new ObjectDataCompiler()).compile(data, template);
-        UUID id = UUID.randomUUID();
-        dto.setId(id);
         Files.write(Paths.get(messagesDRL + id.toString() + ".drl"), drl.getBytes(), StandardOpenOption.CREATE);
         logger.info("New messages template rule created");
         RuleBasedSystemUtil.mavenCleanAndInstall();	

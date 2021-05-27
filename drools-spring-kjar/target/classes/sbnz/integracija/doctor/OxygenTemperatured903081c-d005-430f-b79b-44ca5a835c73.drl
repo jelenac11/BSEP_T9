@@ -1,0 +1,13 @@
+package rules.doctor.templates;
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+rule "Temperature higher than 40.0 and oxygen level lower than 90 d903081c-d005-430f-b79b-44ca5a835c73"
+    when
+    	Message($patient: patientId, oxygenLevel <= 90, temperature >= 40.0)
+    then
+        System.out.println("Temperature and oxygen level template");
+        insert(new DoctorAlarm(null, $patient, new Date(), "Vojvodina"));
+   end
+
+

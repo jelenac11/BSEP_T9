@@ -11,7 +11,7 @@ import com.tim9.bolnica.enums.*;
            not(AdminAlarm(logId == $id))
        then
            System.out.println("Error log appeared");
-           AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), $log.getMessage());
+           AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "ERROR: " + $log.getMessage());
            insert(alarm);
    end
    

@@ -16,6 +16,7 @@ public class Auth0Parser extends LogParser {
 		String hostname = "Auth0";
 		String ip = "";
 		String message = Auth0Type.valueOf(auth0Log.getType()).getValue();
+		System.out.println(message);
 		if (auth0Log.getHostname() != null) {
 			if (!auth0Log.getHostname().equals("")) {
 				hostname = auth0Log.getHostname();	

@@ -92,7 +92,6 @@
                                 <th scope="col" width="15%">Not before</th>
                                 <th scope="col" width="15%">Not after</th>
                                 <th scope="col" width="15%">Revoke date</th>
-                                <th scope="col" width="8%">CA</th>
                             </thead>
                             <tbody>
                                 <tr *ngFor="
@@ -111,7 +110,6 @@
                                     <td scope="col" width="15%">{{ item.notBefore|date : 'dd/MM/yyyy' }}</td>
                                     <td scope="col" width="15%">{{ item.notAfter|date : 'dd/MM/yyyy' }}</td>
                                     <td scope="col" width="15%">{{ item.revokeDate|date : 'dd/MM/yyyy' }}</td>
-                                    <td scope="col" width="8%">{{ item.isCa }}</td>
                                 </tr>
                             </tbody>
                         </table>

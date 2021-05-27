@@ -15,7 +15,7 @@ template "Severity template"
 
 rule "Severity rule @{severity} appears @{count} times in @{timePeriod} seconds @{id}"
     when
-        Number(intValue >= 1) from accumulate(
+        Number(intValue >= @{count}) from accumulate(
            $l: Log(severity == LogSeverity.@{severity}) over window:time(@{timePeriod}s),
            count($l))
     then

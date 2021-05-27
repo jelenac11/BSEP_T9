@@ -2,13 +2,13 @@
 <mat-dialog-content class="mt-3" style="width: 450px;">
     <form [formGroup]="formLowOxygenLevelAndTemperatureRule" id="formLowOxygenLevelAndTemperatureRule" (ngSubmit)="add()" style="width: 100%;">
         <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
-            <mat-label>Oxygen Level</mat-label>
-            <input matInput type="number" placeholder="Oxygen Level" formControlName="oxygenLevel" min="1" max="100">
+            <mat-label>Oxygen Level lower than</mat-label>
+            <input matInput type="number" placeholder="Oxygen Level lower than" formControlName="oxygenLevel" min="1" max="100">
             <mat-error *ngIf="formLowOxygenLevelAndTemperatureRule.controls.oxygenLevel.invalid">Range: 1-100</mat-error>
         </mat-form-field></p>
         <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">
-            <mat-label>Temperature</mat-label>
-            <input matInput type="number" placeholder="Temperature" formControlName="temperature" min="1">
+            <mat-label>Temperature higher than</mat-label>
+            <input matInput type="number" placeholder="Temperature higher than" formControlName="temperature" min="1">
             <mat-error *ngIf="formLowOxygenLevelAndTemperatureRule.controls.temperature.invalid">Minimum value is 1</mat-error>
         </mat-form-field></p>
         <p><mat-form-field appearance="outline" class="full-row" style="width: 100%">

@@ -213,6 +213,7 @@ public class LogService {
 		RestTemplate restTemplate = new RestTemplate();
 
 		String from = "";
+		//System.out.println(threshold);
 		if (threshold != null) {
 			from = "&from=" + threshold;
 		}
@@ -227,7 +228,9 @@ public class LogService {
 			boolean setNewThreshold = false;
 			for (String auth0Log : list) {
 				if (!setNewThreshold) {
+					//System.out.println(auth0Log);
 					newThreshold = auth0Log.split("log_id")[1].split("\"")[2];
+					//System.out.println("NEWWWWWWWWW" + newThreshold);
 					setNewThreshold = true;
 				}
 				Log log = auth0LogParser.parse(auth0Log);
@@ -235,7 +238,9 @@ public class LogService {
 			}
 
 			this.save(logs);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return newThreshold;
 	}
 

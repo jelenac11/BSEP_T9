@@ -184,7 +184,14 @@ public class CertificateService {
 			if (certificate.getIssuerDN().equals(ca.getSubjectDN())) {
 				RevokedCertificate rc = createRevokedCertificate(certificate);
 		        revokedCertRepo.save(rc);
-		        
+		        /*
+		        emailService.sendMail(new JcaX509CertificateHolder(certificate).getIssuer().getRDNs(BCStyle.E)[0].getFirst().getValue().toString(), "Certificate Revoke", "Hi,\n\nYour Certificate is revoked." + 
+					"\n\nCertificate info:\n\tCommon Name: " + rc.getCommonName() +
+					"\n\tSerial number: " + rc.getId() +
+					"\n\tIssuer: " + rc.getIssuer() +
+					"\n\tReason: CA certificate is revoked." +
+					"\n\nTeam 9\n");
+		        */
 		        KeyStoreUtil.deleteEntry(ks, alias);
 		        KeyStoreUtil.saveKeyStore(ks, KEYSTORE_FILE_PATH, KEYSTORE_PASSWORD);
 

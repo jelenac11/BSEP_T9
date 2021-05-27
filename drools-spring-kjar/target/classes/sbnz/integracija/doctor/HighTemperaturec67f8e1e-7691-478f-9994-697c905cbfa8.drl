@@ -1,0 +1,13 @@
+package rules.doctor.templates;
+import com.tim9.bolnica.model.*;
+import java.util.Date;
+
+rule "High temperature over 40.0 c67f8e1e-7691-478f-9994-697c905cbfa8 "
+    when
+    	Message(temperature > 40.0, $patient: patientId)
+    then
+        System.out.println("High temperature template rule");
+        insert(new DoctorAlarm(null, $patient, new Date(), "Temperature is higher than 40"));
+   end
+
+

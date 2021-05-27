@@ -71,6 +71,6 @@ public class DeviceService {
 	}
 	
 	private int getOxygenLevel() {
-		return (int) getRandomNumber(60, 131);
+		return (int) getRandomNumber(0, 100);
 	}
 }

@@ -2,13 +2,13 @@ package sbnz.integracija.admin
 
 import java.util.Date;
 import com.tim9.bolnica.model.*;
-   
+import com.tim9.bolnica.util.BlackListIpAddresses;
 
 rule "Connection from blacklisted IP address"
     when
         $log: Log($id: id, 
             $ip: ip,
-            ip memberOf ['13.48.123.212', '128.128.199.200', '14.54.11.127', '22.54.160.93', '43.220.201.254']     
+            ip memberOf BlackListIpAddresses.blackList    
         )
         not (AdminAlarm(logId == $id))
     then
