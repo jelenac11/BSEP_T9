@@ -198,7 +198,7 @@ public class LogService {
 	}
 	
 	private void readAuth0Logs() throws Exception {
-		String threshold = null;
+		String threshold = "";
 		while (true) {
 			threshold = this.readAuth0(threshold);
 			Thread.sleep(5000);
@@ -212,31 +212,24 @@ public class LogService {
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 		RestTemplate restTemplate = new RestTemplate();
 
-		String from = "";
-		//System.out.println(threshold);
-		if (threshold != null) {
-			from = "&from=" + threshold;
-		}
 		ResponseEntity<String> result = restTemplate.exchange(
-				"https://dev-lsmn3kc2.eu.auth0.com/api/v2/logs?fields=date,type,ip,user_name,hostname,log_id" + from,
+				"https://dev-lsmn3kc2.eu.auth0.com/api/v2/logs?sort=date:-1&fields=date,type,ip,user_name,hostname,log_id&take=100",
 				HttpMethod.GET, entity, String.class);
 
 		ArrayList<Log> logs = new ArrayList<>();
 		String newThreshold = threshold;
 		try {
 			String[] list = result.getBody().substring(2, result.getBody().length() - 2).split("\\},\\{");
-			boolean setNewThreshold = false;
-			for (String auth0Log : list) {
-				if (!setNewThreshold) {
-					//System.out.println(auth0Log);
-					newThreshold = auth0Log.split("log_id")[1].split("\"")[2];
-					//System.out.println("NEWWWWWWWWW" + newThreshold);
-					setNewThreshold = true;
+			for (int i = 0; i < list.length; i++) {
+				if (list[i].equals(threshold)) {
+					break;
 				}
-				Log log = auth0LogParser.parse(auth0Log);
-				logs.add(log);
+				newThreshold = list[0];
+				Log log = auth0LogParser.parse(list[i]);
+				if (!list[i].contains("seccft")) {
+					logs.add(log);
+				}
 			}
-
 			this.save(logs);
 		} catch (Exception e) {
 			e.printStackTrace();
