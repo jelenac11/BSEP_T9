@@ -61,6 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         
         .antMatchers("**").authenticated()
         .and().oauth2ResourceServer().jwt();
+    	
+    	http.headers()
+        .xssProtection()
+        .and()
+        .contentSecurityPolicy("script-src 'self'");
     }
     
 }
