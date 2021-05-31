@@ -40,10 +40,10 @@ export class AddTemperatureRuleComponent implements OnInit {
       this.snackBar.error("Temperature min value is 1.")
       return;
     }
-    const rule = { id: null, temperature: 1, message: '' };
+    const rule = { id: null, temperature: 1, message: '', hospital: '' };
     rule.temperature = this.formTemperatureRule.value.temperature;
     rule.message = this.formTemperatureRule.value.message;
-    console.log(this.higher);
+    rule.hospital = JSON.parse(localStorage.getItem("user_data")).hospital;
     if (this.higher == "true") {
       this.rulesService.addTemperatureRuleHigher(rule).subscribe((data: any) => {
         this.dialogRef.close(true);

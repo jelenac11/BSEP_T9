@@ -8,11 +8,11 @@ import java.util.Date;
 
 rule "Alert log appeared"
     when
-        $log: Log($id: id, severity == LogSeverity.ALERT)
+        $log: Log($id: id, severity == LogSeverity.ALERT, $hospital: hospital)
         not(AdminAlarm(logId == $id))
     then
         System.out.println("Alert log appeared");
-        AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "ALERT: " + $log.getMessage());
+        AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "ALERT: " + $log.getMessage(), $hospital);
         insert(alarm);
 end
    

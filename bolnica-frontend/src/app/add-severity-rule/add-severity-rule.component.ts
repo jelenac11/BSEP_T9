@@ -38,11 +38,12 @@ export class AddSeverityRuleComponent implements OnInit {
     if (this.formSeverityRule.invalid) {
       return;
     }
-    const rule = { severity: '', timePeriod: 1, count: 1, message: '' };
+    const rule = { severity: '', timePeriod: 1, count: 1, message: '', hospital: '' };
     rule.severity = this.formSeverityRule.value.severity;
     rule.timePeriod = this.formSeverityRule.value.timePeriod;
     rule.count = this.formSeverityRule.value.count;
     rule.message = this.formSeverityRule.value.message;
+    rule.hospital = JSON.parse(localStorage.getItem("user_data")).hospital;
     this.rulesService.addSeverityRule(rule).subscribe((data: any) => {
       this.dialogRef.close(true);
     },

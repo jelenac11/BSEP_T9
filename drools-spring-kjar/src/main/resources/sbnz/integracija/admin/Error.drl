@@ -7,11 +7,11 @@ import com.tim9.bolnica.enums.*;
 
    rule "Error log appeared"
        when
-           $log: Log($id: id, severity == LogSeverity.ERROR)
+           $log: Log($id: id, severity == LogSeverity.ERROR, $hospital: hospital)
            not(AdminAlarm(logId == $id))
        then
            System.out.println("Error log appeared");
-           AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "ERROR: " + $log.getMessage());
+           AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "ERROR: " + $log.getMessage(), $hospital);
            insert(alarm);
    end
    

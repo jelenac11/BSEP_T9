@@ -12,7 +12,7 @@ import com.tim9.bolnica.model.Message;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long>{
 
-	Page<Message> findByIdIn(Pageable pageable, List<Long> collect);
+	Page<Message> findByIdInOrderByTimestampDesc(Pageable pageable, List<Long> collect);
 
 	List<Message> findAllByOrderByTimestampDesc();
 

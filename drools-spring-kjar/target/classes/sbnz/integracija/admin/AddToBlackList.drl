@@ -6,17 +6,17 @@ import com.tim9.bolnica.util.BlackListIpAddresses;
 
 rule "30 unsuccessful logins in 24 hours from same ip, add ip to blacklist"
     when
-	    $l: Log($id: id, $m: message, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), $ip2: ip)
+	    $l: Log($id: id, $m: message, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), $ip2: ip, $hospital: hospital)
 	    $alarms: ArrayList() from collect( AdminAlarm())
 	    $no: Number(intValue > 29) from accumulate(
-	        $log : Log($id2: id, ip == $ip2, message.contains("Unsuccessful login") || message.contains("Wrong email or password"))
+	        $log : Log($id2: id, ip == $ip2, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), hospital.equals($hospital))
 	        over window:time(1440m),
 	        count($log)
 	    )
 	    not (AdminAlarm(logId == $id))
-	    not(AdminAlarm(message.contains("SAME SOURCE - 30 unsuccessful logins in 24 hours from same ip, added to blacklist" + $ip2), new Date(timestamp.getTime() + 1440*60*1000) > new Date()))
+	    not(AdminAlarm(message.contains("SAME SOURCE - 30 unsuccessful logins in 24 hours from same ip, added to blacklist" + $ip2), new Date(timestamp.getTime() + 1440*60*1000) > new Date(), hospital.equals($hospital)))
     then
     	System.out.println("30 unsuccessful logins in 24 hours from same ip, add ip to blacklist");
     	BlackListIpAddresses.blackList.add($ip2);
-        insert(new AdminAlarm(null, $id, new Date(), "SAME SOURCE - 30 unsuccessful logins in 24 hours from same ip, added to blacklist" + $ip2));
+        insert(new AdminAlarm(null, $id, new Date(), "SAME SOURCE - 30 unsuccessful logins in 24 hours from same ip, added to blacklist" + $ip2, $hospital));
 end

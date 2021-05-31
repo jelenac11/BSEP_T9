@@ -25,4 +25,6 @@ public class OxygenLevelRuleDTO {
 	private int oxygenLevel;
 	@NotBlank(message = "Alarm message must not be empty")
 	private String message;
+	@NotBlank(message = "Hospital must not be empty")
+	private String hospital;
 }

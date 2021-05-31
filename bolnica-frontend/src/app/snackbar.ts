@@ -23,4 +23,9 @@ export class Snackbar {
     this.config.panelClass = ['error', 'notification'];
     this.snackBar.open(msg, '', this.config);
   }
+
+  warning(msg: string): void {
+    this.config.panelClass = ['warning', 'notification'];
+    this.snackBar.open(msg, '', this.config);
+  }
 }

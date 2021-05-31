@@ -59,8 +59,8 @@ public class CSRService {
 	
 	public void createCSR(CSRDTO csrDTO) throws Exception {
 		String hospitalName = Auth0Util.getAdminHospital();
-        if (!csrDTO.getOrganizationalUnit().equals(hospitalName)) {
-        	throw new Exception("Wrong Organizational Unit. You have to enter name of your hospital.");
+        if (!csrDTO.getOrganization().equals(hospitalName)) {
+        	throw new Exception("Wrong Organization. You have to enter name of your hospital.");
         }
 		
 		KeyPair keypair = generateKeyPair();	

@@ -17,5 +17,6 @@ public class AlarmDoctorResponseDTO {
 	private Date timestamp;
 	private String patient;
 	private String message;
-
+	private String hospital;
+	private String department;
 }

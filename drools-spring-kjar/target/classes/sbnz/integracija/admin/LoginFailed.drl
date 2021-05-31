@@ -8,34 +8,32 @@ import com.tim9.bolnica.model.*;
 
 rule "Login failed, same username"
     when
-        $l: Log($id: id, $m: message, message.contains("Unsuccessful login") || message.contains("Wrong email or password"))
-        $alarms: ArrayList() from collect( AdminAlarm())
+        $l: Log($id: id, $m: message, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), $hospital: hospital)
         $n: Number(intValue > 5) from accumulate(
-            $log : Log($id2: id, $ip: ip, message == $m)
+            $log : Log($id2: id, $ip: ip, message == $m, hospital.equals($hospital))
             over window:time(1m),
             count($log)
         )
         not (AdminAlarm(logId == $id))
-        not(AdminAlarm(message.contains("SAME USERNAME - " + $m), new Date(timestamp.getTime() + 60*1000) > new Date()))
+        not(AdminAlarm(message.contains("SAME USERNAME - " + $m), new Date(timestamp.getTime() + 60*1000) > new Date(), hospital.equals($hospital)))
     then
     	System.out.println("Login failed, same username");
-        insert(new AdminAlarm(null, $id, new Date(), "SAME USERNAME - " + $m));
+        insert(new AdminAlarm(null, $id, new Date(), "SAME USERNAME - " + $m, $hospital));
 end
 
 
 rule "Login failed, same source"
     when
-        $l: Log($id: id, $m: message, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), $ip2: ip)
-        $alarms: ArrayList() from collect( AdminAlarm())
+        $l: Log($id: id, $m: message, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), $ip2: ip, $hospital: hospital)
         $no: Number(intValue > 5) from accumulate(
-            $log : Log($id2: id, ip == $ip2, message.contains("Unsuccessful login") || message.contains("Wrong email or password"))
+            $log : Log($id2: id, ip == $ip2, message.contains("Unsuccessful login") || message.contains("Wrong email or password"), hospital.equals($hospital))
             over window:time(1m),
             count($log)
         )
         not (AdminAlarm(logId == $id))
-        not(AdminAlarm(message.contains("SAME SOURCE - Unsuccessful logins from same source - " + $ip2), new Date(timestamp.getTime() + 60*1000) > new Date()))
+        not(AdminAlarm(message.contains("SAME SOURCE - Unsuccessful logins from same source - " + $ip2), new Date(timestamp.getTime() + 60*1000) > new Date(), hospital.equals($hospital)))
     then
     	System.out.println("Login failed, same source");
-        insert(new AdminAlarm(null, $id, new Date(), "SAME SOURCE - Unsuccessful logins from same source - " + $ip2));
+        insert(new AdminAlarm(null, $id, new Date(), "SAME SOURCE - Unsuccessful logins from same source - " + $ip2, $hospital));
 end
    

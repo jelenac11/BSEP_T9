@@ -19,11 +19,13 @@ public class AlarmResponseDTO {
 	private BigInteger id;
 	private Date timestamp;
 	private String message;
+	private String hospital;
 	
 	public AlarmResponseDTO(AdminAlarm a) {
 		this.id = a.getId();
 		this.timestamp = a.getTimestamp();
 		this.message = a.getMessage();
+		this.hospital = a.getHospital();
 	}
 
 }

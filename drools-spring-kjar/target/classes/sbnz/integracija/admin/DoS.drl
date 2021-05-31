@@ -7,17 +7,17 @@ import java.util.Date;
 
 rule "DoS attack"
     when
-        Log($id: id, $m: message, $ip: ip, message.contains("Requested resource"))
+        Log($id: id, $m: message, $ip: ip, message.contains("Requested resource"), $hospital: hospital)
         $alarms: ArrayList() from collect( AdminAlarm())
         $no: Number(intValue > 15) from accumulate(
-            $log : Log($id2: id, ip == $ip, message == $m)
+            $log : Log($id2: id, ip == $ip, message == $m, hospital.equals($hospital))
             over window:time(1m),
             count($log)
         )
         not(AdminAlarm(logId == $id))
-        not(AdminAlarm(message.contains($ip), message.contains("DOS ATTACK"), new Date(timestamp.getTime() + 60*1000) > new Date()))
+        not(AdminAlarm(message.contains($ip), message.contains("DOS ATTACK"), new Date(timestamp.getTime() + 60*1000) > new Date(), hospital.equals($hospital)))
     then
         System.out.println("DoS attack");
-        AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "DOS ATTACK - " + $m + ", from ip: " + $ip);
+        AdminAlarm alarm = new AdminAlarm(null, $id, new Date(), "DOS ATTACK - " + $m + ", from ip: " + $ip, $hospital);
         insert(alarm);
 end

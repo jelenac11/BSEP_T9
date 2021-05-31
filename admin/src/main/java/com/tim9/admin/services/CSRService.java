@@ -102,9 +102,9 @@ public class CSRService {
 		
 		JcaPKCS10CertificationRequest req = new JcaPKCS10CertificationRequest(certReq.getCsr());
 		X500Name subject = req.getSubject();
-		String hospital = subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString();
+		String hospital = subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString();
 		if (this.hospitalRepository.findByName(hospital) == null)
-			this.hospitalRepository.save(new Hospital(null, subject.getRDNs(BCStyle.OU)[0].getFirst().getValue().toString(),
+			this.hospitalRepository.save(new Hospital(null, subject.getRDNs(BCStyle.O)[0].getFirst().getValue().toString(),
 				subject.getRDNs(BCStyle.E)[0].getFirst().getValue().toString()));
 		return certReq;
 	}

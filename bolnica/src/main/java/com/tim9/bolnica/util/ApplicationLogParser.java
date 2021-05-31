@@ -12,6 +12,9 @@ public class ApplicationLogParser extends LogParser {
 
 	@Override
 	public Log parse(String log) {
+		if (log.equals("")) {
+			return null;
+		}
 		String[] tokens = log.split(" ");
 
 		Date date = null;

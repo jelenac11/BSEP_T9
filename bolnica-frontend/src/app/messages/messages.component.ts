@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessagesService } from '../core/services/messages.service';
 import { PatientsService } from '../core/services/patients.service';
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-messages',
@@ -14,7 +16,7 @@ export class MessagesComponent implements OnInit {
   size = 10;
   loggedIn = '';
   formFilter: FormGroup;
-  patients = [];
+  patients = []; 
 
   constructor(
     private fb: FormBuilder,

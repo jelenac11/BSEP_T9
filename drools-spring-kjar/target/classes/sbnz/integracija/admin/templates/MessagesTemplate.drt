@@ -4,6 +4,7 @@ messageRegexBefore
 messageRegexAfter
 timePeriod
 message
+hospital
 
 package rules.admin.templates;
 
@@ -14,11 +15,11 @@ template "Messages template"
 
 rule "Messages before and after rule @{messageRegexBefore} and @{messageRegexAfter} appears in @{timePeriod} seconds @{id}"
    when
-        $l1: Log(message matches "@{messageRegexBefore}", $t:timestamp)
-        $l2: Log(new Date(timestamp.getTime() - @{timePeriod}*1000) < $t, new Date(timestamp.getTime()) > $t, message matches "@{messageRegexAfter}")
+        $l1: Log(message matches "@{messageRegexBefore}", $t:timestamp, hospital.equals("@{hospital}") || hospital.equals(""))
+        $l2: Log(new Date(timestamp.getTime() - @{timePeriod}*1000) < $t, new Date(timestamp.getTime()) > $t, message matches "@{messageRegexAfter}", hospital.equals("@{hospital}"))
     then
     	System.out.println("Messages template rule");
-        insert(new AdminAlarm(null, null, new Date(), "@{message}"));
+        insert(new AdminAlarm(null, null, new Date(), "@{message}", "@{hospital}"));
    end
 
 end template

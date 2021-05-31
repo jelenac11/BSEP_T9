@@ -48,10 +48,11 @@ export class AddLowOxygenLevelTemperatureRuleComponent implements OnInit {
       this.snackBar.error("Oxygen level max value is 100.")
       return;
     }
-    const rule = { id: null, oxygenLevel: 1, temperature: 1, message: '' };
+    const rule = { id: null, oxygenLevel: 1, temperature: 1, message: '', hospital: '' };
     rule.oxygenLevel = this.formLowOxygenLevelAndTemperatureRule.value.oxygenLevel;
     rule.temperature = this.formLowOxygenLevelAndTemperatureRule.value.temperature;
     rule.message = this.formLowOxygenLevelAndTemperatureRule.value.message;
+    rule.hospital = JSON.parse(localStorage.getItem("user_data")).hospital;
     this.rulesService.addLowOxygenLevelAndTemperatureRule(rule).subscribe((data: any) => {
       this.dialogRef.close(true);
     },

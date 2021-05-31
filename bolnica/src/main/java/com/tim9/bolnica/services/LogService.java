@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
@@ -43,10 +44,13 @@ public class LogService {
 
 	@Autowired
 	private LogRepository logRepository;
-	
+
 	@Autowired
 	private AlarmService alarmService;
 	
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
+
 	private static LogParser applicationLogParser = new ApplicationLogParser();
 	private static LogParser simulatorLogParser = new SimulatorLogParser();
 	private static LogParser auth0LogParser = new Auth0Parser();
@@ -94,7 +98,7 @@ public class LogService {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public void addNewConfig(LogConfig lc) {
 		new Thread(new Runnable() {
 			@Override
@@ -110,7 +114,9 @@ public class LogService {
 
 	public Page<LogResponseDTO> findAll(Pageable pageable, SearchLogDTO search) throws RequestException {
 		String hospital = Auth0Util.getAdminHospital();
-		Page<Log> logPage = logRepository.searchLogs(search.getFrom(), search.getTo(), search.getIp(), search.getFacility(), search.getSeverity(), search.getMessage(), search.getSource(), hospital, pageable);
+		Page<Log> logPage = logRepository.searchLogs(search.getFrom(), search.getTo(), search.getIp(),
+				search.getFacility(), search.getSeverity(), search.getMessage(), search.getSource(), hospital,
+				pageable);
 		ArrayList<LogResponseDTO> forReturn = new ArrayList<LogResponseDTO>();
 		for (Log l : logPage.getContent()) {
 			forReturn.add(new LogResponseDTO(l));
@@ -122,17 +128,18 @@ public class LogService {
 		this.logRepository.saveAll(logs);
 		this.alarmService.checkAlarms(logs);
 	}
-	
+
 	protected void readApplicationLogs() throws IOException, InterruptedException {
-		Date threshold = new Date();
+		Date threshold = null;
 		while (true) {
-			threshold = this.readAppLogs(threshold, "log4j/target/baeldung-logback.log");
+			threshold = this.readAppLogs(threshold, "target/log4j/roll-by-time/app.log");
 			Thread.sleep(5000);
 		}
 	}
-	
+
 	private Date readAppLogs(Date threshold, String path) throws IOException {
 		ArrayList<Log> logs = new ArrayList<>();
+		ArrayList<LogResponseDTO> forReturn = new ArrayList<LogResponseDTO>();
 		ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(path));
 		Date newThreshold = new Date();
 		try {
@@ -144,10 +151,15 @@ public class LogService {
 					newThreshold = log.getTimestamp();
 					setNewThreshold = true;
 				}
-				if (!log.getTimestamp().after(threshold)) {
-					break;
+				if (threshold != null) {
+					if (!log.getTimestamp().after(threshold)) {
+						break;
+					}
 				}
-				logs.add(log);
+				if (log != null) {
+					logs.add(log);
+					forReturn.add(new LogResponseDTO(log));
+				}
 				line = reader.readLine();
 			}
 		} finally {
@@ -155,6 +167,7 @@ public class LogService {
 		}
 		Collections.reverse(logs);
 		this.save(logs);
+		simpMessagingTemplate.convertAndSend("/send-logs", forReturn);
 		return newThreshold;
 	}
 
@@ -168,6 +181,7 @@ public class LogService {
 
 	private Date readSimulatorLogs(Date threshold, String regexp, String path, String hospital) throws IOException {
 		ArrayList<Log> logs = new ArrayList<>();
+		ArrayList<LogResponseDTO> forReturn = new ArrayList<LogResponseDTO>();
 		ReversedLinesFileReader reader = new ReversedLinesFileReader(new File(path));
 		Date newThreshold = new Date();
 		try {
@@ -185,6 +199,7 @@ public class LogService {
 				}
 				if (log.getMessage().matches(regexp)) {
 					logs.add(log);
+					forReturn.add(new LogResponseDTO(log));
 				}
 
 				line = reader.readLine();
@@ -194,9 +209,10 @@ public class LogService {
 		}
 		Collections.reverse(logs);
 		this.save(logs);
+		simpMessagingTemplate.convertAndSend("/send-logs", forReturn);
 		return newThreshold;
 	}
-	
+
 	private void readAuth0Logs() throws Exception {
 		String threshold = "";
 		while (true) {
@@ -217,6 +233,7 @@ public class LogService {
 				HttpMethod.GET, entity, String.class);
 
 		ArrayList<Log> logs = new ArrayList<>();
+		ArrayList<LogResponseDTO> forReturn = new ArrayList<LogResponseDTO>();
 		String newThreshold = threshold;
 		try {
 			String[] list = result.getBody().substring(2, result.getBody().length() - 2).split("\\},\\{");
@@ -228,9 +245,11 @@ public class LogService {
 				Log log = auth0LogParser.parse(list[i]);
 				if (!list[i].contains("seccft")) {
 					logs.add(log);
+					forReturn.add(new LogResponseDTO(log));
 				}
 			}
 			this.save(logs);
+			simpMessagingTemplate.convertAndSend("/send-logs", forReturn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

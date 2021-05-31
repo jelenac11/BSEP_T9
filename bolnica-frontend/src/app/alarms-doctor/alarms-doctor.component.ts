@@ -5,7 +5,6 @@ import { AddLowOxygenLevelTemperatureRuleComponent } from '../add-low-oxygen-lev
 import { AddPressureRuleComponent } from '../add-pressure-rule/add-pressure-rule.component';
 import { AddTemperatureRuleComponent } from '../add-temperature-rule/add-temperature-rule.component';
 import { AlarmsService } from '../core/services/alarms.service';
-import { RulesService } from '../core/services/rules.service';
 import { Snackbar } from '../snackbar';
 
 @Component({

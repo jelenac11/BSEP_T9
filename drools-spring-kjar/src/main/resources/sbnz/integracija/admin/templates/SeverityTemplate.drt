@@ -4,6 +4,7 @@ severity
 timePeriod
 count
 message
+hospital
 
 package rules.admin.templates;
 
@@ -16,11 +17,11 @@ template "Severity template"
 rule "Severity rule @{severity} appears @{count} times in @{timePeriod} seconds @{id}"
     when
         Number(intValue >= @{count}) from accumulate(
-           $l: Log(severity == LogSeverity.@{severity}) over window:time(@{timePeriod}s),
+           $l: Log(severity == LogSeverity.@{severity}, hospital.equals("@{hospital}") || hospital.equals("")) over window:time(@{timePeriod}s),
            count($l))
     then
         System.out.println("Severity template rule");
-        insert(new AdminAlarm(null, null, new Date(), "@{message}"));
+        insert(new AdminAlarm(null, null, new Date(), "@{message}", "@{hospital}"));
 end
 
 end template

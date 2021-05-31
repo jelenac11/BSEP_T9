@@ -61,6 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.POST, "/api/rules/create-olt").hasAuthority("SCOPE_write:rulesDoctor")
         .antMatchers(HttpMethod.POST, "/api/rules/create-oltr").hasAuthority("SCOPE_write:rulesDoctor")
         .antMatchers(HttpMethod.POST, "/api/rules/create-prule").hasAuthority("SCOPE_write:rulesDoctor")
+        .antMatchers("/ws/**").permitAll()
+        .antMatchers("/ws-doctor/**").permitAll()
         
         .antMatchers("**").authenticated()
         .and().oauth2ResourceServer().jwt();

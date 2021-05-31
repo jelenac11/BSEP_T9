@@ -26,6 +26,7 @@ import com.tim9.bolnica.dto.OxygenLevelTemperatureRuleDTO;
 import com.tim9.bolnica.dto.PressureRuleDTO;
 import com.tim9.bolnica.dto.SeverityTemplateRuleDTO;
 import com.tim9.bolnica.exceptions.RequestException;
+import com.tim9.bolnica.util.Auth0Util;
 import com.tim9.bolnica.util.RuleBasedSystemUtil;
 
 
@@ -76,7 +77,10 @@ public class RulesService {
 	@Value("${rules.drl.oxygentemperature}")
     private String oxygenTemperatureDRL;
 	
-	public void addSTR(@Valid SeverityTemplateRuleDTO dto) throws IOException, MavenInvocationException {
+	public void addSTR(@Valid SeverityTemplateRuleDTO dto) throws IOException, MavenInvocationException, RequestException {
+		if (!dto.getHospital().equals(Auth0Util.getAdminHospital())) {
+			throw new RequestException("Not valid hospital");
+		}
 		List<SeverityTemplateRuleDTO> data = new ArrayList<>();
 		UUID id = UUID.randomUUID();
         dto.setId(id);
@@ -88,7 +92,10 @@ public class RulesService {
         RuleBasedSystemUtil.mavenCleanAndInstall();
 	}
 	
-	public void addMTR(@Valid MessagesTemplateRuleDTO dto) throws IOException, MavenInvocationException {
+	public void addMTR(@Valid MessagesTemplateRuleDTO dto) throws IOException, MavenInvocationException, RequestException {
+		if (!dto.getHospital().equals(Auth0Util.getAdminHospital())) {
+			throw new RequestException("Not valid hospital");
+		}
 		List<MessagesTemplateRuleDTO> data = new ArrayList<>();
 		UUID id = UUID.randomUUID();
         dto.setId(id);
@@ -100,7 +107,10 @@ public class RulesService {
         RuleBasedSystemUtil.mavenCleanAndInstall();	
 	}
 
-	public void addT(@Valid TemperatureRuleDTO dto, boolean low) throws IOException, MavenInvocationException {
+	public void addT(@Valid TemperatureRuleDTO dto, boolean low) throws IOException, MavenInvocationException, RequestException {
+		if (!dto.getHospital().equals(Auth0Util.getDoctor().getHospital())) {
+			throw new RequestException("Not valid hospital");
+		}
 		List<TemperatureRuleDTO> data = new ArrayList<>();
 		UUID id = UUID.randomUUID();
 		dto.setId(id);
@@ -123,7 +133,10 @@ public class RulesService {
         RuleBasedSystemUtil.mavenCleanAndInstall();		
 	}
 
-	public void addOLR(@Valid OxygenLevelRuleDTO dto) throws IOException, MavenInvocationException {
+	public void addOLR(@Valid OxygenLevelRuleDTO dto) throws IOException, MavenInvocationException, RequestException {
+		if (!dto.getHospital().equals(Auth0Util.getDoctor().getHospital())) {
+			throw new RequestException("Not valid hospital");
+		}
 		List<OxygenLevelRuleDTO> data = new ArrayList<>();
 		UUID id = UUID.randomUUID();
 		dto.setId(id);
@@ -136,7 +149,10 @@ public class RulesService {
 		
 	}
 
-	public void addOxygenLevelTemperatureRule(@Valid OxygenLevelTemperatureRuleDTO dto) throws IOException, MavenInvocationException {
+	public void addOxygenLevelTemperatureRule(@Valid OxygenLevelTemperatureRuleDTO dto) throws IOException, MavenInvocationException, RequestException {
+		if (!dto.getHospital().equals(Auth0Util.getDoctor().getHospital())) {
+			throw new RequestException("Not valid hospital");
+		}
 		List<OxygenLevelTemperatureRuleDTO> data = new ArrayList<>();
 		UUID id = UUID.randomUUID();
 		dto.setId(id);
@@ -149,6 +165,9 @@ public class RulesService {
 	}
 	
 	public void addPressureRule(@Valid PressureRuleDTO dto) throws IOException, MavenInvocationException, RequestException {
+		if (!dto.getHospital().equals(Auth0Util.getDoctor().getHospital())) {
+			throw new RequestException("Not valid hospital");
+		}
 		if (dto.getSystolicFrom() > dto.getSystolicTo() || dto.getDiastolicFrom() > dto.getDiastolicTo() || dto.getHeartRateFrom() > dto.getHeartRateTo()) {
 			logger.info("Invalid params for creating pressure rule");
 			throw new RequestException("Invalid params for creating pressure rule!");

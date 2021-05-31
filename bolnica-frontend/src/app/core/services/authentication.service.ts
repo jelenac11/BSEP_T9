@@ -4,6 +4,7 @@ import auth0 from 'auth0-js';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, bindNodeCallback } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,10 @@ export class AuthService {
   parseHash$ = bindNodeCallback(this.auth0.parseHash.bind(this.auth0));
   checkSession$ = bindNodeCallback(this.auth0.checkSession.bind(this.auth0));
 
-  constructor(public router: Router) {}
+  constructor(
+    public router: Router,
+    private http: HttpClient
+  ) {}
 
   public login(): void {
     this.auth0.authorize();
@@ -62,6 +66,10 @@ export class AuthService {
 
     const jwt: JwtHelperService = new JwtHelperService();
     localStorage.setItem("role", JSON.stringify(jwt.decodeToken(authResult.accessToken).permissions));
+    let username = jwt.decodeToken(authResult.accessToken).sub;
+    this.http.get("https://dev-lsmn3kc2.eu.auth0.com/api/v2/users/" + username + "?fields=user_metadata").subscribe(data => {
+      localStorage.setItem("user_data", JSON.stringify(JSON.parse(JSON.stringify(data)).user_metadata));
+    });
   }
 
   get isAuthenticated(): boolean {
@@ -70,6 +78,10 @@ export class AuthService {
 
   get role(): any {
     return JSON.parse(localStorage.getItem("role"));
+  }
+
+  get userData(): any {
+    return JSON.parse(localStorage.getItem("user_data"));
   }
 
   renewAuth() {

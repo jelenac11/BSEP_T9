@@ -80,10 +80,12 @@ public class MessageService {
 
 	public Page<MessageResponseDTO> findAll(Pageable pageable, FilterDTO filter) {
 		Doctor doctor = Auth0Util.getDoctor();
-		List<Long> patientIds = ((ArrayList<Patient>) this.patientRepo.findByHospitalAndDepartment(doctor.getHospital(), doctor.getDepartment())).stream().map(Patient::getId).collect(Collectors.toList());
+		List<Long> patientIds = ((ArrayList<Patient>) this.patientRepo.findByHospitalAndDepartment(doctor.getHospital(),
+				doctor.getDepartment())).stream().map(Patient::getId).collect(Collectors.toList());
 		List<Message> all = messageRepo.findByPatientIdInOrderByTimestampDesc(patientIds);
 		ArrayList<Message> filtered = this.filter(all, filter);
-		Page<Message> logPage = messageRepo.findByIdIn(pageable, filtered.stream().map(Message::getId).collect(Collectors.toList()));
+		Page<Message> logPage = messageRepo.findByIdInOrderByTimestampDesc(pageable,
+				filtered.stream().map(Message::getId).collect(Collectors.toList()));
 		ArrayList<MessageResponseDTO> forReturn = new ArrayList<MessageResponseDTO>();
 		for (Message l : logPage.getContent()) {
 			MessageResponseDTO mr = new MessageResponseDTO(l);

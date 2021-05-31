@@ -3,6 +3,7 @@ id
 temperature
 oxygenLevel
 message
+hospital
 
 package rules.doctor.templates;
 
@@ -14,6 +15,7 @@ template "Temperature and oxygen level template"
 rule "Temperature higher than @{temperature} and oxygen level lower than @{oxygenLevel} @{id}"
     when
     	Message($patient: patientId, oxygenLevel <= @{oxygenLevel}, temperature >= @{temperature})
+    	Patient(hospital.equals("@{hospital}"), id == $patient)
     then
         System.out.println("Temperature and oxygen level template");
         insert(new DoctorAlarm(null, $patient, new Date(), "@{message}"));

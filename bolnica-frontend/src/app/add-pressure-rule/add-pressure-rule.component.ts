@@ -64,7 +64,7 @@ export class AddPressureRuleComponent implements OnInit {
       this.snackBar.error("Heart rate from must be smaller than heart rate to.")
       return;
     }
-    const rule = { id: null, systolicFrom: 1, systolicTo: 1, diastolicFrom: 1, diastolicTo: 1, heartRateFrom: 1, heartRateTo: 1, message: '' };
+    const rule = { id: null, systolicFrom: 1, systolicTo: 1, diastolicFrom: 1, diastolicTo: 1, heartRateFrom: 1, heartRateTo: 1, message: '', hospital: '' };
     rule.systolicFrom = this.formPressureRule.value.systolicFrom;
     rule.systolicTo = this.formPressureRule.value.systolicTo;
     rule.diastolicFrom = this.formPressureRule.value.diastolicFrom;
@@ -72,6 +72,7 @@ export class AddPressureRuleComponent implements OnInit {
     rule.heartRateFrom = this.formPressureRule.value.heartRateFrom;
     rule.heartRateTo = this.formPressureRule.value.heartRateTo;
     rule.message = this.formPressureRule.value.message;
+    rule.hospital = JSON.parse(localStorage.getItem("user_data")).hospital;
     this.rulesService.addPressureRule(rule).subscribe((data: any) => {
       this.dialogRef.close(true);
     },

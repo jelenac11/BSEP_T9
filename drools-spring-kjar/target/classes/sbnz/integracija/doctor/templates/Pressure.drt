@@ -7,6 +7,7 @@ diastolicTo
 heartRateFrom
 heartRateTo
 message
+hospital
 
 package rules.doctor.templates;
 
@@ -18,6 +19,7 @@ template "Pressure template"
 rule "Pressure @{id} "
     when
     	Message($patient: patientId, systolic < @{systolicTo}, systolic> @{systolicFrom}, diastolic < @{diastolicTo}, diastolic> @{diastolicFrom}, heartRate < @{heartRateTo}, heartRate > @{heartRateFrom})
+    	Patient(hospital.equals("@{hospital}"), id == $patient)
     then
         System.out.println("Pressure template rule");
         insert(new DoctorAlarm(null, $patient, new Date(), "@{message}"));

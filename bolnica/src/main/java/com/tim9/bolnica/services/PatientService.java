@@ -57,6 +57,29 @@ public class PatientService {
 		Patient p18 = new Patient(18L, "18", "Ime18", "Prezime18", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 3", "Emergency");
 		Patient p19 = new Patient(19L, "19", "Ime19", "Prezime19", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Lactose intolerance, Cancer, Hepatitis A, Cold sore", "Hospital 1", "Emergency");
 		Patient p20 = new Patient(20L, "20", "Ime20", "Prezime20", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 3", "Surgery");
+		
+		Patient p21 = new Patient(21L, "21", "Ime21", "Prezime21", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Covid-19, Alzheimer, Skin infection, Lactose intolerance", "Hospital 1", "Emergency");
+		Patient p22 = new Patient(22L, "22", "Ime22", "Prezime22", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.B, "Flu", "Hospital 1", "Mental health");
+		Patient p23 = new Patient(23L, "23", "Ime23", "Prezime23", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.B, "Flu", "Hospital 1", "Surgery");
+		Patient p24 = new Patient(24L, "24", "Ime24", "Prezime24", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.AB, "Diabetes, Hepatitis A, Alzheimer, Bronchitis", "Hospital 1", "Emergency");
+		Patient p25 = new Patient(25L, "25", "Ime25", "Prezime25", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.O, "Flu", "Hospital 1", "Mental health");
+		Patient p26 = new Patient(26L, "26", "Ime26", "Prezime26", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Sinus infection, Acne", "Hospital 1", "Emergency");
+		Patient p27 = new Patient(27L, "27", "Ime27", "Prezime27", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.B, "Allergie, Lactose intolerance, Bronchitis", "Hospital 1", "Emergency");
+		Patient p28 = new Patient(28L, "28", "Ime28", "Prezime28", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.AB, "Flu", "Hospital 1", "Surgery");
+		Patient p29 = new Patient(29L, "29", "Ime29", "Prezime29", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Allergie, Cancer, Dermatitis herpetiformis", "Hospital 1", "Emergency");
+		Patient p30 = new Patient(30L, "30", "Ime30", "Prezime30", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.B, "Covid-19, Dermatitis herpetiformis", "Hospital 1", "Emergency");
+		
+		Patient p31 = new Patient(31L, "31", "Ime31", "Prezime31", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 2", "Surgery");
+		Patient p32 = new Patient(32L, "32", "Ime32", "Prezime32", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 2", "Emergency");
+		Patient p33 = new Patient(33L, "33", "Ime33", "Prezime33", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 2", "Emergency");
+		Patient p34 = new Patient(34L, "34", "Ime34", "Prezime34", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 2", "Mental health");
+		Patient p35 = new Patient(35L, "35", "Ime35", "Prezime35", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 2", "Surgery");
+		Patient p36 = new Patient(36L, "36", "Ime36", "Prezime36", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Cancer, Lactose intolerance", "Hospital 1", "Emergency");
+		Patient p37 = new Patient(37L, "37", "Ime37", "Prezime37", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 3", "Mental health");
+		Patient p38 = new Patient(38L, "38", "Ime38", "Prezime38", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 3", "Emergency");
+		Patient p39 = new Patient(39L, "39", "Ime39", "Prezime39", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Lactose intolerance, Cancer, Hepatitis A, Cold sore", "Hospital 1", "Emergency");
+		Patient p40 = new Patient(30L, "40", "Ime40", "Prezime40", new Date(899157600000L), 165, 75, Gender.MALE, BloodType.A, "Flu", "Hospital 3", "Surgery");
+		
 		this.patientRepo.save(p1);
 		this.patientRepo.save(p2);
 		this.patientRepo.save(p3);
@@ -77,5 +100,25 @@ public class PatientService {
 		this.patientRepo.save(p18);
 		this.patientRepo.save(p19);
 		this.patientRepo.save(p20);
+		this.patientRepo.save(p21);
+		this.patientRepo.save(p22);
+		this.patientRepo.save(p23);
+		this.patientRepo.save(p24);
+		this.patientRepo.save(p25);
+		this.patientRepo.save(p26);
+		this.patientRepo.save(p27);
+		this.patientRepo.save(p28);
+		this.patientRepo.save(p29);
+		this.patientRepo.save(p30);
+		this.patientRepo.save(p31);
+		this.patientRepo.save(p32);
+		this.patientRepo.save(p33);
+		this.patientRepo.save(p34);
+		this.patientRepo.save(p35);
+		this.patientRepo.save(p36);
+		this.patientRepo.save(p37);
+		this.patientRepo.save(p38);
+		this.patientRepo.save(p39);
+		this.patientRepo.save(p40);
 	}
 }

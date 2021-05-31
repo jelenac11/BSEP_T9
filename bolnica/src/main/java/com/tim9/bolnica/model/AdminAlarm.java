@@ -3,12 +3,7 @@ package com.tim9.bolnica.model;
 import java.math.BigInteger;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
@@ -36,5 +31,7 @@ public class AdminAlarm {
 	private Date timestamp;
 	
 	private String message;
+	
+	private String hospital;
 
 }
