@@ -37,11 +37,12 @@ export class AddMessagesRuleComponent implements OnInit {
     if (this.formMessagesRule.invalid) {
       return;
     }
-    const rule = { messageRegexBefore: '', messageRegexAfter: '', timePeriod: 1, message: '' };
+    const rule = { messageRegexBefore: '', messageRegexAfter: '', timePeriod: 1, message: '', hospital: '' };
     rule.messageRegexBefore = this.formMessagesRule.value.messageRegexBefore;
     rule.messageRegexAfter = this.formMessagesRule.value.messageRegexAfter;
     rule.timePeriod = this.formMessagesRule.value.timePeriod;
     rule.message = this.formMessagesRule.value.message;
+    rule.hospital = JSON.parse(localStorage.getItem("user_data")).hospital;
     this.rulesService.addMessagesRule(rule).subscribe((data: any) => {
       this.dialogRef.close(true);
     },
